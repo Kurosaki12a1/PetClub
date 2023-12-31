@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Pet Club</string>
+
+    <!-- Menu name !-->
+    <string name="home">Tổng quan</string>
+    <string name="bill">Hóa đơn</string>
+    <string name="goods">Hàng hóa</string>
+    <string name="notification">Thông báo</string>
+    <string name="more">Nhiều hơn</string>
+</resources>

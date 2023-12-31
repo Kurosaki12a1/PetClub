@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "991835099486",
+    "project_id": "pet-7acf2",
+    "storage_bucket": "pet-7acf2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991835099486:android:849845af29b609472cffcf",
+        "android_client_info": {
+          "package_name": "com.kien.petclub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACXv0X2MAE9-kVb7cDi6L1S0lKzk0TwtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
