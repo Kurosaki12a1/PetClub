@@ -56,6 +56,7 @@
     <dimen name="text_size18">18sp</dimen>
     <dimen name="text_size20">20sp</dimen>
     <dimen name="text_size22">22sp</dimen>
+    <dimen name="text_size26">26sp</dimen>
     <dimen name="text_size28">28sp</dimen>
     <dimen name="text_size30">30sp</dimen>
 

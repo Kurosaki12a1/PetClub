@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">Pet Club</string>
 
+    <!-- General Strings -->
+    <string name="hide">Hide</string>
+    <string name="connection_error">Connection Error</string>
+    <string name="no_internet">No internet connection please try again later</string>
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="some_error">Some error occurred, try again later</string>
+    <string name="list_no_result">Sorry, There are no results here!</string>
+
     <!-- Menu name !-->
     <string name="home">Tổng quan</string>
     <string name="bill">Hóa đơn</string>

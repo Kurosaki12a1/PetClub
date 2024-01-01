@@ -69,12 +69,27 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("android.arch.lifecycle:extensions:1.1.1")
 
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+
+    // Feature module Support
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.6")
+
+    // Testing Navigation
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.6")
+
+    // Loading animation
+    implementation("com.github.ybq:Android-SpinKit:1.4.0")
+
     //  implementation("androidx.compose.runtime:runtime-livedata:1.1.0-alpha05")
 
+    // Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-compiler:2.48")
     kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.4.2")
-
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.browser:browser:1.7.0")
