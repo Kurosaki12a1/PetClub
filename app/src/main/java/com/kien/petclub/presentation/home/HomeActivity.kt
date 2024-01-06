@@ -1,5 +1,10 @@
 package com.kien.petclub.presentation.home
 
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ListPopupWindow
+import android.widget.PopupMenu
+import android.widget.PopupWindow
 import com.kien.petclub.R
 import com.kien.petclub.databinding.ActivityHomeBinding
 import com.kien.petclub.extensions.setupWithNavController
@@ -32,4 +37,52 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
         navController = controller
     }
+
+    override fun setUpViews() {
+        super.setUpViews()
+        setUpImageSwitcher()
+    }
+
+    // When click item Menu, it will open new Activity with Fragment.
+    private fun setUpImageSwitcher() {
+        binding.actionBtn.apply {
+            inAnimation = AnimationUtils.loadAnimation(this@HomeActivity, R.anim.anim_in)
+            inAnimation = AnimationUtils.loadAnimation(this@HomeActivity, R.anim.anim_out)
+            setImageResource(R.drawable.ic_add_btn)
+            setOnClickListener {
+                setImageResource(R.drawable.ic_cancel)
+               /* val popMenu = PopupMenu(this@HomeActivity, this)
+                popMenu.menuInflater.inflate(R.menu.menu_add, popMenu.menu)
+                popMenu.setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.add_pet -> {
+                            navController.navigate(R.id.action_global_addPetFragment)
+                            true
+                        }
+                        R.id.add_bill -> {
+                            navController.navigate(R.id.action_global_addBillFragment)
+                            true
+                        }
+                        R.id.add_goods -> {
+                            navController.navigate(R.id.action_global_addGoodsFragment)
+                            true
+                        }
+                        else -> false
+                    }
+                }*/
+            }
+        }
+    }
+
+
+  /*  private fun setUpImageSwitcher() {
+        binding.actionBtn.apply {
+            inAnimation = AnimationUtils.loadAnimation(this@HomeActivity, R.anim.anim_in)
+            inAnimation = AnimationUtils.loadAnimation(this@HomeActivity, R.anim.anim_out)
+            setImageResource(R.drawable.ic_add_btn)
+            setOnClickListener {
+                setImageResource(R.drawable.ic_cancel)
+            }
+        }
+    }*/
 }

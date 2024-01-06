@@ -17,7 +17,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        setUpViews()
         if (savedInstanceState == null) {
             setUpBottomNavigation()
         }

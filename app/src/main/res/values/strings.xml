@@ -16,4 +16,26 @@
     <string name="goods">Hàng hóa</string>
     <string name="notification">Thông báo</string>
     <string name="more">Nhiều hơn</string>
+
+    <string name="add_goods">Thêm hàng hóa</string>
+    <string name="add_service">Thêm dịch vụ</string>
+
+    <!-- Hàng hóa -->
+    <string name="goods_info">%1$s hàng hóa - Tồn kho %2$s</string>
+
+    <!-- Hóa đơn -->
+    <string name="bill_info">%1$s hóa đơn</string>
+    <string name="bill_total">Tổng %1$s</string>
+
+    <string name="price_sell">Giá bán</string>
+    <string name="price_capital">Giá vốn</string>
+
+    <string name="all_time">Toàn thời gian</string>
+    <string name="today">Hôm nay</string>
+    <string name="yesterday">Hôm qua</string>
+    <string name="this_week">Tuần này</string>
+    <string name="last_week">Tuần trước</string>
+    <string name="this_month">Tháng này</string>
+    <string name="last_month">Tháng trước</string>
+    <string name="time_options">Tùy chọn...</string>
 </resources>

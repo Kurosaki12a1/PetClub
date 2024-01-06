@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
@@ -7,21 +7,56 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_host_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         app:defaultNavHost="true"
-        />
+        app:layout_constraintBottom_toTopOf="@id/guideLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageSwitcher
+        android:id="@+id/actionBtn"
+        android:layout_width="@dimen/dimen65"
+        android:layout_height="@dimen/dimen65"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/dimen6"
+        android:layout_marginBottom="@dimen/dimen6"
+        app:layout_constraintBottom_toTopOf="@id/guideLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
         app:itemIconTint="@drawable/bottom_navigation_selector"
         app:labelVisibilityMode="selected"
-        app:menu="@menu/menu_bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen56"
-        android:background="@color/white" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideLine"
+        app:menu="@menu/menu_bottom_navigation" />
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
