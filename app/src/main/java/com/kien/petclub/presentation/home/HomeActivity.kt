@@ -1,7 +1,6 @@
 package com.kien.petclub.presentation.home
 
 import android.graphics.Rect
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
@@ -54,30 +53,25 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun setUpObserver() {
         viewModel.fabState.onEach { isExtended ->
-            Log.d("PetClub", "setUpObserver: $isExtended")
             if (isExtended) {
-                shrinkFab()
-            } else {
                 expandFab()
+            } else {
+                shrinkFab()
             }
         }.launchIn(lifecycleScope)
     }
 
     private fun setUpFloatingActionButton() {
         binding.actionBtn.setIconResource(R.drawable.ic_add_btn)
-        binding.actionBtn.setOnClickListener {
-            Log.d("PetClub", "setUpFloatingActionButton: Clicked")
-            viewModel.updateFabState() }
+        binding.actionBtn.setOnClickListener { viewModel.updateFabState() }
     }
 
     private fun shrinkFab() {
         binding.transparentBg.startAnimation(animationLoader.toBottomBgAnim)
-        binding.actionBtn.setIconResource(R.drawable.ic_cancel)
+        binding.actionBtn.setIconResource(R.drawable.ic_add_btn)
         binding.actionBtn.startAnimation(animationLoader.rotateAntiClockWiseFabAnim)
         binding.addService.startAnimation(animationLoader.toBottomFabAnim)
         binding.addGoods.startAnimation(animationLoader.toBottomFabAnim)
-        binding.tvAddGoods.startAnimation(animationLoader.toBottomBgAnim)
-        binding.tvAddService.startAnimation(animationLoader.toBottomFabAnim)
 
         binding.addService.visibility = View.GONE
         binding.addGoods.visibility = View.GONE
@@ -87,12 +81,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     private fun expandFab() {
         binding.transparentBg.startAnimation(animationLoader.fromBottomBgAnim)
-        binding.actionBtn.setIconResource(R.drawable.ic_add_btn)
+        binding.actionBtn.setIconResource(R.drawable.ic_cancel)
         binding.actionBtn.startAnimation(animationLoader.rotateClockWiseFabAnim)
         binding.addService.startAnimation(animationLoader.fromBottomFabAnim)
         binding.addGoods.startAnimation(animationLoader.fromBottomFabAnim)
-        binding.tvAddGoods.startAnimation(animationLoader.fromBottomBgAnim)
-        binding.tvAddService.startAnimation(animationLoader.fromBottomFabAnim)
 
         binding.addService.visibility = View.VISIBLE
         binding.addGoods.visibility = View.VISIBLE
@@ -102,7 +94,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
-            if (binding.actionBtn.isExtended) {
+            if (!binding.actionBtn.isExtended) {
                 val outRect = Rect()
                 binding.actionBtn.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {

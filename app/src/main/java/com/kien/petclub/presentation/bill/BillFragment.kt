@@ -5,5 +5,5 @@ import com.kien.petclub.databinding.FragmentBillBinding
 import com.kien.petclub.presentation.base.BaseFragment
 
 class BillFragment : BaseFragment<FragmentBillBinding>() {
-    override fun getLayoutId(): Int = R.layout.fragment_bill
+    override fun getViewBinding(): FragmentBillBinding = FragmentBillBinding.inflate(layoutInflater)
 }

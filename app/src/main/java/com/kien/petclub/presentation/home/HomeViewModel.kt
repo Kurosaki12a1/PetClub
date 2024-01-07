@@ -10,17 +10,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor() : BaseViewModel() {
 
-    private val _fabState = MutableStateFlow<Boolean>(true)
+    private val _fabState = MutableStateFlow(false)
 
     val fabState: StateFlow<Boolean>
         get() = _fabState
 
     fun updateFabState() {
         _fabState.value = !_fabState.value
-        Log.d("PetClub", "updateFabState: ${_fabState.value}")
-    }
-
-    fun onShrinkFab() {
-
     }
 }

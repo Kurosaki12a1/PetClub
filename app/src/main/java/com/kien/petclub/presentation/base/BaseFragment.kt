@@ -16,6 +16,8 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
     private var vb: VB? = null
     open val binding get() = vb!!
 
+    abstract fun getViewBinding(): VB
+
     private var mRootView: View? = null
     private var hasInitializedRootView = false
     private var progressDialog: Dialog? = null
@@ -26,7 +28,8 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         if (mRootView == null) {
-            initViewBinding(inflater, container)
+            vb = getViewBinding()
+            mRootView = vb?.root
         }
 
         return mRootView
@@ -44,6 +47,11 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         super.onPause()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        vb = null
+    }
+
     override
     fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,15 +66,6 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
             hasInitializedRootView = true
         }
     }
-
-
-    private fun initViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
-        vb = DataBindingUtil.inflate(inflater, getLayoutId(), container, false)
-        mRootView = binding.root
-    }
-
-    @LayoutRes
-    abstract fun getLayoutId(): Int
 
     open fun registerListeners() {}
 
