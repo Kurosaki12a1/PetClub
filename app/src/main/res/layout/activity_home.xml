@@ -7,6 +7,19 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/transparentBg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#66000000"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideLine"
         android:layout_width="match_parent"
@@ -25,16 +38,65 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageSwitcher
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/actionBtn"
-        android:layout_width="@dimen/dimen65"
-        android:layout_height="@dimen/dimen65"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:layout_marginEnd="@dimen/dimen6"
         android:layout_marginBottom="@dimen/dimen6"
+        android:visibility="visible"
+        app:icon="@drawable/ic_add_btn"
         app:layout_constraintBottom_toTopOf="@id/guideLine"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/dimen6"
+        android:layout_marginBottom="@dimen/dimen6"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/actionBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="visible" />
+        app:srcCompat="@drawable/ic_gift" />
+
+    <TextView
+        android:id="@+id/tvAddService"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_service"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/addService"
+        app:layout_constraintEnd_toStartOf="@id/addService"
+        app:layout_constraintTop_toTopOf="@id/addService" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addGoods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/dimen6"
+        android:layout_marginBottom="@dimen/dimen6"
+        android:visibility="gone"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/addService"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add_goods" />
+
+    <TextView
+        android:id="@+id/tvAddGoods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_goods"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/addGoods"
+        app:layout_constraintEnd_toStartOf="@id/addGoods"
+        app:layout_constraintTop_toTopOf="@id/addGoods" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
@@ -49,14 +111,5 @@
         app:layout_constraintTop_toBottomOf="@id/guideLine"
         app:menu="@menu/menu_bottom_navigation" />
 
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

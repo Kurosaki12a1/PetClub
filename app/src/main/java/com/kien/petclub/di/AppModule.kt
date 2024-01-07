@@ -1,9 +1,24 @@
 package com.kien.petclub.di
 
+import android.app.Application
+import android.content.Context
+import com.kien.petclub.utils.AnimationLoader
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule
+object AppModule {
+
+    @Provides
+    fun provideContext(application: Application): Context = application.applicationContext
+
+/*    @Provides
+    @Singleton
+    fun provideAnimationLoader(context: Context) = AnimationLoader(context)*/
+
+
+}
