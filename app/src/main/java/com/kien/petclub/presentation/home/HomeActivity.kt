@@ -1,7 +1,6 @@
 package com.kien.petclub.presentation.home
 
 import android.graphics.Rect
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
@@ -97,9 +96,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
-            val outRect = Rect()
-            binding.actionBtn.getGlobalVisibleRect(outRect)
-            viewModel.shrinkFab(ev, outRect)
+            viewModel.shrinkFab(ev, Rect().also { binding.actionBtn.getGlobalVisibleRect(it) })
         }
         return super.dispatchTouchEvent(ev)
     }

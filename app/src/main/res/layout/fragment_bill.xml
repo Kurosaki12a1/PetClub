@@ -3,67 +3,67 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/dimen10">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen5"
+        android:gravity="center"
         android:text="@string/bill"
+        android:textColor="@color/black"
         android:textSize="@dimen/text_size24"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/ivSort"
+        app:drawableLeftCompat="@mipmap/ic_app"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivMore"
-        android:layout_width="@dimen/dimen24"
-        android:layout_height="@dimen/dimen24"
+        android:layout_width="@dimen/dimen30"
+        android:layout_height="@dimen/dimen30"
         android:layout_marginEnd="@dimen/dimen18"
-        android:src="@mipmap/ic_three_dot"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_three_dot"
+        app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivSort"
-        android:layout_width="@dimen/dimen24"
-        android:layout_height="@dimen/dimen24"
+        android:layout_width="@dimen/dimen30"
+        android:layout_height="@dimen/dimen30"
         android:layout_marginEnd="@dimen/dimen30"
+        android:scaleType="fitCenter"
         android:src="@mipmap/ic_filter_new"
+        app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toStartOf="@id/ivMore"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivSearch"
-        android:layout_width="@dimen/dimen24"
-        android:layout_height="@dimen/dimen24"
+        android:layout_width="@dimen/dimen30"
+        android:layout_height="@dimen/dimen30"
         android:layout_marginEnd="@dimen/dimen30"
+        android:scaleType="fitCenter"
         android:src="@mipmap/ic_search_new"
+        app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toStartOf="@id/ivSort"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/ivCalendar"
-        android:layout_width="@dimen/dimen24"
-        android:layout_height="@dimen/dimen24"
-        android:layout_marginTop="@dimen/dimen5"
-        android:src="@drawable/ic_calendar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <TextView
         android:id="@+id/infoDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen5"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dimen5"
         android:text="@string/today"
-        android:textSize="@dimen/text_size16"
-        app:layout_constraintBottom_toBottomOf="@id/ivCalendar"
-        app:layout_constraintStart_toEndOf="@id/ivCalendar"
-        app:layout_constraintTop_toTopOf="@id/ivCalendar" />
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size24"
+        android:drawablePadding="@dimen/dimen10"
+        app:drawableLeftCompat="@drawable/ic_calendar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
 
     <View
         android:id="@+id/line1"
@@ -73,14 +73,14 @@
         android:background="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivCalendar" />
+        app:layout_constraintTop_toBottomOf="@id/infoDate" />
 
     <TextView
         android:id="@+id/infoGoods"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen5"
         android:layout_marginTop="@dimen/dimen2"
+        android:layout_marginStart="@dimen/dimen10"
         android:textSize="@dimen/text_size14"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
