@@ -2,6 +2,7 @@ package com.kien.petclub.di
 
 import android.app.Application
 import android.content.Context
+import com.google.firebase.auth.FirebaseAuth
 import com.kien.petclub.utils.AnimationLoader
 import dagger.Module
 import dagger.Provides
