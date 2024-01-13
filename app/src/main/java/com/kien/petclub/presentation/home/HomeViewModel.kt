@@ -1,6 +1,7 @@
 package com.kien.petclub.presentation.home
 
-import android.util.Log
+import android.graphics.Rect
+import android.view.MotionEvent
 import com.kien.petclub.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,5 +18,13 @@ class HomeViewModel @Inject constructor() : BaseViewModel() {
 
     fun updateFabState() {
         _fabState.value = !_fabState.value
+    }
+
+    fun shrinkFab(ev: MotionEvent, outRect: Rect) {
+        // When the user touches the screen and the FAB is extended, we shrink it
+        if (fabState.value && !outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+            updateFabState()
+        }
+
     }
 }

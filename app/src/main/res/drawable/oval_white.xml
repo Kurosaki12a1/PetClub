@@ -3,10 +3,10 @@
     >
 
     <size
-        android:width="@dimen/dimen30"
+        android:width="@dimen/dimen40"
         android:height="@dimen/dimen18" />
 
     <corners
-        android:radius="@dimen/dimen5" />
+        android:radius="@dimen/dimen20" />
     <solid android:color="@color/white" />
 </shape>

@@ -1,6 +1,7 @@
 package com.kien.petclub.presentation.home
 
 import android.graphics.Rect
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
@@ -77,30 +78,28 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         binding.addGoods.visibility = View.GONE
         binding.tvAddGoods.visibility = View.GONE
         binding.tvAddService.visibility = View.GONE
+        binding.transparentBg.visibility = View.GONE
     }
 
     private fun expandFab() {
+        binding.addService.visibility = View.VISIBLE
+        binding.addGoods.visibility = View.VISIBLE
+        binding.tvAddGoods.visibility = View.VISIBLE
+        binding.tvAddService.visibility = View.VISIBLE
+        binding.transparentBg.visibility = View.VISIBLE
+
         binding.transparentBg.startAnimation(animationLoader.fromBottomBgAnim)
         binding.actionBtn.setIconResource(R.drawable.ic_cancel)
         binding.actionBtn.startAnimation(animationLoader.rotateClockWiseFabAnim)
         binding.addService.startAnimation(animationLoader.fromBottomFabAnim)
         binding.addGoods.startAnimation(animationLoader.fromBottomFabAnim)
-
-        binding.addService.visibility = View.VISIBLE
-        binding.addGoods.visibility = View.VISIBLE
-        binding.tvAddGoods.visibility = View.VISIBLE
-        binding.tvAddService.visibility = View.VISIBLE
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
-            if (!binding.actionBtn.isExtended) {
-                val outRect = Rect()
-                binding.actionBtn.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
-                    shrinkFab()
-                }
-            }
+            val outRect = Rect()
+            binding.actionBtn.getGlobalVisibleRect(outRect)
+            viewModel.shrinkFab(ev, outRect)
         }
         return super.dispatchTouchEvent(ev)
     }
