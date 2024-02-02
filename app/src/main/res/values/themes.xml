@@ -2,4 +2,5 @@
 <resources>
 
     <style name="Theme.PetClub" parent="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
+
 </resources>

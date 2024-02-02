@@ -28,5 +28,5 @@ data class Goods(
     @SerializedName("GHI_CHU")
     val note: String,
     @SerializedName("HINH_ANH")
-    val photo: String
+    val photo: List<String>? = null
 )

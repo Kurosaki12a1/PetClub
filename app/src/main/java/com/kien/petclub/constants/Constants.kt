@@ -1,4 +1,4 @@
-package com.kien.petclub.data.constants
+package com.kien.petclub.constants
 
 object Constants {
     // Hàng hóa
@@ -35,4 +35,9 @@ object Constants {
     const val NOTIFICATION_DESCRIPTION = "NOI_DUNG"
     const val NOTIFICATION_TIME = "THOI_GIAN"
     const val NOTIFICATIONS_ICON = "HINH_ANH"
+
+    // Type of products
+    const val KEY_TYPE = "type"
+    const val VALUE_GOODS = "goods"
+    const val VALUE_SERVICE = "service"
 }

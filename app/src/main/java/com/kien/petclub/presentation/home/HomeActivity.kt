@@ -6,8 +6,13 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.kien.petclub.R
+import com.kien.petclub.constants.Constants.KEY_TYPE
+import com.kien.petclub.constants.Constants.VALUE_GOODS
+import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
+import com.kien.petclub.extensions.openActivity
 import com.kien.petclub.extensions.setupWithNavController
+import com.kien.petclub.presentation.add_product.AddProductActivity
 import com.kien.petclub.presentation.base.BaseActivity
 import com.kien.petclub.utils.AnimationLoader
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +48,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             intent
         )
 
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            if (it.itemId == R.id.nav_goods) {
+                binding.actionBtn.visibility = View.VISIBLE
+            } else {
+                binding.actionBtn.visibility = View.GONE
+            }
+            true
+        }
+
         navController = controller
     }
 
@@ -64,6 +78,34 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     private fun setUpFloatingActionButton() {
         binding.actionBtn.setIconResource(R.drawable.ic_add_btn)
         binding.actionBtn.setOnClickListener { viewModel.updateFabState() }
+
+        binding.addService.setOnClickListener {
+            openActivity(
+                AddProductActivity::class.java,
+                KEY_TYPE to VALUE_SERVICE
+            )
+        }
+
+        binding.tvAddService.setOnClickListener {
+            openActivity(
+                AddProductActivity::class.java,
+                KEY_TYPE to VALUE_SERVICE
+            )
+        }
+
+        binding.addGoods.setOnClickListener {
+            openActivity(
+                AddProductActivity::class.java,
+                KEY_TYPE to VALUE_GOODS
+            )
+        }
+
+        binding.tvAddGoods.setOnClickListener {
+            openActivity(
+                AddProductActivity::class.java,
+                KEY_TYPE to VALUE_GOODS
+            )
+        }
     }
 
     private fun shrinkFab() {
@@ -100,6 +142,4 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         }
         return super.dispatchTouchEvent(ev)
     }
-
-
 }

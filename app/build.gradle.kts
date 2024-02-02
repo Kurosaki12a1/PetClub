@@ -52,6 +52,10 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -99,6 +103,16 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
     implementation("com.google.firebase:firebase-database:20.3.0")
     implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-auth:22.3.0")
+//    implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // Firebase Storage
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+
+    
+    // Scan Barcode
+   // implementation("com.google.firebase:firebase-ml-vision:24.1.0")
+    implementation("com.journeyapps:zxing-android-embedded:4.2.0")
+
+
 }

@@ -6,7 +6,7 @@ data class Service(
     @SerializedName("MA_DICH_VU")
     val id: String,
     @SerializedName("MA_VACH_DICH_VU")
-    val code: String,
+    val code: String?,
     @SerializedName("TEN_DICH_VU")
     val name: String,
     @SerializedName("NHOM_DICH_VU")
@@ -18,9 +18,9 @@ data class Service(
     @SerializedName("GIA_VON") // Giá vốn
     val buyingPrice: String,
     @SerializedName("MO_TA")
-    val description: String,
+    val description: String?,
     @SerializedName("GHI_CHU")
-    val note: String,
+    val note: String?,
     @SerializedName("HINH_ANH")
-    val photo: String
+    val photo: List<String>? = null
 )

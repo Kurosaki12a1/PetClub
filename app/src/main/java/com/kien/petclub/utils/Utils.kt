@@ -9,9 +9,16 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import com.kien.petclub.R
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 fun showMessage(context: Context, message: String?) {
-    Toast.makeText(context, message ?: context.resources.getString(R.string.some_error), Toast.LENGTH_SHORT)
+    Toast.makeText(
+        context,
+        message ?: context.resources.getString(R.string.some_error),
+        Toast.LENGTH_SHORT
+    )
         .show()
 }
 
@@ -55,4 +62,12 @@ fun hideLoadingDialog(mProgressDialog: Dialog?, activity: Activity?) {
     if (activity != null && !activity.isFinishing && mProgressDialog != null && mProgressDialog.isShowing) {
         mProgressDialog.dismiss()
     }
+}
+
+
+fun convertMillisToDate(): String {
+    val format = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+    val calender = Calendar.getInstance()
+    calender.timeInMillis = System.currentTimeMillis()
+    return format.format(calender.time)
 }

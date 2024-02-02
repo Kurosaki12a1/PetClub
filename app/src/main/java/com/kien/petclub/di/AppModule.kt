@@ -17,9 +17,6 @@ object AppModule {
     @Provides
     fun provideContext(application: Application): Context = application.applicationContext
 
-/*    @Provides
-    @Singleton
-    fun provideAnimationLoader(context: Context) = AnimationLoader(context)*/
 
 
 }

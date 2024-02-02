@@ -12,7 +12,7 @@
         android:gravity="center"
         android:text="@string/goods"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size24"
+        android:textSize="@dimen/text_size20"
         android:textStyle="bold"
         app:drawableLeftCompat="@mipmap/ic_app"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,10 +20,10 @@
 
     <ImageView
         android:id="@+id/ivSort"
-        android:layout_width="@dimen/dimen30"
-        android:layout_height="@dimen/dimen30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen18"
-        android:src="@mipmap/ic_sort_new"
+        android:src="@drawable/ic_sort_new"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +33,7 @@
         android:layout_width="@dimen/dimen30"
         android:layout_height="@dimen/dimen30"
         android:layout_marginEnd="@dimen/dimen30"
-        android:src="@mipmap/ic_filter_new"
+        android:src="@drawable/ic_filter_new"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toStartOf="@id/ivSort"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
         android:layout_height="@dimen/dimen30"
         android:layout_marginEnd="@dimen/dimen30"
         android:scaleType="fitCenter"
-        android:src="@mipmap/ic_search_new"
+        android:src="@drawable/ic_search_new"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toStartOf="@id/ivFilter"
         app:layout_constraintTop_toTopOf="parent" />

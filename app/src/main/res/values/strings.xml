@@ -20,6 +20,9 @@
     <string name="add_goods">Thêm hàng hóa</string>
     <string name="add_service">Thêm dịch vụ</string>
 
+    <string name="save">Lưu</string>
+    <string name="save_and_continue">Lưu và thêm mới</string>
+
     <!-- Hàng hóa -->
     <string name="goods_info">%1$s hàng hóa - Tồn kho %2$s</string>
 
@@ -38,4 +41,35 @@
     <string name="this_month">Tháng này</string>
     <string name="last_month">Tháng trước</string>
     <string name="time_options">Tùy chọn...</string>
+
+    <!-- Add Goods/ Services -->
+    <string name="goodsId">Mã hàng</string>
+    <string name="barcode">Mã vạch</string>
+    <string name="goodsName">Tên hàng</string>
+    <string name="type">Nhóm hàng</string>
+    <string name="brand">Thương hiệu</string>
+    <string name="selling_price">Giá bán</string>
+    <string name="buying_price">Giá vốn</string>
+    <string name="location">Vị trí</string>
+    <string name="inventory">Tồn kho</string>
+    <string name="weight">Trọng lượng \n (gram)</string>
+    <string name="inventory_minimum">Tồn ít nhất</string>
+    <string name="inventory_maximum">Tồn nhiều nhất</string>
+
+
+    <string name="sell_direct">Bán trực tiếp</string>
+    <string name="point_accumulation">Tích điểm</string>
+
+    <!-- Hint -->
+    <string name="hint_goodsId">Mã hàng tự động</string>
+    <string name="hint_barcode">Mã vạch</string>
+    <string name="hint_goodsName">Tên hàng</string>
+    <string name="hint_type">Chọn Nhóm hàng</string>
+    <string name="hint_brand">Chọn Thương hiệu</string>
+    <string name="hint_location">Chọn vị trí</string>
+    <string name="hint_zero">0</string>
+    <string name="hint_max">999999999</string>
+    <string name="description">Mô tả</string>
+    <string name="note_goods">Mẫu ghi chú (hóa đơn, đặt hàng)</string>
+
 </resources>

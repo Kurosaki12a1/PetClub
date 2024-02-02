@@ -60,7 +60,7 @@
         android:layout_gravity="end"
         android:layout_marginEnd="@dimen/dimen10"
         android:layout_marginBottom="@dimen/dimen10"
-        android:visibility="visible"
+        android:visibility="gone"
         app:backgroundTint="@color/white"
         app:icon="@drawable/ic_add_btn"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation_view"
@@ -122,5 +122,6 @@
         app:layout_constraintBottom_toBottomOf="@id/addGoods"
         app:layout_constraintEnd_toStartOf="@id/actionBtn"
         app:layout_constraintTop_toTopOf="@id/addGoods" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
