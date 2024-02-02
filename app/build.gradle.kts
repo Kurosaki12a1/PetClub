@@ -114,5 +114,10 @@ dependencies {
    // implementation("com.google.firebase:firebase-ml-vision:24.1.0")
     implementation("com.journeyapps:zxing-android-embedded:4.2.0")
 
+    // Lotte
+    implementation("com.airbnb.android:lottie:3.4.0")
+
+
+
 
 }

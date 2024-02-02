@@ -72,4 +72,13 @@
     <string name="description">Mô tả</string>
     <string name="note_goods">Mẫu ghi chú (hóa đơn, đặt hàng)</string>
 
+    <string name="hint_email">Nhập email vào đây…</string>
+    <string name="hint_password">Nhập Mật khẩu…</string>
+
+    <string name="email">Email</string>
+    <string name="password">Mật khẩu</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+
 </resources>
