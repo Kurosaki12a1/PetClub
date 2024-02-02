@@ -4,9 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.kien.petclub.domain.model.entity.Service
 import com.kien.petclub.domain.usecase.firebase_db.AddServiceUseCase
 import com.kien.petclub.presentation.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import javax.inject.Inject
 
+@HiltViewModel
 class AddProductViewModel @Inject constructor(private val useCase: AddServiceUseCase) :
     BaseViewModel() {
     fun submit(

@@ -2,13 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/dimen10"
-    android:paddingEnd="@dimen/dimen10">
+    android:paddingStart="@dimen/dimen5"
+    android:paddingEnd="@dimen/dimen5">
 
     <ImageView
         android:id="@+id/ivAddPhoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dimen100"
+        android:layout_height="@dimen/dimen100"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_add_camera" />
 
 </FrameLayout>

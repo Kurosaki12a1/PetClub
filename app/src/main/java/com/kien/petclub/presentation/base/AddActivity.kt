@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewbinding.ViewBinding
@@ -26,7 +27,6 @@ abstract class AddActivity<VB : ViewBinding> : BaseActivity<VB>() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         const val REQUEST_CODE_ID_SERVICE = 110
         const val REQUEST_CODE_BARCODE_SERVICE = 111
-        private const val REQUEST_CODE = "REQUEST_CODE"
     }
 
     private var imageUri: Uri? = null
@@ -41,8 +41,13 @@ abstract class AddActivity<VB : ViewBinding> : BaseActivity<VB>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        photoAdapter = PhotoAdapter { onImageClick(it) }
         getViewTypes(intent?.getStringExtra(KEY_TYPE) ?: VALUE_GOODS)
+    }
+
+    override fun setUpViews() {
+        super.setUpViews()
+        photoAdapter = PhotoAdapter { onImageClick(it) }
+        photoAdapter.setData(listImages)
     }
 
     open fun onImageClick(position: Int) {
@@ -52,9 +57,7 @@ abstract class AddActivity<VB : ViewBinding> : BaseActivity<VB>() {
     private fun startBarcodeScanner() {
         val integrator = IntentIntegrator(this)
         integrator.setOrientationLocked(false)
-        val intent = integrator.createScanIntent().also {
-            it.putExtra(REQUEST_CODE, requestCode)
-        }
+        val intent = integrator.createScanIntent()
         barcodeLauncher.launch(intent)
     }
 
@@ -118,8 +121,7 @@ abstract class AddActivity<VB : ViewBinding> : BaseActivity<VB>() {
         getResultLauncher { resultCode, resultData ->
             if (resultCode == Activity.RESULT_OK) {
                 val scanResult = IntentIntegrator.parseActivityResult(resultCode, resultData)
-                val code = resultData?.getIntExtra(REQUEST_CODE, 0) ?: 0
-                onBarcodeScannerResult(scanResult.contents, code)
+                onBarcodeScannerResult(scanResult.contents, requestCode)
             }
         }
 

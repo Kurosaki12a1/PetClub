@@ -1,5 +1,6 @@
 package com.kien.petclub.presentation.add_product
 
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,8 @@ class AddProductActivity : AddActivity<ActivityAddProductBinding>() {
 
     override fun setUpViews() {
         super.setUpViews()
+        binding.ivBack.setOnClickListener { finish() }
+
         binding.ivBarCode.setOnClickListener {
             requestCameraPermissionAndStartScanner(REQUEST_CODE_BARCODE_SERVICE)
         }
@@ -28,9 +31,7 @@ class AddProductActivity : AddActivity<ActivityAddProductBinding>() {
             requestCameraPermissionAndStartScanner(REQUEST_CODE_ID_SERVICE)
         }
 
-        binding.save.setOnClickListener {
-            submit()
-        }
+        binding.save.setOnClickListener { submit() }
 
         binding.rvListPhoto.adapter = photoAdapter
         binding.rvListPhoto.layoutManager =
