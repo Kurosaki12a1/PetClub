@@ -40,4 +40,6 @@ object Constants {
     const val KEY_TYPE = "type"
     const val VALUE_GOODS = "goods"
     const val VALUE_SERVICE = "service"
+
+    const val TIMEOUT_BACK_PRESS = 2000L
 }

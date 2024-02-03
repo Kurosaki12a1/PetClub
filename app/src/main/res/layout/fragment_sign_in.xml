@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@mipmap/login_background">
+    android:layout_height="match_parent">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/birdAnimationView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/guideline2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/bird_flying" />
+    <!--
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/birdAnimationView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/guideline2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/bird_flying" />
 
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/windAnimationView"
-        android:layout_width="@dimen/dimen30"
-        android:layout_height="@dimen/dimen30"
-        app:layout_constraintStart_toStartOf="@id/guideline1"
-        app:layout_constraintTop_toTopOf="@id/guideline"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/butterfly" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/windAnimationView"
+            android:layout_width="@dimen/dimen30"
+            android:layout_height="@dimen/dimen30"
+            app:layout_constraintStart_toStartOf="@id/guideline1"
+            app:layout_constraintTop_toTopOf="@id/guideline"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/butterfly" />
+    -->
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.77" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1"
@@ -84,6 +80,7 @@
         android:layout_marginTop="@dimen/dimen5"
         android:background="@drawable/rounded_vani_bg"
         android:drawableEnd="@drawable/ic_inbox"
+        android:focusableInTouchMode="true"
         android:hint="@string/hint_email"
         android:inputType="textEmailAddress"
         android:textColor="@color/black"
@@ -111,6 +108,7 @@
         android:layout_marginTop="@dimen/dimen5"
         android:background="@drawable/rounded_vani_bg"
         android:drawableEnd="@drawable/ic_password"
+        android:focusableInTouchMode="true"
         android:hint="@string/hint_password"
         android:inputType="textPassword"
         android:textColor="@color/black"
@@ -144,8 +142,8 @@
         android:textColor="@color/black"
         android:textSize="@dimen/text_size20"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/ivRegister"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivRegister"
         app:layout_constraintTop_toBottomOf="@id/tvForgotPassword"
         app:layout_constraintWidth_percent="0.35" />
 
@@ -161,8 +159,8 @@
         android:textColor="#5D4037"
         android:textSize="@dimen/text_size20"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ivLogin"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvForgotPassword"
         app:layout_constraintWidth_percent="0.35" />
 

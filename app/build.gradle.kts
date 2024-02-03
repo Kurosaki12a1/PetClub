@@ -6,6 +6,7 @@ plugins {
     id("com.google.gms.google-services")
     //   id("dagger.hilt.android.plugin")
     id("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -74,8 +75,6 @@ dependencies {
     implementation("android.arch.lifecycle:extensions:1.1.1")
 
     // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
 

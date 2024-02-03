@@ -74,11 +74,22 @@
 
     <string name="hint_email">Nhập email vào đây…</string>
     <string name="hint_password">Nhập Mật khẩu…</string>
+    <string name="hint_username">Nhập tên người dùng…</string>
+    <string name="hint_phone_number">Nhập số điện thoại…</string>
+    <string name="recover_password">Khôi phục mật khẩu</string>
 
     <string name="email">Email</string>
     <string name="password">Mật khẩu</string>
+    <string name="re_password">Nhập lại mật khẩu</string>
     <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="forgot_password1">Quên mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="register">Đăng ký</string>
+    <string name="user_name">Tên người dùng</string>
+    <string name="phone_number">Số điện thoại</string>
+
+    <string name="confirm">Xác nhận</string>
+
+    <string name="press_again_to_exit">Nhấn lần nữa để thoát!</string>
 
 </resources>

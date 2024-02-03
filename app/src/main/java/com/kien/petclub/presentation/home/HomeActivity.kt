@@ -3,15 +3,18 @@ package com.kien.petclub.presentation.home
 import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.KEY_TYPE
+import com.kien.petclub.constants.Constants.TIMEOUT_BACK_PRESS
 import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
 import com.kien.petclub.extensions.openActivity
 import com.kien.petclub.extensions.setupWithNavController
+import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.add_product.AddProductActivity
 import com.kien.petclub.presentation.base.BaseActivity
 import com.kien.petclub.utils.AnimationLoader
@@ -73,6 +76,19 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
                 shrinkFab()
             }
         }.launchIn(lifecycleScope)
+
+        var backPressedTime = 0L
+
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedTime + TIMEOUT_BACK_PRESS > System.currentTimeMillis()) {
+                    finish()
+                } else {
+                    showToast(getString(R.string.press_again_to_exit))
+                }
+                backPressedTime = System.currentTimeMillis()
+            }
+        })
     }
 
     private fun setUpFloatingActionButton() {
