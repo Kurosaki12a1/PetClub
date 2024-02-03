@@ -5,6 +5,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.kien.petclub.constants.Constants
 import com.kien.petclub.domain.model.entity.Goods
 import com.kien.petclub.domain.model.entity.Service
+import com.kien.petclub.domain.model.entity.User
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
     private val goodsDatabase = db.reference.child(Constants.GOODS_DB)
     private val serviceDatabase = db.reference.child(Constants.SERVICE_DB)
     private val notificationDatabase = db.reference.child(Constants.NOTIFICATION_DB)
+    private val userDatabase = db.reference.child(Constants.USER_DB)
 
     private val userId = auth.currentUser?.uid ?: ""
     override fun getGoodsDatabase(): Flow<ArrayList<Goods>?> = flow {
@@ -62,6 +64,47 @@ class FirebaseDBRepositoryImpl @Inject constructor(
             emit(null)
         }
     }
+
+    override fun addUserDatabase(
+        userId: String,
+        name: String,
+        phoneNumber: String
+    ): Flow<Resource<Unit>> = flow {
+        try {
+            val user = User(userId, name, phoneNumber)
+            userDatabase.child(userId).setValue(user).await()
+            emit(Resource.success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.failure(e))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun updateUserDatabase(userId: String, user: User): Flow<Resource<Unit>> = flow {
+        try {
+            userDatabase.child(userId).setValue(user).await()
+            emit(Resource.success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.failure(e))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun getUserDatabase(userId: String): Flow<User?> = flow {
+        val snapshot = userDatabase.child(userId).get().await()
+        try {
+            emit(snapshot.getValue(User::class.java))
+        } catch (e: Exception) {
+            emit(null)
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun deleteUserDatabase(userId: String): Flow<Resource<Unit>> = flow {
+        try {
+            userDatabase.child(userId).removeValue().await()
+            emit(Resource.success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.failure(e))
+        }
+    }.flowOn(Dispatchers.IO)
 
     override fun addGoodsDatabase(goods: Goods): Flow<Resource<Unit>> = flow {
         try {

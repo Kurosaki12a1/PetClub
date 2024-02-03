@@ -2,6 +2,7 @@ package com.kien.petclub.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.kien.petclub.domain.model.entity.User
 import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.util.AuthUtils
 import com.kien.petclub.domain.util.Resource
@@ -42,17 +43,20 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun register(email: String, password: String): Flow<Resource<FirebaseUser?>> = flow {
-        if (!AuthUtils.isValidEmail(email) || !AuthUtils.isValidPassword(password)) {
-            emit(Resource.failure(IllegalArgumentException("Email or password format is invalid.")))
-            return@flow
+    override fun recoverPassword(email: String): Flow<Resource<Unit>> = flow {
+        try {
+            auth.sendPasswordResetEmail(email).await()
+            emit(Resource.success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.failure(e))
         }
+    }.flowOn(Dispatchers.IO)
 
+    override fun signUp(email: String, password: String): Flow<Resource<FirebaseUser?>> = flow {
         try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
-            result.user?.sendEmailVerification()?.await()
             emit(Resource.success(result.user))
-        } catch (e: Exception) {
+        } catch (e : Exception) {
             emit(Resource.failure(e))
         }
     }.flowOn(Dispatchers.IO)

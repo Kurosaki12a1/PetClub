@@ -2,10 +2,20 @@ package com.kien.petclub.domain.repository
 
 import com.kien.petclub.domain.model.entity.Goods
 import com.kien.petclub.domain.model.entity.Service
+import com.kien.petclub.domain.model.entity.User
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseDBRepository {
+
+    fun addUserDatabase(userId: String, name: String, phoneNumber: String): Flow<Resource<Unit>>
+
+    fun updateUserDatabase(userId: String, user: User): Flow<Resource<Unit>>
+
+    fun getUserDatabase(userId: String): Flow<User?>
+
+    fun deleteUserDatabase(userId: String): Flow<Resource<Unit>>
+
     fun addGoodsDatabase(goods: Goods): Flow<Resource<Unit>>
 
     fun addServiceDatabase(service: Service): Flow<Resource<Unit>>
@@ -20,7 +30,7 @@ interface FirebaseDBRepository {
 
     fun getGoodsById(id: String): Flow<Goods?>
 
-    fun getServiceById(id : String): Flow<Service?>
+    fun getServiceById(id: String): Flow<Service?>
 
     fun deleteGoodsDatabase(goodsId: String): Flow<Resource<Unit>>
 

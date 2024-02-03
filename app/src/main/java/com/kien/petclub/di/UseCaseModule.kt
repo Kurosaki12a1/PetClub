@@ -1,14 +1,22 @@
 package com.kien.petclub.di
 
+import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
+import com.kien.petclub.domain.usecase.auth.SignInUseCase
+import com.kien.petclub.domain.usecase.auth.SignOutUseCase
+import com.kien.petclub.domain.usecase.auth.SignUpUseCase
 import com.kien.petclub.domain.usecase.firebase_db.AddGoodsUseCase
 import com.kien.petclub.domain.usecase.firebase_db.AddServiceUseCase
+import com.kien.petclub.domain.usecase.firebase_db.AddUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.DeleteGoodsUseCase
 import com.kien.petclub.domain.usecase.firebase_db.DeleteServiceUseCase
+import com.kien.petclub.domain.usecase.firebase_db.DeleteUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.GetGoodsUseCase
 import com.kien.petclub.domain.usecase.firebase_db.GetServiceUseCase
+import com.kien.petclub.domain.usecase.firebase_db.GetUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.UpdateGoodsUseCase
 import com.kien.petclub.domain.usecase.firebase_db.UpdateServiceUseCase
+import com.kien.petclub.domain.usecase.firebase_db.UpdateUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,6 +74,49 @@ class UseCaseModule {
     @Singleton
     fun provideDeleteServiceUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteServiceUseCase {
         return DeleteServiceUseCase(firebaseDBRepository)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideAddUserUseCase(firebaseDBRepository: FirebaseDBRepository): AddUserUseCase {
+        return AddUserUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteUserUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteUserUseCase {
+        return DeleteUserUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserUseCase(firebaseDBRepository: FirebaseDBRepository): GetUserUseCase {
+        return GetUserUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserUseCase(firebaseDBRepository: FirebaseDBRepository): UpdateUserUseCase {
+        return UpdateUserUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignInUseCase(authRepository: AuthRepository): SignInUseCase {
+        return SignInUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignOutUseCase(authRepository: AuthRepository): SignOutUseCase {
+        return SignOutUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignUpUseCase(authRepository: AuthRepository): SignUpUseCase {
+        return SignUpUseCase(authRepository)
     }
 
 }

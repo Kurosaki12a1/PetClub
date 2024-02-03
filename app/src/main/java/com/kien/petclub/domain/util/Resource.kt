@@ -11,11 +11,11 @@ sealed class Resource<out T> {
         ): Resource<Nothing> = Failure(error, errorMessage)
     }
 
-    class Success<out T>(val value: T) : Resource<T>()
+    data class Success<out T>(val value: T) : Resource<T>()
 
-    class Failure(
-        error: Throwable,
-        errorMessage : String? = null,
+    data class Failure(
+        val error: Throwable,
+        val errorMessage : String? = null,
     ) : Resource<Nothing>()
 }
 

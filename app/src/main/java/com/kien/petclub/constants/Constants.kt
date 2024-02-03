@@ -36,6 +36,9 @@ object Constants {
     const val NOTIFICATION_TIME = "THOI_GIAN"
     const val NOTIFICATIONS_ICON = "HINH_ANH"
 
+    // User
+    const val USER_DB = "DU_LIEU_NGUOI_DUNG"
+
     // Type of products
     const val KEY_TYPE = "type"
     const val VALUE_GOODS = "goods"

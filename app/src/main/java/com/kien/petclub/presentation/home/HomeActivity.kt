@@ -12,6 +12,8 @@ import com.kien.petclub.constants.Constants.TIMEOUT_BACK_PRESS
 import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
+import com.kien.petclub.extensions.getVisibleRect
+import com.kien.petclub.extensions.isInVisibleRect
 import com.kien.petclub.extensions.openActivity
 import com.kien.petclub.extensions.setupWithNavController
 import com.kien.petclub.extensions.showToast
@@ -154,26 +156,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
-            val addBtnService = Rect().also {
-                binding.addService.getGlobalVisibleRect(it)
-            }
-            val addBtnGoods = Rect().also {
-                binding.addGoods.getGlobalVisibleRect(it)
-            }
-            val addTvService = Rect().also {
-                binding.tvAddService.getGlobalVisibleRect(it)
-            }
-            val addTvGoods = Rect().also {
-                binding.tvAddGoods.getGlobalVisibleRect(it)
-            }
-            if (addBtnService.contains(ev.rawX.toInt(), ev.rawY.toInt()) ||
-                addBtnGoods.contains(ev.rawX.toInt(), ev.rawY.toInt()) ||
-                addTvService.contains(ev.rawX.toInt(), ev.rawY.toInt()) ||
-                addTvGoods.contains(ev.rawX.toInt(), ev.rawY.toInt())
+            if (binding.addService.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt()) ||
+                binding.addGoods.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt()) ||
+                binding.tvAddService.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt()) ||
+                binding.tvAddGoods.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt())
             ) {
                 return super.dispatchTouchEvent(ev)
             }
-            viewModel.shrinkFab(ev, Rect().also { binding.actionBtn.getGlobalVisibleRect(it) })
+
+            viewModel.shrinkFab(ev, binding.actionBtn.getVisibleRect())
         }
         return super.dispatchTouchEvent(ev)
     }
