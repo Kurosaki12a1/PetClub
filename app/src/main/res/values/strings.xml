@@ -6,7 +6,7 @@
     <string name="connection_error">Connection Error</string>
     <string name="no_internet">No internet connection please try again later</string>
     <string name="retry">Retry</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Hủy</string>
     <string name="some_error">Some error occurred, try again later</string>
     <string name="list_no_result">Sorry, There are no results here!</string>
 
@@ -19,6 +19,15 @@
 
     <string name="add_goods">Thêm hàng hóa</string>
     <string name="add_service">Thêm dịch vụ</string>
+    <string name="choose_brand">Chọn thương hiệu</string>
+    <string name="choose_type">Chọn nhóm hàng</string>
+    <string name="choose_location">Chọn vị trí</string>
+    <string name="name_brand">Tên thương hiệu</string>
+    <string name="name_type">Tên nhóm hàng</string>
+    <string name="name_location">Tên vị trí</string>
+    <string name="add_brand">Thêm thương hiệu</string>
+    <string name="add_type">Thêm nhóm hàng</string>
+    <string name="add_location">Thêm vị trí</string>
 
     <string name="save">Lưu</string>
     <string name="save_and_continue">Lưu và thêm mới</string>
@@ -55,7 +64,8 @@
     <string name="weight">Trọng lượng \n (gram)</string>
     <string name="inventory_minimum">Tồn ít nhất</string>
     <string name="inventory_maximum">Tồn nhiều nhất</string>
-
+    <string name="description">Mô tả</string>
+    <string name="note_goods">Mẫu ghi chú (hóa đơn, đặt hàng)</string>
 
     <string name="sell_direct">Bán trực tiếp</string>
     <string name="point_accumulation">Tích điểm</string>
@@ -69,14 +79,14 @@
     <string name="hint_location">Chọn vị trí</string>
     <string name="hint_zero">0</string>
     <string name="hint_max">999999999</string>
-    <string name="description">Mô tả</string>
-    <string name="note_goods">Mẫu ghi chú (hóa đơn, đặt hàng)</string>
 
     <string name="hint_email">Nhập email vào đây…</string>
     <string name="hint_password">Nhập Mật khẩu…</string>
     <string name="hint_username">Nhập tên người dùng…</string>
     <string name="hint_phone_number">Nhập số điện thoại…</string>
     <string name="recover_password">Khôi phục mật khẩu</string>
+
+    <!-- Auth -->
 
     <string name="email">Email</string>
     <string name="password">Mật khẩu</string>
@@ -88,8 +98,13 @@
     <string name="user_name">Tên người dùng</string>
     <string name="phone_number">Số điện thoại</string>
 
-    <string name="confirm">Xác nhận</string>
+    <!-- Pop up -->
+    <string name="add">Thêm</string>
+    <string name="delete">Xóa</string>
+
 
     <string name="press_again_to_exit">Nhấn lần nữa để thoát!</string>
+    <string name="confirm">Xác nhận</string>
+    <!-- Error -->
 
 </resources>

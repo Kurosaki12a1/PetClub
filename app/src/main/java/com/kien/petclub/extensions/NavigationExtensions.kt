@@ -2,6 +2,7 @@ package com.kien.petclub.extensions
 
 import android.content.Intent
 import android.util.SparseArray
+import android.view.MenuItem
 import androidx.core.util.forEach
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
@@ -20,7 +21,8 @@ fun BottomNavigationView.setupWithNavController(
     navGraphIds: List<Int>,
     fragmentManager: FragmentManager,
     containerId: Int,
-    intent: Intent
+    intent: Intent,
+    onItemSelectedListener: (MenuItem) -> Unit
 ): LiveData<NavController> {
 
     // Map of tags
@@ -74,6 +76,7 @@ fun BottomNavigationView.setupWithNavController(
             false
         } else {
             val newlySelectedItemTag = graphIdToTagMap[item.itemId]
+            onItemSelectedListener(item)
             if (selectedItemTag != newlySelectedItemTag) {
                 // Pop everything above the first fragment (the "fixed start destination")
                 fragmentManager.popBackStack(
@@ -92,7 +95,7 @@ fun BottomNavigationView.setupWithNavController(
                             R.anim.nav_default_enter_anim,
                             R.anim.nav_default_exit_anim,
                             R.anim.nav_default_pop_enter_anim,
-                            R.anim.nav_default_pop_exit_anim,
+                            R.anim.nav_default_pop_exit_anim
                         )
                         .attach(selectedFragment)
                         .setPrimaryNavigationFragment(selectedFragment)
@@ -173,10 +176,10 @@ private fun BottomNavigationView.setupItemReselected(
     setOnItemReselectedListener { item ->
         val newlySelectedItemTag = graphIdToTagMap[item.itemId]
         val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
-                as NavHostFragment?
-        val navController = selectedFragment?.navController
+                as NavHostFragment
+        val navController = selectedFragment.navController
         // Pop the back stack to the start destination of the current navController graph
-        navController?.popBackStack(
+        navController.popBackStack(
             navController.graph.startDestinationId, false
         )
     }
@@ -233,5 +236,6 @@ private fun FragmentManager.isOnBackStack(backStackName: String): Boolean {
     }
     return false
 }
+
 
 private fun getFragmentTag(index: Int) = "bottomNavigation#$index"

@@ -11,7 +11,6 @@
         android:id="@+id/fragment_host_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:paddingStart="@dimen/dimen5"
         android:paddingEnd="@dimen/dimen5"
         app:defaultNavHost="true"

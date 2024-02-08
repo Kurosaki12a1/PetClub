@@ -1,6 +1,5 @@
 package com.kien.petclub.presentation.home
 
-import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -13,6 +12,7 @@ import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
 import com.kien.petclub.extensions.getVisibleRect
+import com.kien.petclub.extensions.initTransitionOpen
 import com.kien.petclub.extensions.isInVisibleRect
 import com.kien.petclub.extensions.openActivity
 import com.kien.petclub.extensions.setupWithNavController
@@ -51,15 +51,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             supportFragmentManager,
             R.id.fragment_host_container,
             intent
-        )
-
-        binding.bottomNavigationView.setOnItemSelectedListener {
+        ) {
             if (it.itemId == R.id.nav_goods) {
                 binding.actionBtn.visibility = View.VISIBLE
             } else {
                 binding.actionBtn.visibility = View.GONE
             }
-            true
         }
 
         navController = controller
@@ -81,7 +78,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
         var backPressedTime = 0L
 
-        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (backPressedTime + TIMEOUT_BACK_PRESS > System.currentTimeMillis()) {
                     finish()
@@ -93,37 +90,20 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         })
     }
 
+    private fun openProductActivity(view: View, vararg extras: Pair<String, Any?>) {
+        view.setOnClickListener {
+            openActivity(AddProductActivity::class.java, *extras)
+            initTransitionOpen()
+        }
+    }
+
     private fun setUpFloatingActionButton() {
         binding.actionBtn.setIconResource(R.drawable.ic_add_btn)
         binding.actionBtn.setOnClickListener { viewModel.updateFabState() }
-
-        binding.addService.setOnClickListener {
-            openActivity(
-                AddProductActivity::class.java,
-                KEY_TYPE to VALUE_SERVICE
-            )
-        }
-
-        binding.tvAddService.setOnClickListener {
-            openActivity(
-                AddProductActivity::class.java,
-                KEY_TYPE to VALUE_SERVICE
-            )
-        }
-
-        binding.addGoods.setOnClickListener {
-            openActivity(
-                AddProductActivity::class.java,
-                KEY_TYPE to VALUE_GOODS
-            )
-        }
-
-        binding.tvAddGoods.setOnClickListener {
-            openActivity(
-                AddProductActivity::class.java,
-                KEY_TYPE to VALUE_GOODS
-            )
-        }
+        openProductActivity(binding.addService, KEY_TYPE to VALUE_SERVICE)
+        openProductActivity(binding.tvAddService, KEY_TYPE to VALUE_SERVICE)
+        openProductActivity(binding.addGoods, KEY_TYPE to VALUE_GOODS)
+        openProductActivity(binding.tvAddGoods, KEY_TYPE to VALUE_GOODS)
     }
 
     private fun shrinkFab() {
@@ -155,7 +135,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if (ev?.action == MotionEvent.ACTION_DOWN) {
+        if (ev?.action == MotionEvent.ACTION_DOWN && binding.actionBtn.visibility == View.VISIBLE) {
             if (binding.addService.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt()) ||
                 binding.addGoods.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt()) ||
                 binding.tvAddService.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt()) ||

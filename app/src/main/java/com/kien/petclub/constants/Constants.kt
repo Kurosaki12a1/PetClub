@@ -36,13 +36,22 @@ object Constants {
     const val NOTIFICATION_TIME = "THOI_GIAN"
     const val NOTIFICATIONS_ICON = "HINH_ANH"
 
+    const val TYPE_DB = "ALL_TYPE_PRODUCT"
+    const val BRAND_DB = "ALL_BRAND_PRODUCT"
+    const val LOCATION_DB = "ALL_LOCATION_PRODUCT"
+
     // User
     const val USER_DB = "DU_LIEU_NGUOI_DUNG"
 
     // Type of products
-    const val KEY_TYPE = "type"
+    const val KEY_TYPE = "key_type"
     const val VALUE_GOODS = "goods"
     const val VALUE_SERVICE = "service"
+    const val VALUE_BRAND = "brand"
+    const val VALUE_TYPE = "type"
+    const val VALUE_LOCATION = "location"
+    const val DATA = "data"
 
     const val TIMEOUT_BACK_PRESS = 2000L
+    const val EMPTY_STRING = ""
 }

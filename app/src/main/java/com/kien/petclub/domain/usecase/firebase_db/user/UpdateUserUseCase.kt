@@ -1,4 +1,4 @@
-package com.kien.petclub.domain.usecase.firebase_db
+package com.kien.petclub.domain.usecase.firebase_db.user
 
 import com.kien.petclub.domain.model.entity.User
 import com.kien.petclub.domain.repository.FirebaseDBRepository

@@ -1,22 +1,27 @@
 package com.kien.petclub.di
 
+import com.google.firebase.storage.FirebaseStorage
 import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
+import com.kien.petclub.domain.repository.FirebaseStorageRepository
 import com.kien.petclub.domain.usecase.auth.SignInUseCase
 import com.kien.petclub.domain.usecase.auth.SignOutUseCase
 import com.kien.petclub.domain.usecase.auth.SignUpUseCase
-import com.kien.petclub.domain.usecase.firebase_db.AddGoodsUseCase
-import com.kien.petclub.domain.usecase.firebase_db.AddServiceUseCase
-import com.kien.petclub.domain.usecase.firebase_db.AddUserUseCase
-import com.kien.petclub.domain.usecase.firebase_db.DeleteGoodsUseCase
-import com.kien.petclub.domain.usecase.firebase_db.DeleteServiceUseCase
-import com.kien.petclub.domain.usecase.firebase_db.DeleteUserUseCase
-import com.kien.petclub.domain.usecase.firebase_db.GetGoodsUseCase
-import com.kien.petclub.domain.usecase.firebase_db.GetServiceUseCase
-import com.kien.petclub.domain.usecase.firebase_db.GetUserUseCase
-import com.kien.petclub.domain.usecase.firebase_db.UpdateGoodsUseCase
-import com.kien.petclub.domain.usecase.firebase_db.UpdateServiceUseCase
-import com.kien.petclub.domain.usecase.firebase_db.UpdateUserUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.AddInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.AddProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.CheckExistenceProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.DeleteProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.GetGoodsUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.GetInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.GetProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.GetServiceUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.SearchInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.UpdateProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.user.AddUserUseCase
+import com.kien.petclub.domain.usecase.firebase_db.user.DeleteUserUseCase
+import com.kien.petclub.domain.usecase.firebase_db.user.GetUserUseCase
+import com.kien.petclub.domain.usecase.firebase_db.user.UpdateUserUseCase
+import com.kien.petclub.domain.usecase.storage.UploadImageUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,32 +35,26 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideAddGoodsUseCase(firebaseDBRepository: FirebaseDBRepository): AddGoodsUseCase {
-        return AddGoodsUseCase(firebaseDBRepository)
-    }
-
-    @Provides
-    @Singleton
     fun provideGetGoodsUseCase(firebaseDBRepository: FirebaseDBRepository): GetGoodsUseCase {
         return GetGoodsUseCase(firebaseDBRepository)
     }
 
     @Provides
     @Singleton
-    fun provideUpdateGoodsUseCase(firebaseDBRepository: FirebaseDBRepository): UpdateGoodsUseCase {
-        return UpdateGoodsUseCase(firebaseDBRepository)
+    fun provideUpdateProductUseCase(firebaseDBRepository: FirebaseDBRepository): UpdateProductUseCase {
+        return UpdateProductUseCase(firebaseDBRepository)
     }
 
     @Provides
     @Singleton
-    fun provideDeleteGoodsUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteGoodsUseCase {
-        return DeleteGoodsUseCase(firebaseDBRepository)
+    fun provideDeleteProductUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteProductUseCase {
+        return DeleteProductUseCase(firebaseDBRepository)
     }
 
     @Provides
     @Singleton
-    fun provideAddServiceUseCase(firebaseDBRepository: FirebaseDBRepository): AddServiceUseCase {
-        return AddServiceUseCase(firebaseDBRepository)
+    fun provideAddProductUseCase(firebaseDBRepository: FirebaseDBRepository): AddProductUseCase {
+        return AddProductUseCase(firebaseDBRepository)
     }
 
     @Provides
@@ -66,15 +65,13 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideUpdateServiceUseCase(firebaseDBRepository: FirebaseDBRepository): UpdateServiceUseCase {
-        return UpdateServiceUseCase(firebaseDBRepository)
+    fun provideGetProductUseCase(
+        goodsUseCase: GetGoodsUseCase,
+        serviceUseCase: GetServiceUseCase
+    ): GetProductUseCase {
+        return GetProductUseCase(goodsUseCase, serviceUseCase)
     }
 
-    @Provides
-    @Singleton
-    fun provideDeleteServiceUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteServiceUseCase {
-        return DeleteServiceUseCase(firebaseDBRepository)
-    }
 
 
     @Provides
@@ -117,6 +114,36 @@ class UseCaseModule {
     @Singleton
     fun provideSignUpUseCase(authRepository: AuthRepository): SignUpUseCase {
         return SignUpUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCheckExistUserUseCase(firebaseDBRepository: FirebaseDBRepository): CheckExistenceProductUseCase {
+        return CheckExistenceProductUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUploadImageUseCase(storage : FirebaseStorageRepository) : UploadImageUseCase {
+        return UploadImageUseCase(storage)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): AddInfoProductUseCase {
+        return AddInfoProductUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSearchInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): SearchInfoProductUseCase {
+        return SearchInfoProductUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): GetInfoProductUseCase {
+        return GetInfoProductUseCase(firebaseDBRepository)
     }
 
 }

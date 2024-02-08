@@ -20,4 +20,7 @@
     <color name="red">#e20404</color>
     <color name="backgroundGray">#FAFAFA</color>
     <color name="backgroundDarkGray">#E1E1E1</color>
+
+    <color name="blue_brighter">#D1E8FF</color>
+    <color name="vani">#FFF8E1</color>
 </resources>

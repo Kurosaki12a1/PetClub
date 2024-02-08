@@ -10,9 +10,9 @@ data class Service(
     @SerializedName("TEN_DICH_VU")
     val name: String,
     @SerializedName("NHOM_DICH_VU")
-    val type: String,
+    val type: String? = null,
     @SerializedName("THUONG_HIEU")
-    val brands: String,
+    val brands: String? = null,
     @SerializedName("GIA_BAN") // Giá bán
     val sellingPrice: String,
     @SerializedName("GIA_VON") // Giá vốn

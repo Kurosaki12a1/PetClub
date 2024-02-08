@@ -209,11 +209,12 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
-                <Spinner
+                <EditText
                     android:id="@+id/typeEdit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
+                    android:drawableEnd="@drawable/ic_right_arrow"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
@@ -240,11 +241,12 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
-                <Spinner
+                <EditText
                     android:id="@+id/brandEdit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
+                    android:drawableEnd="@drawable/ic_right_arrow"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
@@ -400,12 +402,13 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
-                <Spinner
+                <EditText
                     android:id="@+id/locationEdit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
                     android:textColor="@color/black"
+                    android:drawableEnd="@drawable/ic_right_arrow"
                     android:textSize="@dimen/text_size16" />
 
             </LinearLayout>

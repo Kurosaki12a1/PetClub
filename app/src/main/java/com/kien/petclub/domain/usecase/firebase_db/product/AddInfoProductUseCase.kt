@@ -1,0 +1,24 @@
+package com.kien.petclub.domain.usecase.firebase_db.product
+
+import com.kien.petclub.constants.Constants.VALUE_BRAND
+import com.kien.petclub.constants.Constants.VALUE_TYPE
+import com.kien.petclub.domain.model.entity.InfoProduct
+import com.kien.petclub.domain.repository.FirebaseDBRepository
+import com.kien.petclub.domain.util.Resource
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class AddInfoProductUseCase @Inject constructor(val repo: FirebaseDBRepository) {
+    operator fun invoke(type: String, name: String): Flow<Resource<Unit>> {
+        return when (type) {
+            VALUE_BRAND -> repo.addBrandProduct(name)
+            VALUE_TYPE -> repo.addTypeProduct(InfoProduct(id = "", name = name))
+            else -> repo.addLocationProduct(name)
+        }
+    }
+
+    // This for add child of type product
+   fun addTypeChildProduct(parentId: String, name: String): Flow<Resource<Unit>> {
+        return repo.addTypeProduct(InfoProduct(id = "", name = name, parentId = parentId))
+    }
+}

@@ -3,11 +3,13 @@ package com.kien.petclub.extensions
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.kien.petclub.R
 
 fun <A : Activity> Activity.openActivityAndClearStack(activity: Class<A>) {
     Intent(this, activity).apply {
@@ -65,5 +67,29 @@ fun AppCompatActivity.getResultLauncher(
             onResult(result.resultCode, result.data)
         }
     return launcher
+}
+
+fun Activity.initTransitionOpen() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        overrideActivityTransition(
+            Activity.OVERRIDE_TRANSITION_OPEN,
+            R.anim.anim_slide_in_right,
+            R.anim.anim_slide_out_left
+        )
+    } else {
+        overridePendingTransition(R.anim.anim_slide_in_right, R.anim.anim_slide_out_left)
+    }
+}
+
+fun Activity.initTransitionClose() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        overrideActivityTransition(
+            Activity.OVERRIDE_TRANSITION_CLOSE,
+            R.anim.anim_slide_in_left,
+            R.anim.anim_slide_out_right
+        )
+    } else {
+        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
+    }
 }
 

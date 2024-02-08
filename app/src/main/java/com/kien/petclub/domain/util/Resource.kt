@@ -17,6 +17,11 @@ sealed class Resource<out T> {
         val error: Throwable,
         val errorMessage : String? = null,
     ) : Resource<Nothing>()
+
+    object Loading : Resource<Nothing>()
+
+    object Default : Resource<Nothing>() 
+
 }
 
 enum class FailureStatus {

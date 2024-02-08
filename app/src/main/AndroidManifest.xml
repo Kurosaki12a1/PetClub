@@ -44,6 +44,8 @@
         <activity android:name=".presentation.home.HomeActivity" />
         <activity android:name=".presentation.add_product.AddProductActivity"
             android:launchMode="singleTask"/>
+        <activity android:name=".presentation.add_info_product.AddInfoProductActivity" />
+
     </application>
 
 </manifest>

@@ -51,7 +51,7 @@ class SignUpUseCase @Inject constructor(private val repo: AuthRepository) {
         }
 
         if (phone.isEmpty()) {
-            return flow {(Resource.Failure(IllegalArgumentException("Phone is empty")))}
+            return flow { (Resource.Failure(IllegalArgumentException("Phone is empty"))) }
         }
 
         return repo.signUp(email, password)

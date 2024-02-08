@@ -5,7 +5,8 @@ import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface FirebaseStorageRepository {
-    fun uploadImage(uri: Uri, nameFile : String) : Flow<Resource<Uri>>
+    fun uploadImage(uri: Uri, nameFile : String) : Flow<Resource<String>>
+    fun uploadListImage(listImages: List<Uri>) : Flow<Resource<List<String>>>
     fun downloadImage(fileRef: String) : Flow<Resource<Uri>>
     fun deleteImage(fileRef: String) : Flow<Resource<Unit>>
 }

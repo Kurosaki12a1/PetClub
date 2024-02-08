@@ -10,9 +10,9 @@ data class Goods(
     @SerializedName("TEN_HANG_HOA")
     val name: String,
     @SerializedName("NHOM_HANG_HOA")
-    val type: String,
+    val type: String? = null,
     @SerializedName("THUONG_HIEU")
-    val brands: String,
+    val brands: String? = null,
     @SerializedName("GIA_BAN") // Giá bán
     val sellingPrice: String,
     @SerializedName("GIA_VON") // Giá vốn
@@ -22,7 +22,7 @@ data class Goods(
     @SerializedName("TRONG_LUONG")
     val weight: String,
     @SerializedName("VI_TRI")
-    val location: String,
+    val location: String? = null,
     @SerializedName("MO_TA")
     val description: String,
     @SerializedName("GHI_CHU")

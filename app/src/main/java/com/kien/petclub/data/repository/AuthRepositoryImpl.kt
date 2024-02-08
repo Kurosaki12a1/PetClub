@@ -16,18 +16,14 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : AuthRepository {
     override fun signIn(email: String, password: String): Flow<Resource<FirebaseUser?>> =
         flow<Resource<FirebaseUser?>> {
-            if (!AuthUtils.isValidEmail(email) || !AuthUtils.isValidPassword(password)) {
-                emit(Resource.failure(IllegalArgumentException("Email or password format is invalid.")))
-                return@flow
-            }
-
+            emit(Resource.Loading)
             try {
                 val result = auth.signInWithEmailAndPassword(email, password).await()
                 val user = result.user
-                if (user != null && user.isEmailVerified) {
+                if (user != null) {
                     emit(Resource.success(user))
                 } else {
-                    emit(Resource.failure(IllegalArgumentException("Email is not verified.")))
+                    emit(Resource.failure(Exception("User is not exist")))
                 }
             } catch (e: Exception) {
                 emit(Resource.failure(e))
@@ -44,6 +40,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
     }.flowOn(Dispatchers.IO)
 
     override fun recoverPassword(email: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading)
         try {
             auth.sendPasswordResetEmail(email).await()
             emit(Resource.success(Unit))
@@ -53,6 +50,7 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
     }.flowOn(Dispatchers.IO)
 
     override fun signUp(email: String, password: String): Flow<Resource<FirebaseUser?>> = flow {
+        emit(Resource.Loading)
         try {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             emit(Resource.success(result.user))
