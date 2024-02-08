@@ -19,6 +19,7 @@ import com.kien.petclub.databinding.ActivityAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.initTransitionClose
+import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -35,6 +36,8 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
     private lateinit var popUp: AddInfoProductPopup
 
     private val viewModel: AddInfoProductViewModel by viewModels()
+
+    private var parentTypeId = EMPTY_STRING
 
     private var typeAddInfo = EMPTY_STRING
 
@@ -99,6 +102,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
                     // After added, we continue update recycler view
                     viewModel.getInfo(typeAddInfo)
                 }
+                is Resource.Failure -> {showToast("Add: ${it.errorMessage.toString()}")}
 
                 else -> {}
             }
@@ -109,6 +113,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
                 is Resource.Success -> {
                     adapter.setData(it.value)
                 }
+                is Resource.Failure -> {showToast("Get: ${it.errorMessage.toString()}")}
 
                 else -> {}
             }
@@ -120,13 +125,26 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
         lifecycleScope.launch {
             popUpViewModel.dataPopup.collect {
                 if (it.isNotBlank() && it.isNotEmpty()) {
-                    viewModel.addInfo(typeAddInfo, it)
+                    if (parentTypeId != EMPTY_STRING && typeAddInfo == VALUE_TYPE) {
+                        viewModel.updateTypeProduct(parentTypeId, it)
+                        parentTypeId = EMPTY_STRING
+                    } else {
+                        viewModel.addInfo(typeAddInfo, it)
+                    }
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.searchResponse.collectLatest { }
+            viewModel.searchResponse.collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        adapter.setData(it.value)
+                    }
+
+                    else -> {}
+                }
+            }
         }
     }
 
@@ -136,6 +154,10 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
 
 
     override fun onAddInfoProduct(data: InfoProduct) {
+        // If this is child of type, we need pass parent id
+        if (typeAddInfo == VALUE_TYPE && data.parentId == null) {
+            parentTypeId = data.id
+        }
         showAddPopUp()
     }
 

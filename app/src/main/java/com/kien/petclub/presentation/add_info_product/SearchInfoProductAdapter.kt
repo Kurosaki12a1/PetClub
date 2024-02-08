@@ -10,6 +10,7 @@ import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ItemAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
+import com.kien.petclub.utils.showMessage
 
 class SearchInfoProductAdapter(
     private val typeInfo : String,
@@ -46,11 +47,13 @@ class SearchInfoProductAdapter(
                 SearchInfoProductAdapter(typeInfo, listener).also { it.setData(data.child!!) }
         }
 
-        holder.parentView.setOnLongClickListener {
+        holder.itemView.setOnLongClickListener {
+            showMessage(it.context, "Long click triggered")
             showPopup(it, data)
             true
         }
-        holder.tvInfo.setOnClickListener {
+
+        holder.itemView.setOnClickListener {
             listener?.onClickListener(data)
         }
 
@@ -60,7 +63,8 @@ class SearchInfoProductAdapter(
         val popUp = PopupMenu(v.context, v)
         val inflater = popUp.menuInflater
         inflater.inflate(R.menu.item_popup_menu, popUp.menu)
-        popUp.menu.findItem(R.id.action_add).isVisible = typeInfo != VALUE_TYPE
+        popUp.menu.findItem(R.id.action_add).isVisible =
+            data.child == null && typeInfo == VALUE_TYPE && data.parentId == null
         popUp.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_add -> {
@@ -87,7 +91,6 @@ class SearchInfoProductAdapter(
         RecyclerView.ViewHolder(binding.root) {
         val expand = binding.ivExpand
         val rvChild = binding.rvChild
-        val parentView = binding.itemParent
         val tvInfo = binding.tvInfo
     }
 

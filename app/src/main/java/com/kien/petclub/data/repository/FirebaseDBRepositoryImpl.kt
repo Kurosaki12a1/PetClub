@@ -7,6 +7,7 @@ import com.kien.petclub.domain.model.entity.Goods
 import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.model.entity.Service
 import com.kien.petclub.domain.model.entity.User
+import com.kien.petclub.domain.model.entity.mapSnapshotToInfoProduct
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.Dispatchers
@@ -207,7 +208,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         emit(Resource.Loading)
         val snapshot = typeProductDatabase.get().await()
         try {
-            val listType = snapshot.children.mapNotNull { it.getValue(InfoProduct::class.java) }
+            val listType = snapshot.children.mapNotNull { mapSnapshotToInfoProduct(it) }
             emit(Resource.success(ArrayList(listType)))
         } catch (e: Exception) {
             emit(Resource.failure(e))

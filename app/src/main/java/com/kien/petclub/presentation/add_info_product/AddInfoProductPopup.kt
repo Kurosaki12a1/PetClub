@@ -1,13 +1,17 @@
 package com.kien.petclub.presentation.add_info_product
 
 import android.graphics.Color
+import android.graphics.Insets
+import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -51,10 +55,29 @@ class AddInfoProductPopup(private val typeInfoProduct: String) : DialogFragment(
         setUpViews()
     }
 
+    private fun getSizeWidthWindow(): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowMetrics =
+                requireActivity().windowManager.currentWindowMetrics
+            val insets: Insets = windowMetrics.windowInsets
+                .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+            return windowMetrics.bounds.width() - insets.left -
+                    insets.right
+
+        } else {
+            val window = dialog!!.window
+            val size = Point()
+            // Store dimensions of the screen in `size`
+            val display = window!!.windowManager.defaultDisplay
+            display.getSize(size)
+            return size.x
+        }
+    }
+
     override fun onResume() {
         dialog?.window?.apply {
             setLayout(
-                WindowManager.LayoutParams.MATCH_PARENT,
+                (getSizeWidthWindow() * 0.85).toInt(),
                 WindowManager.LayoutParams.WRAP_CONTENT
             )
             setGravity(Gravity.CENTER)

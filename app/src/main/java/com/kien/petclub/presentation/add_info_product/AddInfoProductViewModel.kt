@@ -38,6 +38,14 @@ class AddInfoProductViewModel @Inject constructor(
         }
     }
 
+    fun updateTypeProduct(parentId : String, name: String) {
+        viewModelScope.launch {
+            addInfoProductUseCase.addTypeChildProduct(parentId, name).collect {
+                _addResponse.value = it
+            }
+        }
+    }
+
     fun searchInfo(type: String, name: String) {
         viewModelScope.launch {
             searchInfoProductUseCase(type, name).collect {
