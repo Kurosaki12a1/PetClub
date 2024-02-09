@@ -1,6 +1,5 @@
 package com.kien.petclub.data.repository
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.kien.petclub.constants.Constants
@@ -335,6 +334,41 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         try {
             val listLocation = snapshot.children.mapNotNull { it.getValue(InfoProduct::class.java) }
             emit(Resource.success(ArrayList(listLocation)))
+        } catch (e: Exception) {
+            emit(Resource.failure(e))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun deleteTypeProduct(id: String, parentId: String?): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading)
+        try {
+            if (parentId != null) {
+                typeProductDatabase.child(parentId).child("child").child(id).removeValue().await()
+            } else {
+                typeProductDatabase.child(id).removeValue().await()
+            }
+            emit(Resource.success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.failure(e))
+        }
+    }.flowOn(Dispatchers.IO)
+
+
+    override fun deleteBrandProduct(id: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading)
+        try {
+            brandProductDatabase.child(id).removeValue().await()
+            emit(Resource.success(Unit))
+        } catch (e: Exception) {
+            emit(Resource.failure(e))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun deleteLocationProduct(id: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading)
+        try {
+            locationProductDatabase.child(id).removeValue().await()
+            emit(Resource.success(Unit))
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }

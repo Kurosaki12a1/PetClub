@@ -63,4 +63,10 @@ interface FirebaseDBRepository {
     fun searchForTypes(name: String): Flow<Resource<ArrayList<InfoProduct>>>
 
     fun searchForLocations(name: String): Flow<Resource<ArrayList<InfoProduct>>>
+
+    fun deleteTypeProduct(id: String, parentId: String?): Flow<Resource<Unit>>
+
+    fun deleteBrandProduct(id: String): Flow<Resource<Unit>>
+
+    fun deleteLocationProduct(id: String): Flow<Resource<Unit>>
 }

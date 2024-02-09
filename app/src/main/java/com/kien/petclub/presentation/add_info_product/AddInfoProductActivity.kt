@@ -132,6 +132,24 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
 
         }.launchIn(lifecycleScope)
 
+        viewModel.deleteResponse.onEach {
+            when (it) {
+                is Resource.Success -> {
+                    // After deleted, we continue update recycler view
+                    viewModel.getInfo(typeAddInfo)
+                }
+
+                is Resource.Loading -> {
+                    showLoadingAnimation()
+                }
+
+                else -> {
+                    stopLoadingAnimation()
+                }
+            }
+
+        }.launchIn(lifecycleScope)
+
 
         val popUpViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         lifecycleScope.launch {
@@ -190,7 +208,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
     }
 
     override fun onDeleteInfoProduct(data: InfoProduct) {
-
+        viewModel.deleteInfo(typeAddInfo, data.id, data.parentId)
     }
 
     override fun onClickListener(data: InfoProduct) {

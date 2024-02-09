@@ -49,7 +49,9 @@ class SearchInfoProductAdapter(
                     collapseRecyclerView(holder.rvChild)
                 } else {
                     holder.expand.setImageResource(R.drawable.ic_collapse)
-                    expandRecyclerView(holder.rvChild)
+                    val totalHeightChildRecyclerView =
+                        (holder.itemView.height) * data.child!!.size + holder.rvChild.paddingTop
+                    expandRecyclerView(totalHeightChildRecyclerView, holder.rvChild)
                 }
             }
             holder.rvChild.layoutManager = LinearLayoutManager(holder.itemView.context)
@@ -67,15 +69,9 @@ class SearchInfoProductAdapter(
         }
     }
 
-    private fun expandRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.measure(
-            View.MeasureSpec.makeMeasureSpec(recyclerView.width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        )
-        val targetHeight = recyclerView.measuredHeight
-
-        val valueAnimator = ValueAnimator.ofInt(0, targetHeight).apply {
-            duration = 300 // Thời gian animation
+    private fun expandRecyclerView(height: Int, recyclerView: RecyclerView) {
+        val valueAnimator = ValueAnimator.ofInt(0, height).apply {
+            duration = 1000 // Thời gian animation
             addUpdateListener { animation ->
                 val layoutParams = recyclerView.layoutParams
                 layoutParams.height = animation.animatedValue as Int
@@ -95,7 +91,7 @@ class SearchInfoProductAdapter(
         val initialHeight = recyclerView.measuredHeight
 
         val valueAnimator = ValueAnimator.ofInt(initialHeight, 0).apply {
-            duration = 300 // Thời gian animation
+            duration = 1000 // Thời gian animation
             addUpdateListener { animation ->
                 val layoutParams = recyclerView.layoutParams
                 layoutParams.height = animation.animatedValue as Int

@@ -1,4 +1,4 @@
-package com.kien.petclub.domain.usecase.firebase_db.product
+package com.kien.petclub.domain.usecase.firebase_db.product.info_product
 
 import com.kien.petclub.constants.Constants.VALUE_BRAND
 import com.kien.petclub.constants.Constants.VALUE_TYPE

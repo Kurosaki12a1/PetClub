@@ -1,22 +1,22 @@
 package com.kien.petclub.di
 
-import com.google.firebase.storage.FirebaseStorage
 import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.repository.FirebaseStorageRepository
 import com.kien.petclub.domain.usecase.auth.SignInUseCase
 import com.kien.petclub.domain.usecase.auth.SignOutUseCase
 import com.kien.petclub.domain.usecase.auth.SignUpUseCase
-import com.kien.petclub.domain.usecase.firebase_db.product.AddInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.AddInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.AddProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.CheckExistenceProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.DeleteProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.GetGoodsUseCase
-import com.kien.petclub.domain.usecase.firebase_db.product.GetInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.GetInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.GetProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.GetServiceUseCase
-import com.kien.petclub.domain.usecase.firebase_db.product.SearchInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.SearchInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.UpdateProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.DeleteInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.AddUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.DeleteUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.GetUserUseCase
@@ -149,6 +149,12 @@ class UseCaseModule {
     @Singleton
     fun provideGetInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): GetInfoProductUseCase {
         return GetInfoProductUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteInfoProductUseCase {
+        return DeleteInfoProductUseCase(firebaseDBRepository)
     }
 
 }
