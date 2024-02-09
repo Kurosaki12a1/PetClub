@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +20,6 @@ import com.kien.petclub.databinding.ActivityAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.initTransitionClose
-import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -99,23 +99,35 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
         viewModel.addResponse.onEach {
             when (it) {
                 is Resource.Success -> {
+                    stopLoadingAnimation()
                     // After added, we continue update recycler view
                     viewModel.getInfo(typeAddInfo)
                 }
-                is Resource.Failure -> {showToast("Add: ${it.errorMessage.toString()}")}
 
-                else -> {}
+                is Resource.Loading -> {
+                    showLoadingAnimation()
+                }
+
+                else -> {
+                    stopLoadingAnimation()
+                }
             }
         }.launchIn(lifecycleScope)
 
         viewModel.getResponse.onEach {
             when (it) {
                 is Resource.Success -> {
+                    stopLoadingAnimation()
                     adapter.setData(it.value)
                 }
-                is Resource.Failure -> {showToast("Get: ${it.errorMessage.toString()}")}
 
-                else -> {}
+                is Resource.Loading -> {
+                    showLoadingAnimation()
+                }
+
+                else -> {
+                    stopLoadingAnimation()
+                }
             }
 
         }.launchIn(lifecycleScope)
@@ -139,10 +151,16 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
             viewModel.searchResponse.collectLatest {
                 when (it) {
                     is Resource.Success -> {
+                        stopLoadingAnimation()
                         adapter.setData(it.value)
                     }
+                    is Resource.Loading -> {
+                        showLoadingAnimation()
+                    }
 
-                    else -> {}
+                    else -> {
+                        stopLoadingAnimation()
+                    }
                 }
             }
         }
@@ -150,6 +168,16 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
 
     private fun showAddPopUp() {
         popUp.show(supportFragmentManager, "AddInfoProductPopup")
+    }
+
+    private fun showLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.VISIBLE
+        binding.loadingAnimationView.playAnimation()
+    }
+
+    private fun stopLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.GONE
+        binding.loadingAnimationView.cancelAnimation()
     }
 
 

@@ -59,4 +59,13 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
         }
     }.flowOn(Dispatchers.IO)
 
+    override fun isSignedIn(): Flow<Boolean>  = flow {
+        val user = auth.currentUser
+        if (user != null) {
+            emit(true)
+        } else {
+            emit(false)
+        }
+    }.flowOn(Dispatchers.IO)
+
 }

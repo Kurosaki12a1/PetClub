@@ -20,6 +20,7 @@ import com.kien.petclub.domain.usecase.firebase_db.product.UpdateProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.AddUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.DeleteUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.GetUserUseCase
+import com.kien.petclub.domain.usecase.firebase_db.user.IsSignedInUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.UpdateUserUseCase
 import com.kien.petclub.domain.usecase.storage.UploadImageUseCase
 import dagger.Module
@@ -72,7 +73,11 @@ class UseCaseModule {
         return GetProductUseCase(goodsUseCase, serviceUseCase)
     }
 
-
+    @Provides
+    @Singleton
+    fun provideIsSignedInUseCase(authRepository: AuthRepository): IsSignedInUseCase {
+        return IsSignedInUseCase(authRepository)
+    }
 
     @Provides
     @Singleton

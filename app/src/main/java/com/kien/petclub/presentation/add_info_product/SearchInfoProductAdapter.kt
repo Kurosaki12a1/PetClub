@@ -1,5 +1,8 @@
 package com.kien.petclub.presentation.add_info_product
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +13,12 @@ import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ItemAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
-import com.kien.petclub.utils.showMessage
 
 class SearchInfoProductAdapter(
-    private val typeInfo : String,
+    private val typeInfo: String,
     private val listener: SearchInfoProductListener? = null
 ) : RecyclerView.Adapter<SearchInfoProductAdapter.ViewHolder>() {
+
 
     private var listInfoProduct = ArrayList<InfoProduct>()
 
@@ -35,11 +38,18 @@ class SearchInfoProductAdapter(
             holder.rvChild.visibility = View.GONE
         } else {
             holder.expand.visibility = View.VISIBLE
+            if (holder.rvChild.visibility == View.VISIBLE) {
+                holder.expand.setImageResource(R.drawable.ic_collapse)
+            } else {
+                holder.expand.setImageResource(R.drawable.ic_add)
+            }
             holder.expand.setOnClickListener {
                 if (holder.rvChild.visibility == View.VISIBLE) {
-                    holder.rvChild.visibility = View.GONE
+                    holder.expand.setImageResource(R.drawable.ic_add)
+                    collapseRecyclerView(holder.rvChild)
                 } else {
-                    holder.rvChild.visibility = View.VISIBLE
+                    holder.expand.setImageResource(R.drawable.ic_collapse)
+                    expandRecyclerView(holder.rvChild)
                 }
             }
             holder.rvChild.layoutManager = LinearLayoutManager(holder.itemView.context)
@@ -48,7 +58,6 @@ class SearchInfoProductAdapter(
         }
 
         holder.itemView.setOnLongClickListener {
-            showMessage(it.context, "Long click triggered")
             showPopup(it, data)
             true
         }
@@ -56,25 +65,70 @@ class SearchInfoProductAdapter(
         holder.itemView.setOnClickListener {
             listener?.onClickListener(data)
         }
-
     }
 
-    private fun showPopup(v : View, data: InfoProduct) {
+    private fun expandRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.measure(
+            View.MeasureSpec.makeMeasureSpec(recyclerView.width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        val targetHeight = recyclerView.measuredHeight
+
+        val valueAnimator = ValueAnimator.ofInt(0, targetHeight).apply {
+            duration = 300 // Thời gian animation
+            addUpdateListener { animation ->
+                val layoutParams = recyclerView.layoutParams
+                layoutParams.height = animation.animatedValue as Int
+                recyclerView.layoutParams = layoutParams
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    super.onAnimationStart(animation)
+                    recyclerView.visibility = View.VISIBLE
+                }
+            })
+        }
+        valueAnimator.start()
+    }
+
+    private fun collapseRecyclerView(recyclerView: RecyclerView) {
+        val initialHeight = recyclerView.measuredHeight
+
+        val valueAnimator = ValueAnimator.ofInt(initialHeight, 0).apply {
+            duration = 300 // Thời gian animation
+            addUpdateListener { animation ->
+                val layoutParams = recyclerView.layoutParams
+                layoutParams.height = animation.animatedValue as Int
+                recyclerView.layoutParams = layoutParams
+            }
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    super.onAnimationEnd(animation)
+                    recyclerView.visibility = View.GONE
+                }
+            })
+        }
+        valueAnimator.start()
+    }
+
+    private fun showPopup(v: View, data: InfoProduct) {
         val popUp = PopupMenu(v.context, v)
         val inflater = popUp.menuInflater
         inflater.inflate(R.menu.item_popup_menu, popUp.menu)
         popUp.menu.findItem(R.id.action_add).isVisible =
-            data.child == null && typeInfo == VALUE_TYPE && data.parentId == null
+            typeInfo == VALUE_TYPE && data.parentId == null
         popUp.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_add -> {
                     listener?.onAddInfoProduct(data)
                     true
                 }
+
                 R.id.action_delete -> {
                     listener?.onDeleteInfoProduct(data)
                     true
                 }
+
                 else -> false
             }
         }

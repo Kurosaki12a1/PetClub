@@ -13,4 +13,6 @@ interface AuthRepository {
     fun signUp(email: String, password: String) : Flow<Resource<FirebaseUser?>>
 
     fun recoverPassword(email: String) : Flow<Resource<Unit>>
+
+    fun isSignedIn() : Flow<Boolean>
 }

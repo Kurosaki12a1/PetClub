@@ -11,8 +11,10 @@ import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.home.HomeActivity
 import com.kien.petclub.utils.showMessage
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SignInFragment : BaseFragment<FragmentSignInBinding>() {
@@ -56,6 +58,14 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
                 else -> {}
             }
         }.launchIn(lifecycleScope)
+
+        lifecycleScope.launch {
+            viewModel.isSignedInResponse.collectLatest {
+                if (it) {
+                    (requireActivity() as AuthActivity).openHome()
+                }
+            }
+        }
     }
 
 
@@ -66,8 +76,6 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
     private fun openSignUp() {
         navigateSafe(SignInFragmentDirections.actionOpenSignUpFragment())
     }
-
-
 
     private fun signIn() {
         viewModel.signIn(

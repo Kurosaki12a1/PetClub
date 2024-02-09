@@ -1,5 +1,6 @@
 package com.kien.petclub.data.repository
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.kien.petclub.constants.Constants
@@ -292,7 +293,8 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         emit(Resource.Loading)
         // Query by key, startAt by name and endAt by name + "\uf8ff" to get all the brand that start with name
         val snapshot =
-            brandProductDatabase.orderByKey().startAt(name).endAt(name + "\uf8ff").get().await()
+            brandProductDatabase.orderByChild("name").startAt(name).endAt(name + "\uf8ff").get()
+                .await()
         try {
             val listBrand = snapshot.children.mapNotNull { it.getValue(InfoProduct::class.java) }
             emit(Resource.success(ArrayList(listBrand)))
@@ -304,24 +306,21 @@ class FirebaseDBRepositoryImpl @Inject constructor(
 
     override fun searchForTypes(name: String): Flow<Resource<ArrayList<InfoProduct>>> = flow {
         emit(Resource.Loading)
-        // Query by key, startAt by name and endAt by name + "\uf8ff" to get all the type that start with name
-        val snapshot =
-            typeProductDatabase.orderByChild("name")
-                .startAt(name).endAt(name + "\uf8ff").get().await()
+        val snapShot = typeProductDatabase.get().await()
         try {
-            val listType = snapshot.children.mapNotNull { it.getValue(InfoProduct::class.java) }
-            val newListType = ArrayList<InfoProduct>()
-            listType.forEach { list ->
-                list.parentId?.let {
-                    val parent = typeProductDatabase.child(it)
-                    val snapshotParent = parent.get().await()
-                    val parentType = snapshotParent.getValue(InfoProduct::class.java)
-                    newListType.add(parentType!!)
-                } ?: run {
-                    newListType.add(list)
+            val listTotalTypeProduct = snapShot.children.mapNotNull { mapSnapshotToInfoProduct(it) }
+            val result = HashMap<String, InfoProduct>()
+            listTotalTypeProduct.forEach { parent ->
+                if (parent.name.lowercase().startsWith(name.lowercase())) {
+                    result[parent.id] = parent
+                }
+                parent.child?.forEach { child ->
+                    if (child.name.lowercase().startsWith(name.lowercase())) {
+                        result[parent.id] = parent
+                    }
                 }
             }
-            emit(Resource.success(ArrayList(newListType)))
+            emit(Resource.success(result.values.toMutableList() as ArrayList<InfoProduct>))
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
@@ -331,7 +330,8 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         emit(Resource.Loading)
         // Query by key, startAt by name and endAt by name + "\uf8ff" to get all the location that start with name
         val snapshot =
-            locationProductDatabase.orderByKey().startAt(name).endAt(name + "\uf8ff").get().await()
+            locationProductDatabase.orderByChild("name").startAt(name).endAt(name + "\uf8ff").get()
+                .await()
         try {
             val listLocation = snapshot.children.mapNotNull { it.getValue(InfoProduct::class.java) }
             emit(Resource.success(ArrayList(listLocation)))

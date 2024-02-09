@@ -8,7 +8,7 @@
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dimen10"
+        android:padding="@dimen/dimen16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen30"
             android:text="@string/choose_brand"
-            android:textColor="@color/black"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size24"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/ivBack"
@@ -47,11 +47,14 @@
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen10"
-            android:background="@drawable/rounded_blue_bg"
+            android:layout_marginTop="@dimen/dimen18"
+            android:background="@drawable/rounded_gray_bg"
             android:drawableStart="@drawable/ic_search_new"
-            android:padding="@dimen/dimen12"
             android:drawablePadding="@dimen/dimen12"
+            android:padding="@dimen/dimen12"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
@@ -60,8 +63,8 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen25"
-        android:background="@color/blue_brighter"
+        android:layout_height="@dimen/dimen10"
+        android:background="@color/backgroundDarkGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolBar" />
@@ -73,5 +76,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/loadingAnimationView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dimen30"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.25"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.25"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loading" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
