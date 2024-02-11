@@ -17,8 +17,8 @@ import com.kien.petclub.constants.Constants.VALUE_LOCATION
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ActivityAddProductBinding
-import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
+import com.kien.petclub.extensions.initTransitionClose
 import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.add_info_product.AddInfoProductActivity
 import com.kien.petclub.presentation.base.AddActivity
@@ -90,15 +90,17 @@ class AddProductActivity : AddActivity<ActivityAddProductBinding>() {
         viewModel.response.onEach {
             when (it) {
                 is Resource.Success -> {
+                    stopLoadingAnimation()
+                    initTransitionClose()
                     finish()
                 }
 
                 is Resource.Failure -> {
-                    showToast(it.error.message.toString())
+                    stopLoadingAnimation()
                 }
 
                 is Resource.Loading -> {
-                    // Show loading TODO
+                    showLoadingAnimation()
                 }
 
                 else -> {}
@@ -196,5 +198,15 @@ class AddProductActivity : AddActivity<ActivityAddProductBinding>() {
                 photo = listImages
             )
         }
+    }
+
+    private fun showLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.VISIBLE
+        binding.loadingAnimationView.playAnimation()
+    }
+
+    private fun stopLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.GONE
+        binding.loadingAnimationView.cancelAnimation()
     }
 }

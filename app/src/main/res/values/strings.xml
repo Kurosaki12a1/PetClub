@@ -56,9 +56,12 @@
     <string name="barcode">Mã vạch</string>
     <string name="goodsName">Tên hàng</string>
     <string name="type">Nhóm hàng</string>
+    <string name="type2">Loại hàng</string>
     <string name="brand">Thương hiệu</string>
+    <string name="measure_stock">Định mức tồn</string>
     <string name="selling_price">Giá bán</string>
     <string name="buying_price">Giá vốn</string>
+    <string name="warehouse">Thẻ Kho</string>
     <string name="location">Vị trí</string>
     <string name="inventory">Tồn kho</string>
     <string name="weight">Trọng lượng \n (gram)</string>
@@ -66,6 +69,8 @@
     <string name="inventory_maximum">Tồn nhiều nhất</string>
     <string name="description">Mô tả</string>
     <string name="note_goods">Mẫu ghi chú (hóa đơn, đặt hàng)</string>
+    <string name="note_order">Ghi chú đặt hàng</string>
+    <string name="view_more">Xem thêm</string>
 
     <string name="sell_direct">Bán trực tiếp</string>
     <string name="point_accumulation">Tích điểm</string>

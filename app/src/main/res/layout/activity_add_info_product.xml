@@ -47,15 +47,16 @@
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen18"
+            android:layout_marginTop="16dp"
             android:background="@drawable/rounded_gray_bg"
             android:drawableStart="@drawable/ic_search_new"
             android:drawablePadding="@dimen/dimen12"
+            android:imeOptions="actionSearch"
             android:padding="@dimen/dimen12"
             android:singleLine="true"
-            android:imeOptions="actionSearch"
             android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -72,7 +73,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider" />

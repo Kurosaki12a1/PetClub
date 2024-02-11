@@ -8,8 +8,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen50"
-        android:padding="@dimen/dimen10">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen16">
 
         <ImageView
             android:id="@+id/iv_back"
@@ -24,10 +24,10 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dimen16"
+            android:layout_marginStart="@dimen/dimen30"
             android:text="@string/add_service"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size18"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size24"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/toolbar"
             app:layout_constraintStart_toEndOf="@id/iv_back"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:textColor="@color/blue"
-            android:textSize="@dimen/text_size18"
+            android:textSize="@dimen/text_size20"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -553,7 +553,25 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loadingAnimationView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.25"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintWidth_percent="0.25"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/loading" />
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
 
 </LinearLayout>

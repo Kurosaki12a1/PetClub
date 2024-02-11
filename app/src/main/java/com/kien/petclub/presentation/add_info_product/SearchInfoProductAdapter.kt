@@ -6,6 +6,8 @@ import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
+import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +20,10 @@ class SearchInfoProductAdapter(
     private val typeInfo: String,
     private val listener: SearchInfoProductListener? = null
 ) : RecyclerView.Adapter<SearchInfoProductAdapter.ViewHolder>() {
+
+    companion object {
+        private const val TIME_ANIMATION = 300L
+    }
 
 
     private var listInfoProduct = ArrayList<InfoProduct>()
@@ -32,47 +38,48 @@ class SearchInfoProductAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = listInfoProduct[position]
-        holder.tvInfo.text = data.name
-        if (data.child == null) {
-            holder.expand.visibility = View.GONE
-            holder.rvChild.visibility = View.GONE
-        } else {
-            holder.expand.visibility = View.VISIBLE
-            if (holder.rvChild.visibility == View.VISIBLE) {
-                holder.expand.setImageResource(R.drawable.ic_collapse)
+        holder.apply {
+            tvInfo.text = data.name
+            if (data.child == null) {
+                expand.visibility = View.GONE
+                rvChild.visibility = View.GONE
             } else {
-                holder.expand.setImageResource(R.drawable.ic_add)
-            }
-            holder.expand.setOnClickListener {
-                if (holder.rvChild.visibility == View.VISIBLE) {
-                    holder.expand.setImageResource(R.drawable.ic_add)
-                    collapseRecyclerView(holder.rvChild)
+                expand.visibility = View.VISIBLE
+                if (rvChild.visibility == View.VISIBLE) {
+                    expand.setImageResource(R.drawable.ic_collapse)
                 } else {
-                    holder.expand.setImageResource(R.drawable.ic_collapse)
-                    val totalHeightChildRecyclerView =
-                        (holder.itemView.height) * data.child!!.size + holder.rvChild.paddingTop
-                    expandRecyclerView(totalHeightChildRecyclerView, holder.rvChild)
+                    expand.setImageResource(R.drawable.ic_add)
                 }
+                expand.setOnClickListener {
+                    if (rvChild.visibility == View.VISIBLE) {
+                        collapseRecyclerView(rvChild, expand)
+                    } else {
+                        val totalHeightChildRecyclerView =
+                            (itemView.height) * data.child!!.size + rvChild.paddingTop
+                        expandRecyclerView(totalHeightChildRecyclerView, rvChild, expand)
+                    }
+                }
+                rvChild.layoutManager = LinearLayoutManager(itemView.context)
+                rvChild.adapter =
+                    SearchInfoProductAdapter(typeInfo, listener).also { it.setData(data.child!!) }
             }
-            holder.rvChild.layoutManager = LinearLayoutManager(holder.itemView.context)
-            holder.rvChild.adapter =
-                SearchInfoProductAdapter(typeInfo, listener).also { it.setData(data.child!!) }
-        }
 
-        holder.itemView.setOnLongClickListener {
-            showPopup(it, data)
-            true
-        }
+            itemView.setOnLongClickListener {
+                showPopup(it, data)
+                true
+            }
 
-        holder.itemView.setOnClickListener {
-            listener?.onClickListener(data)
+            itemView.setOnClickListener {
+                listener?.onClickListener(data)
+            }
         }
     }
 
-    private fun expandRecyclerView(height: Int, recyclerView: RecyclerView) {
+    private fun expandRecyclerView(height: Int, recyclerView: RecyclerView, view: ImageView) {
         val valueAnimator = ValueAnimator.ofInt(0, height).apply {
-            duration = 1000 // Thời gian animation
+            duration = TIME_ANIMATION
             addUpdateListener { animation ->
+                interpolator = LinearInterpolator()
                 val layoutParams = recyclerView.layoutParams
                 layoutParams.height = animation.animatedValue as Int
                 recyclerView.layoutParams = layoutParams
@@ -81,18 +88,20 @@ class SearchInfoProductAdapter(
                 override fun onAnimationStart(animation: Animator) {
                     super.onAnimationStart(animation)
                     recyclerView.visibility = View.VISIBLE
+                    view.setImageResource(R.drawable.ic_collapse)
                 }
             })
         }
         valueAnimator.start()
     }
 
-    private fun collapseRecyclerView(recyclerView: RecyclerView) {
+    private fun collapseRecyclerView(recyclerView: RecyclerView, view: ImageView) {
         val initialHeight = recyclerView.measuredHeight
 
         val valueAnimator = ValueAnimator.ofInt(initialHeight, 0).apply {
-            duration = 1000 // Thời gian animation
+            duration = TIME_ANIMATION
             addUpdateListener { animation ->
+                interpolator = LinearInterpolator()
                 val layoutParams = recyclerView.layoutParams
                 layoutParams.height = animation.animatedValue as Int
                 recyclerView.layoutParams = layoutParams
@@ -100,6 +109,7 @@ class SearchInfoProductAdapter(
             addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
                     super.onAnimationEnd(animation)
+                    view.setImageResource(R.drawable.ic_add)
                     recyclerView.visibility = View.GONE
                 }
             })
