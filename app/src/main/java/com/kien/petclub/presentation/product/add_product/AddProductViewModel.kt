@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.add_product
+package com.kien.petclub.presentation.product.add_product
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope

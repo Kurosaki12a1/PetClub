@@ -15,6 +15,7 @@ import javax.inject.Inject
 class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: FirebaseStorage) :
     FirebaseStorageRepository {
     override fun uploadImage(uri: Uri, nameFile: String): Flow<Resource<String>> = flow {
+        emit(Resource.Loading)
         try {
             val ref = storage.reference.child("images/$nameFile.jpg")
             // Start upload
@@ -29,6 +30,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
     }.flowOn(Dispatchers.IO)
 
     override fun downloadImage(fileRef: String): Flow<Resource<Uri>> = flow {
+        emit(Resource.Loading)
         try {
             val ref = storage.reference.child(fileRef)
             val downloadUri = ref.downloadUrl.await()
@@ -39,6 +41,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
     }.flowOn(Dispatchers.IO)
 
     override fun deleteImage(fileRef: String): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading)
         try {
             val ref = storage.reference.child(fileRef)
             ref.delete().await()
@@ -49,6 +52,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
     }.flowOn(Dispatchers.IO)
 
     override fun uploadListImage(listImages: List<Uri>): Flow<Resource<List<String>>> = flow {
+        emit(Resource.Loading)
         val imageUrls = mutableListOf<String>()
         val timeStamp = System.currentTimeMillis()
         listImages.forEachIndexed { index, uri ->
@@ -59,6 +63,17 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
             imageUrls.add(imageUrl)
         }
         emit(Resource.success(imageUrls))
+    }.catch { error -> emit(Resource.failure(error)) }.flowOn(Dispatchers.IO)
+
+    override fun downloadListImage(listFileRef: List<String>): Flow<Resource<List<Uri>>> = flow {
+        emit(Resource.Loading)
+        val imageUris = mutableListOf<Uri>()
+        listFileRef.forEach { fileRef ->
+            val ref = storage.reference.child(fileRef)
+            val downloadUri = ref.downloadUrl.await()
+            imageUris.add(downloadUri)
+        }
+        emit(Resource.success(imageUris))
     }.catch { error -> emit(Resource.failure(error)) }.flowOn(Dispatchers.IO)
 
 }

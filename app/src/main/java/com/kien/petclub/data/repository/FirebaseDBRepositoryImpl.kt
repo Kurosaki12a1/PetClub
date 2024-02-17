@@ -3,11 +3,12 @@ package com.kien.petclub.data.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.kien.petclub.constants.Constants
-import com.kien.petclub.domain.model.entity.Goods
 import com.kien.petclub.domain.model.entity.InfoProduct
-import com.kien.petclub.domain.model.entity.Service
+import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.domain.model.entity.User
+import com.kien.petclub.domain.model.entity.mapSnapshotToGoods
 import com.kien.petclub.domain.model.entity.mapSnapshotToInfoProduct
+import com.kien.petclub.domain.model.entity.mapSnapshotToService
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.Dispatchers
@@ -31,44 +32,44 @@ class FirebaseDBRepositoryImpl @Inject constructor(
     private val userDatabase = db.reference.child(Constants.USER_DB)
 
     private val userId = auth.currentUser?.uid ?: ""
-    override fun getGoodsDatabase(): Flow<Resource<ArrayList<Goods>>?> = flow {
+    override fun getGoodsDatabase(): Flow<Resource<ArrayList<Product.Goods>>> = flow {
         emit(Resource.Loading)
         val reference = goodsDatabase.child(userId)
         val snapshot = reference.get().await()
         try {
-            val listGoods = snapshot.children.mapNotNull { it.getValue(Goods::class.java) }
+            val listGoods = snapshot.children.mapNotNull { mapSnapshotToGoods(it) }
             emit(Resource.success(ArrayList(listGoods)))
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun getServiceDatabase(): Flow<Resource<ArrayList<Service>>?> = flow {
+    override fun getServiceDatabase(): Flow<Resource<ArrayList<Product.Service>>?> = flow {
         emit(Resource.Loading)
         val snapshot = serviceDatabase.child(userId).get().await()
         try {
-            val listService = snapshot.children.mapNotNull { it.getValue(Service::class.java) }
+            val listService = snapshot.children.mapNotNull { mapSnapshotToService(it) }
             emit(Resource.success(ArrayList(listService)))
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun getGoodsById(id: String): Flow<Resource<Goods?>> = flow {
+    override fun getGoodsById(id: String): Flow<Resource<Product.Goods?>> = flow {
         emit(Resource.Loading)
         val snapshot = goodsDatabase.child(userId).child(id).get().await()
         try {
-            emit(Resource.success(snapshot.getValue(Goods::class.java)))
+            emit(Resource.success(mapSnapshotToGoods(snapshot)))
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
     }
 
-    override fun getServiceById(id: String): Flow<Resource<Service?>> = flow {
+    override fun getServiceById(id: String): Flow<Resource<Product.Service?>> = flow {
         emit(Resource.Loading)
         val snapshot = serviceDatabase.child(userId).child(id).get().await()
         try {
-            emit(Resource.success(snapshot.getValue(Service::class.java)))
+            emit(Resource.success(mapSnapshotToService(snapshot)))
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
@@ -120,7 +121,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun addGoodsDatabase(goods: Goods): Flow<Resource<Unit>> = flow {
+    override fun addGoodsDatabase(goods: Product.Goods): Flow<Resource<Unit>> = flow {
         try {
             val ref = goodsDatabase.child(userId)
             ref.child(goods.id).setValue(goods).await()
@@ -130,7 +131,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun addServiceDatabase(service: Service): Flow<Resource<Unit>> = flow {
+    override fun addServiceDatabase(service: Product.Service): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
         try {
             val ref = serviceDatabase.child(userId)
@@ -141,22 +142,26 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun updateGoodsDatabase(goodsId: String, data: Goods): Flow<Resource<Unit>> = flow {
-        emit(Resource.Loading)
-        try {
-            goodsDatabase.child(userId).child(goodsId).setValue(data).await()
-            emit(Resource.success(Unit))
-        } catch (e: Exception) {
-            emit(Resource.failure(e))
-        }
-    }.flowOn(Dispatchers.IO)
+    override fun updateGoodsDatabase(goodsId: String, data: Product.Goods): Flow<Resource<Product>> =
+        flow {
+            emit(Resource.Loading)
+            try {
+                goodsDatabase.child(userId).child(goodsId).setValue(data).await()
+                emit(Resource.success(data))
+            } catch (e: Exception) {
+                emit(Resource.failure(e))
+            }
+        }.flowOn(Dispatchers.IO)
 
-    override fun updateServiceDatabase(serviceId: String, data: Service): Flow<Resource<Unit>> =
+    override fun updateServiceDatabase(
+        serviceId: String,
+        data: Product.Service
+    ): Flow<Resource<Product>> =
         flow {
             emit(Resource.Loading)
             try {
                 serviceDatabase.child(userId).child(serviceId).setValue(data).await()
-                emit(Resource.success(Unit))
+                emit(Resource.success(data))
             } catch (e: Exception) {
                 emit(Resource.failure(e))
             }

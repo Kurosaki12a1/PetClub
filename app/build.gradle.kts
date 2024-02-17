@@ -95,6 +95,8 @@ dependencies {
     kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.4.2")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    // Shared View Model
+
     implementation("androidx.browser:browser:1.7.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
 

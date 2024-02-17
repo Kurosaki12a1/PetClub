@@ -1,8 +1,6 @@
 package com.kien.petclub.domain.usecase.firebase_db.product
 
-import com.kien.petclub.domain.model.entity.Goods
-import com.kien.petclub.domain.model.entity.Service
-import com.kien.petclub.domain.model.entity.InfoProduct
+import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +22,7 @@ class AddProductUseCase @Inject constructor(
         note: String?,
         photo: List<String>? = null
     ): Flow<Resource<Unit>> {
-        val service = Service(
+        val service = Product.Service(
             id = id,
             code = code,
             name = name,
@@ -54,7 +52,7 @@ class AddProductUseCase @Inject constructor(
         note: String,
         photo: List<String>? = null
     ): Flow<Resource<Unit>> {
-        val goods = Goods(
+        val goods = Product.Goods(
             id = id,
             code = code,
             name = name,

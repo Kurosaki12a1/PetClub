@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.add_info_product
+package com.kien.petclub.presentation.product.add_info_product
 
 import androidx.lifecycle.viewModelScope
 import com.kien.petclub.domain.model.entity.InfoProduct

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewbinding.ViewBinding
@@ -17,10 +16,10 @@ import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.extensions.checkAndRequestPermission
 import com.kien.petclub.extensions.getResultLauncher
 import com.kien.petclub.extensions.requestPermissionLauncher
-import com.kien.petclub.presentation.add_product.PhotoAdapter
+import com.kien.petclub.presentation.product.PhotoAdapter
 import com.kien.petclub.utils.convertMillisToDate
 
-abstract class AddActivity<VB : ViewBinding> : BaseActivity<VB>() {
+abstract class ProductActivity<VB : ViewBinding> : BaseActivity<VB>() {
     companion object {
         private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
         private const val WRITE_EXTERNAL_STORAGE_PERMISSION =

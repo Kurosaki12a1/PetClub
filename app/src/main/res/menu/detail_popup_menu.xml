@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_print"
+        android:title="@string/print" />
+    <item
+        android:id="@+id/action_stop_selling"
+        android:title="@string/stop_selling" />
+    <item
+        android:id="@+id/action_delete"
+        android:title="@string/delete_product" />
+</menu>

@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.add_product
+package com.kien.petclub.presentation.product
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -17,13 +17,13 @@ class PhotoAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PhotoAdapter.AddPhotoViewHolder {
+    ): AddPhotoViewHolder {
         val root =
             LayoutInflater.from(parent.context).inflate(layout.add_photo_item, parent, false)
         return AddPhotoViewHolder(AddPhotoItemBinding.bind(root))
     }
 
-    override fun onBindViewHolder(holder: PhotoAdapter.AddPhotoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AddPhotoViewHolder, position: Int) {
         // When no item
         if (listUriImage.size == 0) {
             holder.itemView.setOnClickListener { onItemClick.invoke(position) }

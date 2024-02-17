@@ -5,20 +5,24 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.kien.petclub.PetClubApplication
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.KEY_TYPE
 import com.kien.petclub.constants.Constants.TIMEOUT_BACK_PRESS
 import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
+import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.extensions.getVisibleRect
 import com.kien.petclub.extensions.initTransitionOpen
 import com.kien.petclub.extensions.isInVisibleRect
 import com.kien.petclub.extensions.openActivity
 import com.kien.petclub.extensions.setupWithNavController
 import com.kien.petclub.extensions.showToast
-import com.kien.petclub.presentation.add_product.AddProductActivity
+import com.kien.petclub.presentation.product.add_product.AddProductActivity
 import com.kien.petclub.presentation.base.BaseActivity
+import com.kien.petclub.presentation.base.SharedViewModel
+import com.kien.petclub.presentation.product.detail_product.DetailProductActivity
 import com.kien.petclub.utils.AnimationLoader
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -28,6 +32,10 @@ import kotlinx.coroutines.flow.onEach
 class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     private val viewModel by viewModels<HomeViewModel>()
+
+    private val sharedProductVM: SharedViewModel<Product> by lazy {
+        (application as PetClubApplication).sharedProductVM
+    }
 
     override fun getViewBinding() = ActivityHomeBinding.inflate(layoutInflater)
 
@@ -148,4 +156,24 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         }
         return super.dispatchTouchEvent(ev)
     }
+
+    fun showLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.VISIBLE
+        binding.loadingAnimationView.playAnimation()
+    }
+
+    fun stopLoadingAnimation() {
+        binding.loadingAnimationView.visibility = View.GONE
+        binding.loadingAnimationView.cancelAnimation()
+    }
+
+    fun setDataToSharedVM(data: Product) {
+        sharedProductVM.setData(data)
+    }
+
+    fun navigateToDetailProduct() {
+        initTransitionOpen()
+        openActivity(DetailProductActivity::class.java)
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.add_info_product
+package com.kien.petclub.presentation.product.add_info_product
 
 import android.app.Activity
 import android.content.Intent
@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
@@ -21,6 +20,7 @@ import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.initTransitionClose
 import com.kien.petclub.presentation.base.BaseActivity
+import com.kien.petclub.presentation.base.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -36,6 +36,8 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
     private lateinit var popUp: AddInfoProductPopup
 
     private val viewModel: AddInfoProductViewModel by viewModels()
+
+    private val popUpViewModel: SharedViewModel<String> by viewModels()
 
     private var parentTypeId = EMPTY_STRING
 
@@ -151,10 +153,9 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
         }.launchIn(lifecycleScope)
 
 
-        val popUpViewModel = ViewModelProvider(this)[SharedViewModel::class.java]
         lifecycleScope.launch {
-            popUpViewModel.dataPopup.collect {
-                if (it.isNotBlank() && it.isNotEmpty()) {
+            popUpViewModel.data.collect {
+                if (!it.isNullOrBlank() && it.isNotEmpty()) {
                     if (parentTypeId != EMPTY_STRING && typeAddInfo == VALUE_TYPE) {
                         viewModel.updateTypeProduct(parentTypeId, it)
                         parentTypeId = EMPTY_STRING
@@ -172,6 +173,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
                         stopLoadingAnimation()
                         adapter.setData(it.value)
                     }
+
                     is Resource.Loading -> {
                         showLoadingAnimation()
                     }
@@ -212,7 +214,6 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
     }
 
     override fun onClickListener(data: InfoProduct) {
-        // TODO Need pass data of parent if this is child of type
         val intent = Intent()
         intent.putExtra(DATA, data.name)
         intent.putExtra(KEY_TYPE, typeAddInfo)

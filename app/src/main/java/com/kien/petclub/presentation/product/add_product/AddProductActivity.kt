@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.add_product
+package com.kien.petclub.presentation.product.add_product
 
 import android.app.Activity
 import android.content.Intent
@@ -20,14 +20,14 @@ import com.kien.petclub.databinding.ActivityAddProductBinding
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.initTransitionClose
 import com.kien.petclub.extensions.showToast
-import com.kien.petclub.presentation.add_info_product.AddInfoProductActivity
-import com.kien.petclub.presentation.base.AddActivity
+import com.kien.petclub.presentation.product.add_info_product.AddInfoProductActivity
+import com.kien.petclub.presentation.base.ProductActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class AddProductActivity : AddActivity<ActivityAddProductBinding>() {
+class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
 
     private lateinit var typeProduct: String
 

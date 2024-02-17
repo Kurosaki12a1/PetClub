@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.add_info_product
+package com.kien.petclub.presentation.product.add_info_product
 
 import android.graphics.Color
 import android.graphics.Insets
@@ -14,25 +14,21 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.EMPTY_STRING
 import com.kien.petclub.constants.Constants.VALUE_BRAND
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ViewPopUpBinding
+import com.kien.petclub.presentation.base.SharedViewModel
 
 class AddInfoProductPopup(private val typeInfoProduct: String) : DialogFragment() {
 
-    private lateinit var viewModel: SharedViewModel
+    private val viewModel by activityViewModels<SharedViewModel<String>>()
 
     private lateinit var binding: ViewPopUpBinding
 
     override fun getTheme(): Int = R.style.PrettyDialogAnimation
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity())[SharedViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

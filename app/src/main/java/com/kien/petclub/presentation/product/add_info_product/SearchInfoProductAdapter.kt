@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.add_info_product
+package com.kien.petclub.presentation.product.add_info_product
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -154,4 +154,12 @@ class SearchInfoProductAdapter(
         val tvInfo = binding.tvInfo
     }
 
+}
+
+interface SearchInfoProductListener {
+    fun onAddInfoProduct(data: InfoProduct)
+
+    fun onDeleteInfoProduct(data: InfoProduct)
+
+    fun onClickListener(data: InfoProduct)
 }

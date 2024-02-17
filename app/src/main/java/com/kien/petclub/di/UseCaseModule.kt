@@ -22,6 +22,7 @@ import com.kien.petclub.domain.usecase.firebase_db.user.DeleteUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.GetUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.IsSignedInUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.UpdateUserUseCase
+import com.kien.petclub.domain.usecase.storage.DownloadImageUseCase
 import com.kien.petclub.domain.usecase.storage.UploadImageUseCase
 import dagger.Module
 import dagger.Provides
@@ -155,6 +156,12 @@ class UseCaseModule {
     @Singleton
     fun provideDeleteInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteInfoProductUseCase {
         return DeleteInfoProductUseCase(firebaseDBRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDownloadImageUseCase(storage : FirebaseStorageRepository) : DownloadImageUseCase {
+        return DownloadImageUseCase(storage)
     }
 
 }

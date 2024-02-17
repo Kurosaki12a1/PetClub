@@ -14,11 +14,14 @@
     <string name="home">Tổng quan</string>
     <string name="bill">Hóa đơn</string>
     <string name="goods">Hàng hóa</string>
+    <string name="services">Dịch vụ</string>
     <string name="notification">Thông báo</string>
     <string name="more">Nhiều hơn</string>
 
     <string name="add_goods">Thêm hàng hóa</string>
     <string name="add_service">Thêm dịch vụ</string>
+    <string name="edit_goods">Sửa hàng hóa</string>
+    <string name="edit_service">Sửa dịch vụ</string>
     <string name="choose_brand">Chọn thương hiệu</string>
     <string name="choose_type">Chọn nhóm hàng</string>
     <string name="choose_location">Chọn vị trí</string>
@@ -107,9 +110,15 @@
     <string name="add">Thêm</string>
     <string name="delete">Xóa</string>
 
+    <!-- Detail Product Popup -->
+    <string name="print">In tem mã</string>
+    <string name="stop_selling">Ngừng kinh doanh</string>
+    <string name="delete_product">Xóa hàng hóa</string>
 
     <string name="press_again_to_exit">Nhấn lần nữa để thoát!</string>
     <string name="confirm">Xác nhận</string>
     <!-- Error -->
+
+    <string name="delete_success">Xóa thành công</string>
 
 </resources>
