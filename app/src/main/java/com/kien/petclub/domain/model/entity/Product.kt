@@ -29,9 +29,26 @@ sealed class Product {
         val location: String? = null,
         val description: String,
         val note: String,
-        val photo: List<String>? = null
+        val photo: List<String>? = null,
+        val minimumStock: String? = "0",
+        val maximumStock: String? = "999999999"
     ) : Product()
 }
+
+fun Product.getPhoto(): List<String>? {
+    return when (this) {
+        is Product.Goods -> this.photo
+        is Product.Service -> this.photo
+    }
+}
+
+fun Product.getStock() : Int {
+    return when (this) {
+        is Product.Goods -> this.stock.toInt()
+        is Product.Service -> 0
+    }
+}
+
 
 fun mapSnapshotToGoods(snapshot: DataSnapshot): Product.Goods {
     val id = snapshot.child("id").getValue(String::class.java)

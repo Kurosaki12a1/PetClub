@@ -6,16 +6,18 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:gravity="center"
         android:text="@string/home"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size20"
+        android:textSize="@dimen/text_size22"
         android:textStyle="bold"
         app:drawableLeftCompat="@mipmap/ic_app"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.4" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -30,12 +32,12 @@
         android:id="@+id/infoDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/dimen10"
         android:gravity="center_vertical"
         android:padding="@dimen/dimen5"
         android:text="@string/today"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size22"
-        android:drawablePadding="@dimen/dimen10"
         app:drawableLeftCompat="@drawable/ic_calendar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line1" />

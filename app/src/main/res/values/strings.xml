@@ -75,6 +75,8 @@
     <string name="note_order">Ghi chú đặt hàng</string>
     <string name="view_more">Xem thêm</string>
 
+    <string name="measure_stock_detail">%1$s > %2$s</string>
+
     <string name="sell_direct">Bán trực tiếp</string>
     <string name="point_accumulation">Tích điểm</string>
 

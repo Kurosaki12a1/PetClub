@@ -13,6 +13,7 @@ import com.kien.petclub.R
 import com.kien.petclub.constants.Constants
 import com.kien.petclub.databinding.ActivityAddProductBinding
 import com.kien.petclub.domain.model.entity.Product
+import com.kien.petclub.domain.model.entity.getPhoto
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.initTransitionClose
 import com.kien.petclub.extensions.showToast
@@ -25,6 +26,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
+
+    private lateinit var product: Product
 
     private var currentListImage = ArrayList<Uri>()
 
@@ -142,8 +145,7 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
                         showLoadingAnimation()
                     }
 
-                    else -> {
-                    }
+                    else -> {}
                 }
             }
         }
@@ -173,6 +175,7 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
     }
 
     private fun updateUI(product: Product) {
+        this.product = product
         when (product) {
             is Product.Goods -> {
                 binding.idEdit.updateText(product.id)
@@ -229,6 +232,8 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
         val stock = binding.inventoryEdit.text.toString()
         val weight = binding.weightEdit.text.toString()
         val location = binding.locationEdit.text.toString()
+        val minimumStock = binding.minimumInventoryEdit.text.toString()
+        val maximumStock = binding.maximumInventoryEdit.text.toString()
 
         if (id.isEmpty()
             || name.isEmpty()
@@ -255,7 +260,10 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
             location = location,
             description = description,
             note = note,
-            photo = listImages.subtract(currentListImage.toSet()).toList()
+            newestPhoto = listImages.subtract(currentListImage.toSet()).toList(),
+            photo = product.getPhoto(),
+            minimumStock = minimumStock,
+            maximumStock = maximumStock
         )
     }
 

@@ -51,13 +51,19 @@ class EditProductViewModel @Inject constructor(
         location: String,
         description: String,
         note: String,
-        photo: List<Uri>? = null
+        newestPhoto: List<Uri>? = null,
+        photo: List<String>? = null,
+        minimumStock: String?,
+        maximumStock: String?
     ) {
         if (typeProduct == Constants.VALUE_GOODS) {
             viewModelScope.launch {
-                uploadImageUseCase(photo).flatMapConcat {
+                uploadImageUseCase(newestPhoto).flatMapConcat {
                     when (it) {
                         is Resource.Success -> {
+                            val listPhoto = ArrayList<String>()
+                            listPhoto.addAll(photo ?: emptyList())
+                            listPhoto.addAll(it.value)
                             val goods = Product.Goods(
                                 id,
                                 code,
@@ -71,7 +77,9 @@ class EditProductViewModel @Inject constructor(
                                 location,
                                 description,
                                 note,
-                                photo = it.value.ifEmpty { null }
+                                photo = listPhoto,
+                                minimumStock = minimumStock,
+                                maximumStock = maximumStock
                             )
                             updateProductUseCase(id, goods)
                         }
@@ -90,9 +98,12 @@ class EditProductViewModel @Inject constructor(
             }
         } else {
             viewModelScope.launch {
-                uploadImageUseCase(photo).flatMapConcat {
+                uploadImageUseCase(newestPhoto).flatMapConcat {
                     when (it) {
                         is Resource.Success -> {
+                            val listPhoto = ArrayList<String>()
+                            listPhoto.addAll(photo ?: emptyList())
+                            listPhoto.addAll(it.value)
                             val service = Product.Service(
                                 id,
                                 code,
@@ -103,7 +114,7 @@ class EditProductViewModel @Inject constructor(
                                 buyingPrice,
                                 description,
                                 note,
-                                photo = it.value.ifEmpty { null }
+                                photo = listPhoto
                             )
                             updateProductUseCase(id, service)
                         }

@@ -2,7 +2,6 @@ package com.kien.petclub.presentation.product.add_product
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
-import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.usecase.firebase_db.product.AddProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.CheckExistenceProductUseCase
 import com.kien.petclub.domain.usecase.storage.UploadImageUseCase
@@ -97,7 +96,9 @@ class AddProductViewModel @Inject constructor(
         location: String,
         description: String,
         note: String,
-        photo: List<Uri>? = null
+        photo: List<Uri>? = null,
+        minimumStock: String? = "0",
+        maximumStock: String? = "999999"
     ) {
         val isListPhotoEmpty = photo.isNullOrEmpty()
         viewModelScope.launch {
@@ -135,7 +136,9 @@ class AddProductViewModel @Inject constructor(
                             location = location,
                             description = description,
                             note = note,
-                            photo = it.value.ifEmpty { null }
+                            photo = it.value.ifEmpty { null },
+                            minimumStock = minimumStock,
+                            maximumStock = maximumStock
                         )
                     }
 

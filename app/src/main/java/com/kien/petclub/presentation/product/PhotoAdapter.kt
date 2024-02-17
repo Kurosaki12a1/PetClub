@@ -4,6 +4,10 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.kien.petclub.R
 import com.kien.petclub.R.drawable
 import com.kien.petclub.R.layout
 import com.kien.petclub.databinding.AddPhotoItemBinding
@@ -30,7 +34,14 @@ class PhotoAdapter(
             return
         }
         if (position < listUriImage.size) {
-            holder.ivPhoto.setImageURI(listUriImage[position])
+            val requestOptions = RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(drawable.ic_add_camera)
+
+            Glide.with(holder.itemView.context)
+                .load(listUriImage[position])
+                .apply(requestOptions)
+                .into(holder.ivPhoto)
         } else {
             holder.ivPhoto.setImageResource(drawable.ic_add_camera)
             holder.itemView.setOnClickListener {

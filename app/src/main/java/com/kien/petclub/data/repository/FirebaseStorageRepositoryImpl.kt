@@ -69,7 +69,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
         emit(Resource.Loading)
         val imageUris = mutableListOf<Uri>()
         listFileRef.forEach { fileRef ->
-            val ref = storage.reference.child(fileRef)
+            val ref = storage.getReferenceFromUrl(fileRef)
             val downloadUri = ref.downloadUrl.await()
             imageUris.add(downloadUri)
         }

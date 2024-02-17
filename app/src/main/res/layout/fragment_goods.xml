@@ -7,22 +7,26 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:gravity="center"
         android:text="@string/goods"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size20"
+        android:textSize="@dimen/text_size24"
         android:textStyle="bold"
         app:drawableLeftCompat="@mipmap/ic_app"
+        app:layout_constraintHeight_percent="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.4" />
 
     <ImageView
         android:id="@+id/ivSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen18"
+        android:paddingTop="@dimen/dimen20"
+        android:paddingBottom="@dimen/dimen20"
         android:src="@drawable/ic_sort_new"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen30"
+        android:paddingTop="@dimen/dimen20"
+        android:paddingBottom="@dimen/dimen20"
         android:src="@drawable/ic_filter_new"
         app:layout_constraintBottom_toBottomOf="@id/title"
         app:layout_constraintEnd_toStartOf="@id/ivSort"
@@ -43,6 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen30"
+        android:paddingTop="@dimen/dimen20"
+        android:paddingBottom="@dimen/dimen20"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_search_new"
         app:layout_constraintBottom_toBottomOf="@id/title"
@@ -62,38 +70,38 @@
         android:id="@+id/infoGoods"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen10"
-        android:textSize="@dimen/text_size14"
+        android:paddingStart="@dimen/dimen10"
+        android:paddingEnd="@dimen/dimen10"
+        android:layout_marginTop="@dimen/dimen10"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size16"
         android:textStyle="bold"
+        android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/line1"
         tools:text="100 hàng hóa - Tồn kho 200" />
 
-    <ImageView
-        android:id="@+id/infoPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen2"
-        android:layout_marginEnd="@dimen/dimen8"
-        android:src="@drawable/ic_arrow_down"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line1" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/filterPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size14"
+        android:paddingStart="@dimen/dimen10"
+        android:paddingEnd="@dimen/dimen10"
+        android:text="@string/selling_price"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size16"
         android:textStyle="bold"
+        app:drawableEndCompat="@drawable/ic_arrow_down"
         app:layout_constraintBottom_toBottomOf="@id/infoGoods"
-        app:layout_constraintEnd_toStartOf="@id/infoPrice"
-        app:layout_constraintTop_toTopOf="@id/infoGoods"
-        tools:text="Giá bán" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/infoGoods" />
 
     <View
         android:id="@+id/line2"
         android:layout_width="0dp"
         android:layout_height="@dimen/dimen10"
+        android:layout_marginTop="@dimen/dimen10"
         android:background="@color/backgroundDarkGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

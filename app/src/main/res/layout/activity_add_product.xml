@@ -60,9 +60,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvListPhoto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:background="@color/gray"
+                android:clipToPadding="false"
+                android:scrollbars="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_percent="0.2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@id/areaInput" />
 
@@ -214,8 +217,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:hint="@string/choose_type"
                     android:drawableEnd="@drawable/ic_right_arrow"
+                    android:hint="@string/choose_type"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
@@ -247,8 +250,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
-                    android:hint="@string/choose_brand"
                     android:drawableEnd="@drawable/ic_right_arrow"
+                    android:hint="@string/choose_brand"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
@@ -409,9 +412,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
+                    android:drawableEnd="@drawable/ic_right_arrow"
                     android:hint="@string/choose_location"
                     android:textColor="@color/black"
-                    android:drawableEnd="@drawable/ic_right_arrow"
                     android:textSize="@dimen/text_size16" />
 
             </LinearLayout>
@@ -565,8 +568,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_percent="0.25"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.25"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="true"

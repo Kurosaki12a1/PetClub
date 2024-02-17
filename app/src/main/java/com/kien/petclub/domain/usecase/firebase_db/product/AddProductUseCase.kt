@@ -50,7 +50,9 @@ class AddProductUseCase @Inject constructor(
         location: String,
         description: String,
         note: String,
-        photo: List<String>? = null
+        photo: List<String>? = null,
+        minimumStock: String?,
+        maximumStock: String?
     ): Flow<Resource<Unit>> {
         val goods = Product.Goods(
             id = id,
@@ -65,7 +67,9 @@ class AddProductUseCase @Inject constructor(
             location = location,
             description = description,
             note = note,
-            photo = photo
+            photo = photo,
+            minimumStock = minimumStock,
+            maximumStock = maximumStock
         )
         return firebaseDBRepository.addGoodsDatabase(goods)
     }

@@ -163,6 +163,8 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
             val stock = binding.inventoryEdit.text.toString()
             val weight = binding.weightEdit.text.toString()
             val location = binding.locationEdit.text.toString()
+            val minimumStock = binding.minimumInventoryEdit.text.toString()
+            val maximumStock = binding.maximumInventoryEdit.text.toString()
 
             if (stock.isEmpty() || weight.isEmpty() || location.isEmpty()) {
                 showToast("Please fill all fields")
@@ -182,7 +184,9 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
                 stock = stock,
                 weight = weight,
                 location = location,
-                photo = listImages
+                photo = listImages,
+                minimumStock = minimumStock,
+                maximumStock = maximumStock
             )
         } else {
             viewModel.addService(
