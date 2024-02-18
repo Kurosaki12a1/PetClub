@@ -3,5 +3,12 @@
     <style name="PrettyDialogAnimation" parent="Theme.MaterialComponents.DayNight.Dialog.Bridge">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="fontFamily">@font/poppins_light</item>
+    </style>
+
+    <style name="SortDialogFragment" parent="Theme.MaterialComponents.DayNight.Dialog.Bridge">
+        <item name="android:windowEnterAnimation">@anim/anim_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_out</item>
+        <item name="fontFamily">@font/poppins_light</item>
     </style>
 </resources>

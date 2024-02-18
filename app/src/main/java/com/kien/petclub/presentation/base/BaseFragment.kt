@@ -47,10 +47,6 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
         super.onPause()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        vb = null
-    }
 
     override
     fun onViewCreated(view: View, savedInstanceState: Bundle?) {

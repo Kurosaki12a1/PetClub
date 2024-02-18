@@ -37,6 +37,7 @@
 
     <!-- Hàng hóa -->
     <string name="goods_info">%1$s hàng hóa - Tồn kho %2$s</string>
+    <string name="sort_product">Sắp xếp hàng hóa</string>
 
     <!-- Hóa đơn -->
     <string name="bill_info">%1$s hóa đơn</string>
@@ -123,4 +124,15 @@
 
     <string name="delete_success">Xóa thành công</string>
 
+    <!-- Sort Product Choose -->
+    <string name="newest">Mới nhất</string>
+    <string name="oldest">Cũ nhất</string>
+    <string name="name_az">A-Z</string>
+    <string name="name_za">Z-A</string>
+    <string name="price_low_high">Giá thấp đến cao</string>
+    <string name="price_high_low">Giá cao đến thấp</string>
+    <string name="inventory_low_high">Tồn kho tăng</string>
+    <string name="inventory_high_low">Tồn kho giảm</string>
+    <string name="sell_low_height">Bán ít nhất</string>
+    <string name="sell_high_low">Bán nhiều nhất</string>
 </resources>

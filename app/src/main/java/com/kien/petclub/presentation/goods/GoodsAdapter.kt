@@ -11,7 +11,7 @@ import com.kien.petclub.R
 import com.kien.petclub.databinding.ItemDetailProductBinding
 import com.kien.petclub.domain.model.entity.Product
 
-class GoodsAdapter(private var listener: GoodsListener) :
+class GoodsAdapter(private var listener: OnClickListener) :
     RecyclerView.Adapter<GoodsAdapter.ViewHolder>() {
 
     companion object {

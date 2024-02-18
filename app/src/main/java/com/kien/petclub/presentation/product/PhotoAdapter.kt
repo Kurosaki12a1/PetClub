@@ -33,6 +33,12 @@ class PhotoAdapter(
             holder.itemView.setOnClickListener { onItemClick.invoke(position) }
             return
         }
+
+        // Set height = width
+        holder.itemView.post {
+            holder.itemView.layoutParams.width = holder.itemView.height
+        }
+
         if (position < listUriImage.size) {
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

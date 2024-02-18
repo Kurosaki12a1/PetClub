@@ -1,5 +1,6 @@
 package com.kien.petclub.presentation.goods
 
+import android.content.Context
 import android.graphics.Color
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -16,12 +17,20 @@ import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.goods.GoodsAdapter.Companion.BUYING_PRICE
 import com.kien.petclub.presentation.goods.GoodsAdapter.Companion.SELLING_PRICE
+import com.kien.petclub.presentation.goods.popup.ChooserItem
+import com.kien.petclub.presentation.goods.popup.SortChooserPopup
 import com.kien.petclub.presentation.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), GoodsListener {
+class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), OnClickListener {
+
+    companion object {
+        private const val TAG_POPUP = "SortChooserPopup"
+    }
+
+    private lateinit var popUpSort: SortChooserPopup
 
     private val viewModel: GoodsViewModel by viewModels()
 
@@ -34,8 +43,16 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), GoodsListener {
         binding.rvProduct.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvProduct.adapter = adapter
 
+        popUpSort = SortChooserPopup(initChooserItem(requireActivity()),this)
+
         binding.filterPrice.setOnClickListener {
             showPopup(it)
+        }
+
+        binding.ivSort.setOnClickListener {
+            if (!popUpSort.isVisible) {
+                popUpSort.show(requireActivity().supportFragmentManager, TAG_POPUP)
+            }
         }
     }
 
@@ -46,6 +63,8 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), GoodsListener {
 
     override fun setupObservers() {
         super.setupObservers()
+        // OnResume fragment only called when fragment recreated, so we must cal this
+
         lifecycleScope.launch {
             viewModel.productResponse.collect {
                 when (it) {
@@ -77,7 +96,12 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), GoodsListener {
         }
     }
 
-    private fun setInfoTotalProduct(list: ArrayList<Product>) {
+    override fun onItemClick(item: ChooserItem, position: Int) {
+        popUpSort.dismiss()
+    }
+
+    private fun setInfoTotalProduct(list: ArrayList<Product>?) {
+        if (list.isNullOrEmpty()) return
         val totalStock = list.sumOf { it.getStock() }.toString()
         val text = getString(R.string.goods_info, list.size.toString(), totalStock)
         val spannable = SpannableString(text)
@@ -131,5 +155,19 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), GoodsListener {
         popUp.show()
     }
 
+    private fun initChooserItem(context: Context): ArrayList<ChooserItem> {
+        return arrayListOf(
+            ChooserItem(context.getString(R.string.newest), true),
+            ChooserItem(context.getString(R.string.oldest), false),
+            ChooserItem(context.getString(R.string.name_az), false),
+            ChooserItem(context.getString(R.string.name_za), false),
+            ChooserItem(context.getString(R.string.price_low_high), false),
+            ChooserItem(context.getString(R.string.price_high_low), false),
+            ChooserItem(context.getString(R.string.inventory_low_high), false),
+            ChooserItem(context.getString(R.string.inventory_high_low), false),
+            ChooserItem(context.getString(R.string.sell_low_height), false),
+            ChooserItem(context.getString(R.string.sell_high_low), false)
+        )
+    }
 
 }
