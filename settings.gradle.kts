@@ -22,5 +22,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Pet Club"
-include(":app")
- 
+include(":management")
+include(":main")
