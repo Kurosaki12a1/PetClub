@@ -20,7 +20,7 @@ import com.kien.petclub.constants.Constants.EMPTY_STRING
 import com.kien.petclub.constants.Constants.VALUE_BRAND
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ViewPopUpBinding
-import com.kien.petclub.SharedViewModel
+import com.kien.petclub.presentation.base.SharedViewModel
 
 class AddInfoProductPopup(private val typeInfoProduct: String) : DialogFragment() {
 

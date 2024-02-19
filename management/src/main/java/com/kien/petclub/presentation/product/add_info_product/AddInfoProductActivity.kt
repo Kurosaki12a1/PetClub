@@ -20,7 +20,7 @@ import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.initTransitionClose
 import com.kien.petclub.presentation.base.BaseActivity
-import com.kien.petclub.SharedViewModel
+import com.kien.petclub.presentation.base.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn

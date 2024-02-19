@@ -7,6 +7,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kien.petclub.DataHolder
 import com.kien.petclub.R
 import com.kien.petclub.databinding.FragmentGoodsBinding
 import com.kien.petclub.domain.model.entity.Product
@@ -86,8 +87,7 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), OnClickListener {
 
     override fun onItemClick(product: Product) {
         lifecycleScope.launch {
-            val act = requireActivity() as HomeActivity
-            act.setDataToSharedVM(product)
+            DataHolder.put(product)
             (requireActivity() as HomeActivity).navigateToDetailProduct()
         }
     }

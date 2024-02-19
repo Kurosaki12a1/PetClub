@@ -8,8 +8,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kien.petclub.DataHolder
 import com.kien.petclub.R
-import com.kien.petclub.SharedViewModel
 import com.kien.petclub.constants.Constants
 import com.kien.petclub.databinding.ActivityAddProductBinding
 import com.kien.petclub.domain.model.entity.Product
@@ -33,8 +33,6 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
     private lateinit var typeProduct: String
 
     private val viewModel: EditProductViewModel by viewModels()
-
-    private val sharedProductVM: SharedViewModel<Product> by viewModels()
 
     override fun getViewTypes(viewType: String) {
         typeProduct = viewType
@@ -115,13 +113,7 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
     override fun setUpObserver() {
         super.setUpObserver()
 
-        lifecycleScope.launch {
-            sharedProductVM.data.collect {
-                if (it != null) {
-                    updateUI(it)
-                }
-            }
-        }
+        DataHolder.retrieve()?.let { updateUI(it) }
 
         lifecycleScope.launch {
             viewModel.downloadResponse.collect {
@@ -150,7 +142,7 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
             viewModel.updateResponse.collect {
                 when (it) {
                     is Resource.Success -> {
-                        sharedProductVM.setData(it.value)
+                        DataHolder.put(it.value)
                         stopLoadingAnimation()
                         initTransitionClose()
                         finish()

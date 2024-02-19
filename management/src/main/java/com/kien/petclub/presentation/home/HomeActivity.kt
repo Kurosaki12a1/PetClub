@@ -6,13 +6,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.kien.petclub.R
-import com.kien.petclub.SharedViewModel
 import com.kien.petclub.constants.Constants.KEY_TYPE
 import com.kien.petclub.constants.Constants.TIMEOUT_BACK_PRESS
 import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
-import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.extensions.getVisibleRect
 import com.kien.petclub.extensions.initTransitionOpen
 import com.kien.petclub.extensions.isInVisibleRect
@@ -32,11 +30,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     private val viewModel by viewModels<HomeViewModel>()
 
-    private val sharedProductVM: SharedViewModel<Product> by viewModels()
-
     override fun getViewBinding() = ActivityHomeBinding.inflate(layoutInflater)
 
     private val animationLoader = AnimationLoader(this)
+
 
     override fun setUpBottomNavigation() {
         setUpBottomNavigationWithGraphs()
@@ -50,6 +47,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
             R.navigation.nav_notifications,
             R.navigation.nav_more
         )
+
 
         val controller = binding.bottomNavigationView.setupWithNavController(
             graphIds,
@@ -73,6 +71,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     }
 
     override fun setUpObserver() {
+
         viewModel.fabState.onEach { isExtended ->
             if (isExtended) {
                 expandFab()
@@ -162,10 +161,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     fun stopLoadingAnimation() {
         binding.loadingAnimationView.visibility = View.GONE
         binding.loadingAnimationView.cancelAnimation()
-    }
-
-    fun setDataToSharedVM(data: Product) {
-        sharedProductVM.setData(data)
     }
 
     fun navigateToDetailProduct() {

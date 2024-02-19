@@ -5,8 +5,8 @@ import android.widget.PopupMenu
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kien.petclub.DataHolder
 import com.kien.petclub.R
-import com.kien.petclub.SharedViewModel
 import com.kien.petclub.constants.Constants
 import com.kien.petclub.databinding.ActivityDetailProductBinding
 import com.kien.petclub.domain.model.entity.Product
@@ -28,13 +28,18 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
 
     private lateinit var product: Product
 
-    private val sharedProductVM: SharedViewModel<Product> by viewModels()
-
     private val viewModel: DetailProductViewModel by viewModels()
 
     override fun getViewBinding(): ActivityDetailProductBinding =
         ActivityDetailProductBinding.inflate(layoutInflater)
 
+    override fun onResume() {
+        super.onResume()
+        DataHolder.retrieve()?.let {
+            product = it
+            updateUI(it)
+        }
+    }
 
     override fun setUpViews() {
         super.setUpViews()
@@ -62,14 +67,6 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
 
     override fun setUpObserver() {
         super.setUpObserver()
-        lifecycleScope.launch {
-            sharedProductVM.data.collect {
-                if (it != null) {
-                    product = it
-                    updateUI(it)
-                }
-            }
-        }
 
         lifecycleScope.launch {
             viewModel.deleteResponse.collect {
