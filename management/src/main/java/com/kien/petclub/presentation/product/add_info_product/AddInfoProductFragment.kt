@@ -1,84 +1,83 @@
 package com.kien.petclub.presentation.product.add_info_product
 
-import android.app.Activity
-import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
-import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
-import com.kien.petclub.constants.Constants.DATA
-import com.kien.petclub.constants.Constants.EMPTY_STRING
-import com.kien.petclub.constants.Constants.KEY_TYPE
-import com.kien.petclub.constants.Constants.VALUE_BRAND
-import com.kien.petclub.constants.Constants.VALUE_LOCATION
-import com.kien.petclub.constants.Constants.VALUE_TYPE
-import com.kien.petclub.databinding.ActivityAddInfoProductBinding
+import com.kien.petclub.constants.Constants
+import com.kien.petclub.constants.Constants.TAG_ADD_INFO_PRODUCT_POPUP
+import com.kien.petclub.databinding.FragmentAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
-import com.kien.petclub.extensions.initTransitionClose
-import com.kien.petclub.presentation.base.BaseActivity
-import com.kien.petclub.presentation.base.SharedViewModel
+import com.kien.petclub.extensions.backToPreviousScreen
+import com.kien.petclub.presentation.product.base.BaseProductFragment
+import com.kien.petclub.presentation.product.common.ProductListener
+import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
+import com.kien.petclub.presentation.product.utils.showDialog
+import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
-    SearchInfoProductListener {
-
+class AddInfoProductFragment : BaseProductFragment<FragmentAddInfoProductBinding>(),
+    ProductListener {
     private lateinit var adapter: SearchInfoProductAdapter
 
-    private lateinit var popUp: AddInfoProductPopup
+    private lateinit var dialog: AddInfoProductPopup
 
     private val viewModel: AddInfoProductViewModel by viewModels()
 
-    private val popUpViewModel: SharedViewModel<String> by viewModels()
+    private val sharedVM: ShareMultiDataViewModel by activityViewModels()
 
-    private var parentTypeId = EMPTY_STRING
+    private var parentTypeId = Constants.EMPTY_STRING
 
-    private var typeAddInfo = EMPTY_STRING
+    private var typeAddInfo = Constants.EMPTY_STRING
 
-    override fun getViewBinding(): ActivityAddInfoProductBinding =
-        ActivityAddInfoProductBinding.inflate(layoutInflater)
+    private var job: Job? = null
+
+    override fun getViewBinding(): FragmentAddInfoProductBinding =
+        FragmentAddInfoProductBinding.inflate(layoutInflater)
 
     override fun setUpViews() {
         super.setUpViews()
 
-        typeAddInfo = intent?.getStringExtra(KEY_TYPE) ?: EMPTY_STRING
-        popUp = AddInfoProductPopup(typeAddInfo)
+        typeAddInfo = arguments?.getString(Constants.KEY_TYPE) ?: Constants.EMPTY_STRING
+        dialog = AddInfoProductPopup(typeAddInfo)
 
         viewModel.getInfo(typeAddInfo)
 
         adapter = SearchInfoProductAdapter(typeAddInfo, this)
-        binding.rvList.layoutManager = LinearLayoutManager(this)
+        binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvList.adapter = adapter
 
         binding.ivBack.setOnClickListener {
-            initTransitionClose()
-            finish()
+            backToPreviousScreen()
         }
 
         binding.ivAdd.setOnClickListener {
-            showAddPopUp()
+            showDialog(dialog, TAG_ADD_INFO_PRODUCT_POPUP)
         }
 
         when (typeAddInfo) {
-            VALUE_BRAND -> {
+            Constants.VALUE_BRAND -> {
                 binding.title.text = getString(R.string.choose_brand)
                 binding.etSearch.hint = getString(R.string.name_brand)
             }
 
-            VALUE_LOCATION -> {
+            Constants.VALUE_LOCATION -> {
                 binding.title.text = getString(R.string.choose_location)
                 binding.etSearch.hint = getString(R.string.name_location)
             }
 
-            VALUE_TYPE -> {
+            Constants.VALUE_TYPE -> {
                 binding.title.text = getString(R.string.choose_type)
                 binding.etSearch.hint = getString(R.string.name_type)
             }
@@ -96,12 +95,12 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
         })
     }
 
-    override fun setUpObserver() {
-        super.setUpObserver()
+    override fun setupObservers() {
+        super.setupObservers()
         viewModel.addResponse.onEach {
             when (it) {
                 is Resource.Success -> {
-                    stopLoadingAnimation()
+                    hideLoadingAnimation()
                     // After added, we continue update recycler view
                     viewModel.getInfo(typeAddInfo)
                 }
@@ -111,7 +110,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
                 }
 
                 else -> {
-                    stopLoadingAnimation()
+                    hideLoadingAnimation()
                 }
             }
         }.launchIn(lifecycleScope)
@@ -119,7 +118,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
         viewModel.getResponse.onEach {
             when (it) {
                 is Resource.Success -> {
-                    stopLoadingAnimation()
+                    hideLoadingAnimation()
                     adapter.setData(it.value)
                 }
 
@@ -128,7 +127,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
                 }
 
                 else -> {
-                    stopLoadingAnimation()
+                    hideLoadingAnimation()
                 }
             }
 
@@ -146,19 +145,19 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
                 }
 
                 else -> {
-                    stopLoadingAnimation()
+                    hideLoadingAnimation()
                 }
             }
 
         }.launchIn(lifecycleScope)
 
 
-        lifecycleScope.launch {
-            popUpViewModel.data.collect {
+        job = lifecycleScope.launch {
+            sharedVM.infoProductResponse.collect {
                 if (!it.isNullOrBlank() && it.isNotEmpty()) {
-                    if (parentTypeId != EMPTY_STRING && typeAddInfo == VALUE_TYPE) {
+                    if (parentTypeId != Constants.EMPTY_STRING && typeAddInfo == Constants.VALUE_TYPE) {
                         viewModel.updateTypeProduct(parentTypeId, it)
-                        parentTypeId = EMPTY_STRING
+                        parentTypeId = Constants.EMPTY_STRING
                     } else {
                         viewModel.addInfo(typeAddInfo, it)
                     }
@@ -170,7 +169,7 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
             viewModel.searchResponse.collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                         adapter.setData(it.value)
                     }
 
@@ -179,34 +178,19 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
                     }
 
                     else -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                     }
                 }
             }
         }
     }
 
-    private fun showAddPopUp() {
-        popUp.show(supportFragmentManager, "AddInfoProductPopup")
-    }
-
-    private fun showLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.VISIBLE
-        binding.loadingAnimationView.playAnimation()
-    }
-
-    private fun stopLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.GONE
-        binding.loadingAnimationView.cancelAnimation()
-    }
-
-
     override fun onAddInfoProduct(data: InfoProduct) {
         // If this is child of type, we need pass parent id
-        if (typeAddInfo == VALUE_TYPE && data.parentId == null) {
+        if (typeAddInfo == Constants.VALUE_TYPE && data.parentId == null) {
             parentTypeId = data.id
         }
-        showAddPopUp()
+        showDialog(dialog, TAG_ADD_INFO_PRODUCT_POPUP)
     }
 
     override fun onDeleteInfoProduct(data: InfoProduct) {
@@ -214,13 +198,9 @@ class AddInfoProductActivity : BaseActivity<ActivityAddInfoProductBinding>(),
     }
 
     override fun onClickListener(data: InfoProduct) {
-        val intent = Intent()
-        intent.putExtra(DATA, data.name)
-        intent.putExtra(KEY_TYPE, typeAddInfo)
-        setResult(Activity.RESULT_OK, intent)
-        initTransitionClose()
-        finish()
+        job?.cancel()
+        sharedVM.setInfoProduct(data.name)
+        backToPreviousScreen()
     }
-
 
 }

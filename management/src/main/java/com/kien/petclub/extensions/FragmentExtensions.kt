@@ -1,6 +1,10 @@
 package com.kien.petclub.extensions
 
 import android.app.Activity
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
@@ -38,3 +42,28 @@ fun <T> Fragment.setNavigationResult(result: T, key: String = "result") {
 }
 
 fun Fragment.hideKeyboard() = hideSoftInput(requireActivity())
+
+fun Fragment.checkAndRequestPermission(permission: String, requestCode: Int) {
+    requireActivity().checkAndRequestPermission(permission, requestCode)
+}
+
+fun Fragment.requestPermissionLauncher(
+    onResult: (Boolean) -> Unit
+): ActivityResultLauncher<String> {
+    val launcher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            onResult(isGranted)
+        }
+    return launcher
+}
+
+
+fun Fragment.getResultLauncher(
+    onResult: (Int, Intent?) -> Unit
+): ActivityResultLauncher<Intent> {
+    val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            onResult(result.resultCode, result.data)
+        }
+    return launcher
+}

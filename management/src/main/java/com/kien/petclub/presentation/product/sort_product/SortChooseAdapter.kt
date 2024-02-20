@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.goods.popup
+package com.kien.petclub.presentation.product.sort_product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kien.petclub.R
 import com.kien.petclub.databinding.SortChooseItemBinding
-import com.kien.petclub.presentation.goods.OnClickListener
+import com.kien.petclub.domain.model.entity.ChooserItem
+import com.kien.petclub.presentation.product.common.ProductListener
 
 class SortChooseAdapter(
-    private val listener: OnClickListener
+    private val listener: ProductListener
 ) : ListAdapter<ChooserItem, SortChooseAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -50,8 +51,3 @@ class SortChooseAdapter(
         val name = binding.tvName
     }
 }
-
-data class ChooserItem(
-    val name: String,
-    var isSelected: Boolean = false
-)

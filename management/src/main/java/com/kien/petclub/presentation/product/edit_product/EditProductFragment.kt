@@ -1,30 +1,34 @@
 package com.kien.petclub.presentation.product.edit_product
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kien.petclub.DataHolder
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants
-import com.kien.petclub.databinding.ActivityAddProductBinding
+import com.kien.petclub.databinding.FragmentAddProductBinding
 import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.domain.model.entity.getPhoto
 import com.kien.petclub.domain.util.Resource
-import com.kien.petclub.extensions.initTransitionClose
-import com.kien.petclub.extensions.showToast
+import com.kien.petclub.extensions.backToPreviousScreen
+import com.kien.petclub.extensions.navigateSafe
 import com.kien.petclub.extensions.updateText
-import com.kien.petclub.presentation.base.ProductActivity
-import com.kien.petclub.presentation.product.add_info_product.AddInfoProductActivity
+import com.kien.petclub.presentation.product.base.BaseProductImageFragment
+import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
+import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
+import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
+class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>() {
+
+    private var typeInfo = Constants.EMPTY_STRING
 
     private lateinit var product: Product
 
@@ -32,7 +36,16 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
 
     private lateinit var typeProduct: String
 
+    private val sharedViewModel: ShareMultiDataViewModel by activityViewModels()
+
     private val viewModel: EditProductViewModel by viewModels()
+
+    private var job: Job? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        hideBottomNavigationAndFabButton()
+    }
 
     override fun getViewTypes(viewType: String) {
         typeProduct = viewType
@@ -56,12 +69,12 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
     }
 
     // Use same view AddProductActivity
-    override fun getViewBinding(): ActivityAddProductBinding =
-        ActivityAddProductBinding.inflate(layoutInflater)
+    override fun getViewBinding(): FragmentAddProductBinding =
+        FragmentAddProductBinding.inflate(layoutInflater)
 
     override fun setUpViews() {
         super.setUpViews()
-        binding.ivBack.setOnClickListener { finish() }
+        binding.ivBack.setOnClickListener { backToPreviousScreen() }
 
         binding.ivBarCode.setOnClickListener {
             requestCameraPermissionAndStartScanner(REQUEST_CODE_BARCODE_SERVICE)
@@ -73,60 +86,60 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
 
         binding.save.setOnClickListener { submit() }
 
-        val resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val type =
-                        result.data?.getStringExtra(Constants.KEY_TYPE) ?: Constants.EMPTY_STRING
-                    val data = result.data?.getStringExtra(Constants.DATA) ?: Constants.EMPTY_STRING
-                    when (type) {
-                        Constants.VALUE_BRAND -> binding.brandEdit.setText(data)
-                        Constants.VALUE_TYPE -> binding.typeEdit.setText(data)
-                        Constants.VALUE_LOCATION -> binding.locationEdit.setText(data)
-                    }
-                }
-            }
 
         binding.brandEdit.setOnClickListener {
-            val intent = Intent(this, AddInfoProductActivity::class.java)
-            intent.putExtra(Constants.KEY_TYPE, Constants.VALUE_BRAND)
-            resultLauncher.launch(intent)
+            typeInfo = Constants.VALUE_BRAND
+            navigateSafe(EditProductFragmentDirections.actionOpenAddInfoFragment(Constants.VALUE_BRAND))
         }
 
         binding.typeEdit.setOnClickListener {
-            val intent = Intent(this, AddInfoProductActivity::class.java)
-            intent.putExtra(Constants.KEY_TYPE, Constants.VALUE_TYPE)
-            resultLauncher.launch(intent)
+            typeInfo = Constants.VALUE_TYPE
+            navigateSafe(EditProductFragmentDirections.actionOpenAddInfoFragment(Constants.VALUE_TYPE))
         }
 
         binding.locationEdit.setOnClickListener {
-            val intent = Intent(this, AddInfoProductActivity::class.java)
-            intent.putExtra(Constants.KEY_TYPE, Constants.VALUE_LOCATION)
-            resultLauncher.launch(intent)
+            typeInfo = Constants.VALUE_LOCATION
+            navigateSafe(EditProductFragmentDirections.actionOpenAddInfoFragment(Constants.VALUE_LOCATION))
         }
 
         binding.rvListPhoto.adapter = photoAdapter
         binding.rvListPhoto.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
     }
 
-    override fun setUpObserver() {
-        super.setUpObserver()
+    override fun setupObservers() {
+        super.setupObservers()
+        sharedViewModel.setInfoProduct(null)
 
-        DataHolder.retrieve()?.let { updateUI(it) }
+        job = lifecycleScope.launch {
+            sharedViewModel.productResponse.collect {
+                it?.let { updateUI(it) }
+            }
+        }
+
+        lifecycleScope.launch {
+            sharedViewModel.infoProductResponse.collect {
+                if (it.isNullOrEmpty()) return@collect
+                when (typeInfo) {
+                    Constants.VALUE_BRAND -> binding.brandEdit.setText(it)
+                    Constants.VALUE_TYPE -> binding.typeEdit.setText(it)
+                    Constants.VALUE_LOCATION -> binding.locationEdit.setText(it)
+                }
+            }
+        }
 
         lifecycleScope.launch {
             viewModel.downloadResponse.collect {
                 when (it) {
                     is Resource.Success -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                         currentListImage = ArrayList(it.value)
                         listImages.addAll(currentListImage)
                         photoAdapter.setData(listImages)
                     }
 
                     is Resource.Failure -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                     }
 
                     is Resource.Loading -> {
@@ -142,14 +155,14 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
             viewModel.updateResponse.collect {
                 when (it) {
                     is Resource.Success -> {
-                        DataHolder.put(it.value)
-                        stopLoadingAnimation()
-                        initTransitionClose()
-                        finish()
+                        job?.cancel()
+                        sharedViewModel.setProduct(it.value)
+                        hideLoadingAnimation()
+                        backToPreviousScreen()
                     }
 
                     is Resource.Failure -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                     }
 
                     is Resource.Loading -> {
@@ -230,7 +243,7 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
             || type.isEmpty()
             || brand.isEmpty()
         ) {
-            showToast("Please fill all fields")
+            //showToast("Please fill all fields")
             return
         }
 
@@ -253,15 +266,5 @@ class EditProductActivity : ProductActivity<ActivityAddProductBinding>() {
             minimumStock = minimumStock,
             maximumStock = maximumStock
         )
-    }
-
-    private fun showLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.VISIBLE
-        binding.loadingAnimationView.playAnimation()
-    }
-
-    private fun stopLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.GONE
-        binding.loadingAnimationView.cancelAnimation()
     }
 }

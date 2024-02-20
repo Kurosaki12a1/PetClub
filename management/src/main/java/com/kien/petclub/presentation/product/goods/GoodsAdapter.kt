@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.goods
+package com.kien.petclub.presentation.product.goods
 
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +17,9 @@ import com.kien.petclub.domain.model.entity.getName
 import com.kien.petclub.domain.model.entity.getSellingPrice
 import com.kien.petclub.domain.model.entity.getStock
 import com.kien.petclub.domain.model.entity.getUpdateDated
+import com.kien.petclub.presentation.product.common.ProductListener
 
-class GoodsAdapter(private var listener: OnClickListener) :
+class GoodsAdapter(private var listener: ProductListener) :
     RecyclerView.Adapter<GoodsAdapter.ViewHolder>() {
 
     companion object {

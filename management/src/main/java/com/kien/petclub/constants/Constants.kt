@@ -54,4 +54,7 @@ object Constants {
 
     const val TIMEOUT_BACK_PRESS = 2000L
     const val EMPTY_STRING = ""
+
+    // Product Fragment
+    const val TAG_ADD_INFO_PRODUCT_POPUP = "AddInfoProductPopUp"
 }

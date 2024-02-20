@@ -1,11 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_goods"
     app:startDestination="@id/goodsFragment">
 
     <fragment
         android:id="@+id/goodsFragment"
-        android:name="com.kien.petclub.presentation.goods.GoodsFragment"
-        android:label="GoodsFragment" />
+        android:name="com.kien.petclub.presentation.product.goods.GoodsFragment"
+        android:label="GoodsFragment"
+        tools:layout="@layout/fragment_goods">
+
+        <action
+            android:id="@+id/action_open_search_fragment"
+            app:destination="@id/search_fragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:exitAnim="@anim/anim_slide_out_left"
+            app:popEnterAnim="@anim/anim_slide_in_left"
+            app:popExitAnim="@anim/anim_slide_out_right" />
+
+        <action
+            android:id="@+id/action_open_detail_fragment"
+            app:destination="@id/detail_product_fragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:exitAnim="@anim/anim_slide_out_left"
+            app:popEnterAnim="@anim/anim_slide_in_left"
+            app:popExitAnim="@anim/anim_slide_out_right"
+            app:popUpTo="@id/goodsFragment"
+            app:popUpToInclusive="false" />
+
+        <action
+            android:id="@+id/action_open_add_fragment"
+            app:destination="@id/add_product_fragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:exitAnim="@anim/anim_slide_out_left"
+            app:popEnterAnim="@anim/anim_slide_in_left"
+            app:popExitAnim="@anim/anim_slide_out_right"
+            app:popUpTo="@id/goodsFragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="key_type"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/search_fragment"
+        android:name="com.kien.petclub.presentation.product.search.SearchFragment"
+        tools:layout="@layout/fragment_search_product" />
+
+    <fragment
+        android:id="@+id/detail_product_fragment"
+        android:name="com.kien.petclub.presentation.product.detail_product.DetailProductFragment"
+        tools:layout="@layout/fragment_detail_product">
+        <action
+            android:id="@+id/action_open_edit_fragment"
+            app:destination="@id/edit_product_fragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:exitAnim="@anim/anim_slide_out_left"
+            app:popEnterAnim="@anim/anim_slide_in_left"
+            app:popExitAnim="@anim/anim_slide_out_right"
+            app:popUpTo="@id/detail_product_fragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="key_type"
+                app:argType="string" />
+        </action>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_product_fragment"
+        android:name="com.kien.petclub.presentation.product.add_product.AddProductFragment"
+        tools:layout="@layout/fragment_add_product">
+
+        <action
+            android:id="@+id/action_open_add_info_fragment"
+            app:destination="@id/add_info_product_fragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:exitAnim="@anim/anim_slide_out_left"
+            app:popEnterAnim="@anim/anim_slide_in_left"
+            app:popExitAnim="@anim/anim_slide_out_right"
+            app:popUpTo="@id/add_product_fragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="key_type"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/add_info_product_fragment"
+        android:name="com.kien.petclub.presentation.product.add_info_product.AddInfoProductFragment"
+        tools:layout="@layout/fragment_add_info_product" />
+
+    <fragment
+        android:id="@+id/edit_product_fragment"
+        android:name="com.kien.petclub.presentation.product.edit_product.EditProductFragment"
+        tools:layout="@layout/fragment_add_product" >
+        <action
+            android:id="@+id/action_open_add_info_fragment"
+            app:destination="@id/add_info_product_fragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:exitAnim="@anim/anim_slide_out_left"
+            app:popEnterAnim="@anim/anim_slide_in_left"
+            app:popExitAnim="@anim/anim_slide_out_right"
+            app:popUpTo="@id/add_product_fragment"
+            app:popUpToInclusive="false">
+            <argument
+                android:name="key_type"
+                app:argType="string" />
+        </action>
+    </fragment>
 </navigation>

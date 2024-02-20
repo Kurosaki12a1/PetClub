@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.goods.popup
+package com.kien.petclub.presentation.product.sort_product
 
 import android.graphics.Color
 import android.graphics.Insets
@@ -17,11 +17,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
 import com.kien.petclub.databinding.SortChooserPopUpBinding
-import com.kien.petclub.presentation.goods.OnClickListener
+import com.kien.petclub.domain.model.entity.ChooserItem
+import com.kien.petclub.presentation.product.common.ProductListener
 
 class SortChooserPopup(
     private val listItem: ArrayList<ChooserItem>,
-    private val listener: OnClickListener
+    private val listener: ProductListener
 ) : DialogFragment() {
 
     private lateinit var binding: SortChooserPopUpBinding
@@ -86,7 +87,7 @@ class SortChooserPopup(
             dismiss()
         }
 
-        adapter = SortChooseAdapter(object : OnClickListener {
+        adapter = SortChooseAdapter(object : ProductListener {
             override fun onItemClick(item: ChooserItem, position: Int) {
                 super.onItemClick(item, position)
                 listItem.forEach { it.isSelected = false }

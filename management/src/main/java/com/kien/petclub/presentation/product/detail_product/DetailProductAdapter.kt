@@ -17,12 +17,12 @@ class DetailProductAdapter : RecyclerView.Adapter<DetailProductAdapter.ViewHolde
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): DetailProductAdapter.ViewHolder {
+    ): ViewHolder {
         val root = LayoutInflater.from(parent.context).inflate(R.layout.add_photo_item, parent, false)
         return ViewHolder(AddPhotoItemBinding.bind(root))
     }
 
-    override fun onBindViewHolder(holder: DetailProductAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = listPhoto[position]
         val requestOptions = RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)

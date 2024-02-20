@@ -15,10 +15,11 @@ import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ItemAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
+import com.kien.petclub.presentation.product.common.ProductListener
 
 class SearchInfoProductAdapter(
     private val typeInfo: String,
-    private val listener: SearchInfoProductListener? = null
+    private val listener: ProductListener? = null
 ) : RecyclerView.Adapter<SearchInfoProductAdapter.ViewHolder>() {
 
     companion object {
@@ -154,12 +155,4 @@ class SearchInfoProductAdapter(
         val tvInfo = binding.tvInfo
     }
 
-}
-
-interface SearchInfoProductListener {
-    fun onAddInfoProduct(data: InfoProduct)
-
-    fun onDeleteInfoProduct(data: InfoProduct)
-
-    fun onClickListener(data: InfoProduct)
 }

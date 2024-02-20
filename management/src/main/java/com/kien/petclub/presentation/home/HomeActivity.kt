@@ -5,8 +5,8 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.kien.petclub.R
-import com.kien.petclub.constants.Constants.KEY_TYPE
 import com.kien.petclub.constants.Constants.TIMEOUT_BACK_PRESS
 import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
@@ -18,8 +18,7 @@ import com.kien.petclub.extensions.openActivity
 import com.kien.petclub.extensions.setupWithNavController
 import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.base.BaseActivity
-import com.kien.petclub.presentation.product.add_product.AddProductActivity
-import com.kien.petclub.presentation.product.detail_product.DetailProductActivity
+import com.kien.petclub.presentation.product.goods.GoodsFragmentDirections
 import com.kien.petclub.utils.AnimationLoader
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -94,20 +93,34 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         })
     }
 
-    private fun openProductActivity(view: View, vararg extras: Pair<String, Any?>) {
+    fun hideBottomNavigationAndFabButton() {
+        viewModel.setFabState(false) // When open something then we must always set this to false
+        binding.bottomNavigationView.visibility = View.GONE
+        binding.actionBtn.visibility = View.GONE
+        binding.divider.visibility = View.GONE
+    }
+
+    fun showBottomNavigationAndFabButton() {
+        binding.bottomNavigationView.visibility = View.VISIBLE
+        binding.actionBtn.visibility = View.VISIBLE
+        binding.divider.visibility = View.VISIBLE
+    }
+
+    private fun openProductView(view: View, productType: String) {
         view.setOnClickListener {
-            openActivity(AddProductActivity::class.java, *extras)
-            initTransitionOpen()
+            findNavController(R.id.fragment_host_container).navigate(
+                GoodsFragmentDirections.actionOpenAddFragment(productType)
+            )
         }
     }
 
     private fun setUpFloatingActionButton() {
         binding.actionBtn.setIconResource(R.drawable.ic_add_btn)
         binding.actionBtn.setOnClickListener { viewModel.updateFabState() }
-        openProductActivity(binding.addService, KEY_TYPE to VALUE_SERVICE)
-        openProductActivity(binding.tvAddService, KEY_TYPE to VALUE_SERVICE)
-        openProductActivity(binding.addGoods, KEY_TYPE to VALUE_GOODS)
-        openProductActivity(binding.tvAddGoods, KEY_TYPE to VALUE_GOODS)
+        openProductView(binding.addService, VALUE_SERVICE)
+        openProductView(binding.tvAddService, VALUE_SERVICE)
+        openProductView(binding.addGoods, VALUE_GOODS)
+        openProductView(binding.tvAddGoods, VALUE_GOODS)
     }
 
     private fun shrinkFab() {
@@ -161,11 +174,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     fun stopLoadingAnimation() {
         binding.loadingAnimationView.visibility = View.GONE
         binding.loadingAnimationView.cancelAnimation()
-    }
-
-    fun navigateToDetailProduct() {
-        initTransitionOpen()
-        openActivity(DetailProductActivity::class.java)
     }
 
 }

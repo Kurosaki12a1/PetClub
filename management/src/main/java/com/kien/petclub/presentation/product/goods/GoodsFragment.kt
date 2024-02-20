@@ -1,29 +1,33 @@
-package com.kien.petclub.presentation.goods
+package com.kien.petclub.presentation.product.goods
 
 import android.content.Context
 import android.graphics.Color
 import android.view.View
 import android.widget.PopupMenu
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kien.petclub.DataHolder
 import com.kien.petclub.R
 import com.kien.petclub.databinding.FragmentGoodsBinding
 import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.domain.model.entity.getStock
 import com.kien.petclub.domain.util.Resource
+import com.kien.petclub.extensions.navigateSafe
 import com.kien.petclub.presentation.base.BaseFragment
-import com.kien.petclub.presentation.goods.GoodsAdapter.Companion.BUYING_PRICE
-import com.kien.petclub.presentation.goods.GoodsAdapter.Companion.SELLING_PRICE
-import com.kien.petclub.presentation.goods.popup.ChooserItem
-import com.kien.petclub.presentation.goods.popup.SortChooserPopup
 import com.kien.petclub.presentation.home.HomeActivity
+import com.kien.petclub.domain.model.entity.ChooserItem
+import com.kien.petclub.presentation.product.common.ProductListener
+import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.BUYING_PRICE
+import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.SELLING_PRICE
+import com.kien.petclub.presentation.product.sort_product.SortChooserPopup
+import com.kien.petclub.presentation.product.utils.showBottomNavigationAndFabButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), OnClickListener {
+class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener {
 
     companion object {
         private const val TAG_POPUP = "SortChooserPopup"
@@ -32,6 +36,8 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), OnClickListener {
     private lateinit var popUpSort: SortChooserPopup
 
     private val viewModel: GoodsViewModel by viewModels()
+
+    private val shareVM: ShareMultiDataViewModel by activityViewModels()
 
     private lateinit var adapter: GoodsAdapter
     override fun getViewBinding(): FragmentGoodsBinding =
@@ -53,11 +59,17 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), OnClickListener {
                 popUpSort.show(requireActivity().supportFragmentManager, TAG_POPUP)
             }
         }
+
+        binding.ivSearch.setOnClickListener {
+            (requireActivity() as HomeActivity).hideBottomNavigationAndFabButton()
+            navigateSafe(GoodsFragmentDirections.actionOpenSearchFragment())
+        }
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.getAllProduct()
+        showBottomNavigationAndFabButton()
     }
 
     override fun setupObservers() {
@@ -87,8 +99,8 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), OnClickListener {
 
     override fun onItemClick(product: Product) {
         lifecycleScope.launch {
-            DataHolder.put(product)
-            (requireActivity() as HomeActivity).navigateToDetailProduct()
+            shareVM.setProduct(product)
+            navigateSafe(GoodsFragmentDirections.actionOpenDetailFragment())
         }
     }
 

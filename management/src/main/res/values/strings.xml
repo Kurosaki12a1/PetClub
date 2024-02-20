@@ -135,4 +135,6 @@
     <string name="inventory_high_low">Tồn kho giảm</string>
     <string name="sell_low_height">Bán ít nhất</string>
     <string name="sell_high_low">Bán nhiều nhất</string>
+
+    <string name="hint_search">Tìm kiếm</string>
 </resources>

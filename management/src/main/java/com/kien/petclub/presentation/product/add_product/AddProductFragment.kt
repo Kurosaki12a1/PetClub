@@ -1,43 +1,40 @@
 package com.kien.petclub.presentation.product.add_product
 
-import android.app.Activity
-import android.content.Intent
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
-import com.kien.petclub.constants.Constants.DATA
-import com.kien.petclub.constants.Constants.EMPTY_STRING
-import com.kien.petclub.constants.Constants.KEY_TYPE
-import com.kien.petclub.constants.Constants.VALUE_BRAND
-import com.kien.petclub.constants.Constants.VALUE_GOODS
-import com.kien.petclub.constants.Constants.VALUE_LOCATION
-import com.kien.petclub.constants.Constants.VALUE_SERVICE
-import com.kien.petclub.constants.Constants.VALUE_TYPE
-import com.kien.petclub.databinding.ActivityAddProductBinding
+import com.kien.petclub.constants.Constants
+import com.kien.petclub.databinding.FragmentAddProductBinding
 import com.kien.petclub.domain.util.Resource
-import com.kien.petclub.extensions.initTransitionClose
-import com.kien.petclub.extensions.showToast
-import com.kien.petclub.presentation.product.add_info_product.AddInfoProductActivity
-import com.kien.petclub.presentation.base.ProductActivity
+import com.kien.petclub.extensions.backToPreviousScreen
+import com.kien.petclub.extensions.navigateSafe
+import com.kien.petclub.presentation.product.base.BaseProductImageFragment
+import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
+import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
+class AddProductFragment : BaseProductImageFragment<FragmentAddProductBinding>() {
+
+    private var typeInfo = Constants.EMPTY_STRING
 
     private lateinit var typeProduct: String
 
     private val viewModel: AddProductViewModel by viewModels()
 
-    override fun getViewBinding() = ActivityAddProductBinding.inflate(layoutInflater)
+    private val sharedVM: ShareMultiDataViewModel by activityViewModels()
+
+    override fun getViewBinding() = FragmentAddProductBinding.inflate(layoutInflater)
 
     override fun setUpViews() {
         super.setUpViews()
-        binding.ivBack.setOnClickListener { finish() }
+        binding.ivBack.setOnClickListener { backToPreviousScreen() }
 
         binding.ivBarCode.setOnClickListener {
             requestCameraPermissionAndStartScanner(REQUEST_CODE_BARCODE_SERVICE)
@@ -49,61 +46,51 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
 
         binding.save.setOnClickListener { submit() }
 
-        val resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val type = result.data?.getStringExtra(KEY_TYPE) ?: EMPTY_STRING
-                    val data = result.data?.getStringExtra(DATA) ?: EMPTY_STRING
-                    when (type) {
-                        VALUE_BRAND -> binding.brandEdit.setText(data)
-                        VALUE_TYPE -> binding.typeEdit.setText(data)
-                        VALUE_LOCATION -> binding.locationEdit.setText(data)
-                    }
-                }
-            }
-
         binding.brandEdit.setOnClickListener {
-            val intent = Intent(this, AddInfoProductActivity::class.java)
-            intent.putExtra(KEY_TYPE, VALUE_BRAND)
-            resultLauncher.launch(intent)
+            typeInfo = Constants.VALUE_BRAND
+            navigateSafe(AddProductFragmentDirections.actionOpenAddInfoFragment(Constants.VALUE_BRAND))
         }
 
         binding.typeEdit.setOnClickListener {
-            val intent = Intent(this, AddInfoProductActivity::class.java)
-            intent.putExtra(KEY_TYPE, VALUE_TYPE)
-            resultLauncher.launch(intent)
+            typeInfo = Constants.VALUE_TYPE
+            navigateSafe(AddProductFragmentDirections.actionOpenAddInfoFragment(Constants.VALUE_TYPE))
         }
 
         binding.locationEdit.setOnClickListener {
-            val intent = Intent(this, AddInfoProductActivity::class.java)
-            intent.putExtra(KEY_TYPE, VALUE_LOCATION)
-            resultLauncher.launch(intent)
+            typeInfo = Constants.VALUE_LOCATION
+            navigateSafe(AddProductFragmentDirections.actionOpenAddInfoFragment(Constants.VALUE_LOCATION))
         }
 
         binding.rvListPhoto.adapter = photoAdapter
         binding.rvListPhoto.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
     }
 
-    override fun setUpObserver() {
-        super.setUpObserver()
+    override fun setupObservers() {
+        super.setupObservers()
+        sharedVM.setInfoProduct(null)
+
         viewModel.response.onEach {
             when (it) {
                 is Resource.Success -> {
-                    stopLoadingAnimation()
-                    initTransitionClose()
-                    finish()
+                    hideLoadingAnimation()
+                    backToPreviousScreen()
                 }
 
-                is Resource.Failure -> {
-                    stopLoadingAnimation()
-                }
+                is Resource.Failure -> hideLoadingAnimation()
 
-                is Resource.Loading -> {
-                    showLoadingAnimation()
-                }
+                is Resource.Loading -> showLoadingAnimation()
 
                 else -> {}
+            }
+        }.launchIn(lifecycleScope)
+
+        sharedVM.infoProductResponse.onEach {
+            if (it.isNullOrEmpty()) return@onEach
+            when (typeInfo) {
+                Constants.VALUE_BRAND -> binding.brandEdit.setText(it)
+                Constants.VALUE_TYPE -> binding.typeEdit.setText(it)
+                Constants.VALUE_LOCATION -> binding.locationEdit.setText(it)
             }
         }.launchIn(lifecycleScope)
     }
@@ -111,7 +98,7 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
     override fun getViewTypes(viewType: String) {
         typeProduct = viewType
         when (viewType) {
-            VALUE_GOODS -> {
+            Constants.VALUE_GOODS -> {
                 binding.title.setText(R.string.add_goods)
                 binding.areaInventory.visibility = View.VISIBLE
                 binding.areaWeight.visibility = View.VISIBLE
@@ -119,7 +106,7 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
                 binding.areaInventoryDetails.visibility = View.VISIBLE
             }
 
-            VALUE_SERVICE -> {
+            Constants.VALUE_SERVICE -> {
                 binding.title.setText(R.string.add_service)
                 binding.areaInventory.visibility = View.GONE
                 binding.areaWeight.visibility = View.GONE
@@ -155,11 +142,11 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
             || type.isEmpty()
             || brand.isEmpty()
         ) {
-            showToast("Please fill all fields")
+            //   showToast("Please fill all fields")
             return
         }
 
-        if (typeProduct == VALUE_GOODS) {
+        if (typeProduct == Constants.VALUE_GOODS) {
             val stock = binding.inventoryEdit.text.toString()
             val weight = binding.weightEdit.text.toString()
             val location = binding.locationEdit.text.toString()
@@ -167,7 +154,7 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
             val maximumStock = binding.maximumInventoryEdit.text.toString()
 
             if (stock.isEmpty() || weight.isEmpty() || location.isEmpty()) {
-                showToast("Please fill all fields")
+                //   showToast("Please fill all fields")
                 return
             }
 
@@ -204,13 +191,4 @@ class AddProductActivity : ProductActivity<ActivityAddProductBinding>() {
         }
     }
 
-    private fun showLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.VISIBLE
-        binding.loadingAnimationView.playAnimation()
-    }
-
-    private fun stopLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.GONE
-        binding.loadingAnimationView.cancelAnimation()
-    }
 }

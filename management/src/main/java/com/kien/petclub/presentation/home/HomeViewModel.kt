@@ -20,6 +20,10 @@ class HomeViewModel @Inject constructor() : BaseViewModel() {
         _fabState.value = !_fabState.value
     }
 
+    fun setFabState(state: Boolean) {
+        _fabState.value = state
+    }
+
     fun shrinkFab(ev: MotionEvent, outRect: Rect) {
         // When the user touches the screen and the FAB is extended, we shrink it
         if (fabState.value && !outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {

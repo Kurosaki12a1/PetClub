@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.product
+package com.kien.petclub.presentation.product.common
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.kien.petclub.R
 import com.kien.petclub.R.drawable
 import com.kien.petclub.R.layout
 import com.kien.petclub.databinding.AddPhotoItemBinding

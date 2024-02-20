@@ -6,23 +6,26 @@ import com.kien.petclub.domain.repository.FirebaseStorageRepository
 import com.kien.petclub.domain.usecase.auth.SignInUseCase
 import com.kien.petclub.domain.usecase.auth.SignOutUseCase
 import com.kien.petclub.domain.usecase.auth.SignUpUseCase
-import com.kien.petclub.domain.usecase.firebase_db.product.info_product.AddInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.AddProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.CheckExistenceProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.DeleteProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.GetGoodsUseCase
-import com.kien.petclub.domain.usecase.firebase_db.product.info_product.GetInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.GetProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.GetServiceUseCase
-import com.kien.petclub.domain.usecase.firebase_db.product.info_product.SearchInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.ProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.UpdateProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.AddInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.product.info_product.DeleteInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.GetInfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.InfoProductUseCase
+import com.kien.petclub.domain.usecase.firebase_db.product.info_product.SearchInfoProductUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.AddUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.DeleteUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.GetUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.IsSignedInUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.UpdateUserUseCase
 import com.kien.petclub.domain.usecase.storage.DownloadImageUseCase
+import com.kien.petclub.domain.usecase.storage.ImageUseCase
 import com.kien.petclub.domain.usecase.storage.UploadImageUseCase
 import dagger.Module
 import dagger.Provides
@@ -130,7 +133,7 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideUploadImageUseCase(storage : FirebaseStorageRepository) : UploadImageUseCase {
+    fun provideUploadImageUseCase(storage: FirebaseStorageRepository): UploadImageUseCase {
         return UploadImageUseCase(storage)
     }
 
@@ -160,8 +163,46 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideDownloadImageUseCase(storage : FirebaseStorageRepository) : DownloadImageUseCase {
+    fun provideDownloadImageUseCase(storage: FirebaseStorageRepository): DownloadImageUseCase {
         return DownloadImageUseCase(storage)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInfoProductUseCase(
+        addUseCase: AddInfoProductUseCase,
+        deleteUseCase: DeleteInfoProductUseCase,
+        getUseCase: GetInfoProductUseCase,
+        searchUseCase: SearchInfoProductUseCase
+    ): InfoProductUseCase {
+        return InfoProductUseCase(addUseCase, deleteUseCase, getUseCase, searchUseCase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductUseCase(
+        addUseCase: AddProductUseCase,
+        deleteUseCase: DeleteProductUseCase,
+        getUseCase: GetProductUseCase,
+        updateUseCase: UpdateProductUseCase,
+        checkExistenceProductUseCase: CheckExistenceProductUseCase
+    ): ProductUseCase {
+        return ProductUseCase(
+            addUseCase,
+            deleteUseCase,
+            getUseCase,
+            updateUseCase,
+            checkExistenceProductUseCase
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideImageUseCase(
+        uploadUseCase: UploadImageUseCase,
+        downloadUseCase: DownloadImageUseCase
+    ): ImageUseCase {
+        return ImageUseCase(uploadUseCase, downloadUseCase)
     }
 
 }

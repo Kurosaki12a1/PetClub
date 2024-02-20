@@ -1,52 +1,51 @@
 package com.kien.petclub.presentation.product.detail_product
 
+import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
-import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kien.petclub.DataHolder
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants
-import com.kien.petclub.databinding.ActivityDetailProductBinding
+import com.kien.petclub.databinding.FragmentDetailProductBinding
 import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.domain.model.entity.getPhoto
 import com.kien.petclub.domain.util.Resource
-import com.kien.petclub.extensions.initTransitionClose
-import com.kien.petclub.extensions.initTransitionOpen
-import com.kien.petclub.extensions.openActivity
-import com.kien.petclub.extensions.showToast
-import com.kien.petclub.presentation.base.BaseActivity
-import com.kien.petclub.presentation.product.edit_product.EditProductActivity
+import com.kien.petclub.extensions.backToPreviousScreen
+import com.kien.petclub.extensions.navigateSafe
+import com.kien.petclub.presentation.product.base.BaseProductFragment
+import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
+import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
+import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
-
+class DetailProductFragment : BaseProductFragment<FragmentDetailProductBinding>() {
     private lateinit var adapter: DetailProductAdapter
 
     private lateinit var product: Product
 
+    private val shareVM: ShareMultiDataViewModel by activityViewModels()
+
     private val viewModel: DetailProductViewModel by viewModels()
 
-    override fun getViewBinding(): ActivityDetailProductBinding =
-        ActivityDetailProductBinding.inflate(layoutInflater)
-
-    override fun onResume() {
-        super.onResume()
-        DataHolder.retrieve()?.let {
-            product = it
-            updateUI(it)
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        hideBottomNavigationAndFabButton()
     }
+
+    override fun getViewBinding(): FragmentDetailProductBinding =
+        FragmentDetailProductBinding.inflate(layoutInflater)
 
     override fun setUpViews() {
         super.setUpViews()
 
         binding.ivBack.setOnClickListener {
-            initTransitionClose()
-            finish()
+            backToPreviousScreen()
         }
 
         binding.ivOptions.setOnClickListener {
@@ -54,28 +53,35 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
         }
 
         binding.ivEdit.setOnClickListener {
-            initTransitionOpen()
-            openActivity(
-                EditProductActivity::class.java,
-                when (product) {
-                    is Product.Goods -> Constants.KEY_TYPE to Constants.VALUE_GOODS
-                    is Product.Service -> Constants.KEY_TYPE to Constants.VALUE_SERVICE
-                }
+            navigateSafe(
+                DetailProductFragmentDirections.actionOpenEditFragment(
+                    when (product) {
+                        is Product.Goods -> Constants.VALUE_GOODS
+                        is Product.Service -> Constants.VALUE_SERVICE
+                    }
+                )
             )
         }
     }
 
-    override fun setUpObserver() {
-        super.setUpObserver()
+    override fun setupObservers() {
+        super.setupObservers()
+        lifecycleScope.launch {
+            shareVM.productResponse.collect {
+                if (it != null) {
+                    product = it
+                    updateUI(it)
+                }
+            }
+        }
 
         lifecycleScope.launch {
             viewModel.deleteResponse.collect {
                 when (it) {
                     is Resource.Success -> {
-                        stopLoadingAnimation()
-                        showToast(getString(R.string.delete_success))
-                        initTransitionClose()
-                        finish()
+                        hideLoadingAnimation()
+                        //      showToast(getString(R.string.delete_success))
+                        backToPreviousScreen()
                     }
 
                     is Resource.Loading -> {
@@ -83,7 +89,7 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
                     }
 
                     is Resource.Failure -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                     }
 
                     else -> {}
@@ -95,7 +101,7 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
             viewModel.getPhotoResponse.collect {
                 when (it) {
                     is Resource.Success -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                         adapter.setData(it.value)
                     }
 
@@ -104,7 +110,7 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
                     }
 
                     is Resource.Failure -> {
-                        stopLoadingAnimation()
+                        hideLoadingAnimation()
                     }
 
                     else -> {}
@@ -186,11 +192,11 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
         adapter = DetailProductAdapter()
         binding.rvPhoto.adapter = adapter
         binding.rvPhoto.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun showPopup(view: View) {
-        val popup = PopupMenu(this, view)
+        val popup = PopupMenu(requireActivity(), view)
         popup.menuInflater.inflate(R.menu.detail_popup_menu, popup.menu)
         popup.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -210,15 +216,4 @@ class DetailProductActivity : BaseActivity<ActivityDetailProductBinding>() {
         }
         popup.show()
     }
-
-    private fun showLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.VISIBLE
-        binding.loadingAnimationView.playAnimation()
-    }
-
-    private fun stopLoadingAnimation() {
-        binding.loadingAnimationView.visibility = View.GONE
-        binding.loadingAnimationView.cancelAnimation()
-    }
-
 }

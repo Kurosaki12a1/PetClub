@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.goods
+package com.kien.petclub.presentation.product.goods
 
 import android.graphics.Color
 import android.text.SpannableString
