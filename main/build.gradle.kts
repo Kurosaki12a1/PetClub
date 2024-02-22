@@ -41,6 +41,10 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-Xopt-in=kotlin.RequiresOptIn",
+            "-Xopt-in=kotlin.OptIn"
+        )
     }
 
     packaging {
@@ -52,27 +56,25 @@ android {
     hilt {
         enableAggregatingTask = true
     }
+
 }
 
 dependencies {
     implementation(project(":management"))
     implementation(project(":ImagePicker"))
 
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation(libs.androidx.core.ktx)
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-    kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.4.2")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.kotlinx.metadata.jvm)
+
+    implementation(libs.play.services.auth)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
-    implementation("com.google.firebase:firebase-database:20.3.0")
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
-
-    // Firebase Storage
-    implementation("com.google.firebase:firebase-storage:20.3.0")
-
-
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
+    implementation(libs.firebase.storage)
 }
