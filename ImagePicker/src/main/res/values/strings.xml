@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="choose_image">Chọn ảnh</string>
+    <string name="complete_choose">Hoàn thành</string>
+    <string name="images_count">Tổng số %1$s hình ảnh</string>
+
+</resources>

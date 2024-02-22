@@ -1,5 +1,6 @@
 package com.kien.petclub.presentation.product.detail_product
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.widget.PopupMenu
@@ -189,7 +190,8 @@ class DetailProductFragment : BaseProductFragment<FragmentDetailProductBinding>(
 
     private fun setUpRecyclerView() {
         binding.rvPhoto.visibility = View.VISIBLE
-        adapter = DetailProductAdapter()
+        val widthItem = (Resources.getSystem().displayMetrics.widthPixels / 3.5f).toInt()
+        adapter = DetailProductAdapter(widthItem)
         binding.rvPhoto.adapter = adapter
         binding.rvPhoto.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)

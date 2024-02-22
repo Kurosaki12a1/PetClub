@@ -81,6 +81,8 @@
     <string name="sell_direct">Bán trực tiếp</string>
     <string name="point_accumulation">Tích điểm</string>
 
+    <string name="choose_image">Chọn ảnh</string>
+    <string name="complete_choose">Hoàn thành</string>
     <!-- Hint -->
     <string name="hint_goodsId">Mã hàng tự động</string>
     <string name="hint_barcode">Mã vạch</string>

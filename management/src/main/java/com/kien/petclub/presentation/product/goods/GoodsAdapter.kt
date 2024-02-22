@@ -75,6 +75,9 @@ class GoodsAdapter(private var listener: ProductListener) :
                     val requestOptions = RequestOptions()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.mipmap.ic_app)
+                        .centerCrop()
+                        .override(holder.itemView.context.resources.getDimensionPixelSize(R.dimen.dimen60))
+
                     Glide.with(holder.itemView.context)
                         .load(data.photo[0])
                         .apply(requestOptions)

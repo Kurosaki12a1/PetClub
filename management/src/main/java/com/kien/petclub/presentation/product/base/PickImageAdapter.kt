@@ -1,19 +1,27 @@
-package com.kien.petclub.presentation.product.common
+package com.kien.petclub.presentation.product.base
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.kien.imagepicker.R
+import com.kien.imagepicker.adapter.ImagePickerAdapter
 import com.kien.petclub.R.drawable
 import com.kien.petclub.R.layout
 import com.kien.petclub.databinding.AddPhotoItemBinding
+import com.kien.petclub.presentation.product.common.ImagePickerListener
 
-class PhotoAdapter(
-    private var onItemClick: ((position: Int) -> Unit)
-) : RecyclerView.Adapter<PhotoAdapter.AddPhotoViewHolder>() {
+class PickImageAdapter(
+    private var listener : ImagePickerListener,
+    private var size : Int
+) : RecyclerView.Adapter<PickImageAdapter.AddPhotoViewHolder>() {
 
     private var listUriImage = ArrayList<Uri>()
 
@@ -29,34 +37,38 @@ class PhotoAdapter(
     override fun onBindViewHolder(holder: AddPhotoViewHolder, position: Int) {
         // When no item
         if (listUriImage.size == 0) {
-            holder.itemView.setOnClickListener { onItemClick.invoke(position) }
+            holder.ivRemove.visibility = View.GONE
+            holder.itemView.setOnClickListener {
+                listener.onTakePhotoClick()
+            }
             return
         }
 
-        // Set height = width
-        holder.itemView.post {
-            holder.itemView.layoutParams.width = holder.itemView.height
-        }
-
         if (position < listUriImage.size) {
+            holder.ivRemove.visibility = View.VISIBLE
+
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(drawable.ic_add_camera)
+                .placeholder(R.drawable.ic_add_camera)
+                .transform(CenterCrop(), RoundedCorners(ImagePickerAdapter.RADIUS))
+                .override(size)
 
             Glide.with(holder.itemView.context)
                 .load(listUriImage[position])
                 .apply(requestOptions)
                 .into(holder.ivPhoto)
         } else {
+            holder.ivRemove.visibility = View.GONE
             holder.ivPhoto.setImageResource(drawable.ic_add_camera)
             holder.itemView.setOnClickListener {
-                onItemClick.invoke(position)
+                listener.onTakePhotoClick()
             }
         }
     }
 
     override fun getItemCount(): Int = listUriImage.size + 1 // The Last item is add photo
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(listUri: ArrayList<Uri>) {
         listUriImage.clear()
         listUriImage = ArrayList(listUri)
@@ -66,5 +78,6 @@ class PhotoAdapter(
     inner class AddPhotoViewHolder(binding: AddPhotoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val ivPhoto = binding.ivAddPhoto
+        val ivRemove = binding.ivRemovePhoto
     }
 }

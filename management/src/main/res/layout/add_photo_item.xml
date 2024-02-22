@@ -9,8 +9,15 @@
         android:id="@+id/ivAddPhoto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_add_camera" />
+
+    <ImageView
+        android:id="@+id/ivRemovePhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_delete" />
 
 </FrameLayout>

@@ -103,6 +103,7 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         }
 
         binding.rvListPhoto.adapter = photoAdapter
+        binding.rvListPhoto.setHasFixedSize(true)
         binding.rvListPhoto.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
     }

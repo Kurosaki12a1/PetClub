@@ -12,9 +12,7 @@ import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
 import com.kien.petclub.extensions.getVisibleRect
-import com.kien.petclub.extensions.initTransitionOpen
 import com.kien.petclub.extensions.isInVisibleRect
-import com.kien.petclub.extensions.openActivity
 import com.kien.petclub.extensions.setupWithNavController
 import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.base.BaseActivity
@@ -70,7 +68,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     }
 
     override fun setUpObserver() {
-
         viewModel.fabState.onEach { isExtended ->
             if (isExtended) {
                 expandFab()
@@ -83,6 +80,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+                    return
+                }
                 if (backPressedTime + TIMEOUT_BACK_PRESS > System.currentTimeMillis()) {
                     finish()
                 } else {
@@ -175,5 +176,4 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
         binding.loadingAnimationView.visibility = View.GONE
         binding.loadingAnimationView.cancelAnimation()
     }
-
 }

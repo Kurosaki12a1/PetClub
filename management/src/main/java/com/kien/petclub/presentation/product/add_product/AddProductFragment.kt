@@ -1,5 +1,6 @@
 package com.kien.petclub.presentation.product.add_product
 
+import android.net.Uri
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -11,6 +12,7 @@ import com.kien.petclub.databinding.FragmentAddProductBinding
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.extensions.navigateSafe
+import com.kien.petclub.presentation.home.HomeActivity
 import com.kien.petclub.presentation.product.base.BaseProductImageFragment
 import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
@@ -62,8 +64,15 @@ class AddProductFragment : BaseProductImageFragment<FragmentAddProductBinding>()
         }
 
         binding.rvListPhoto.adapter = photoAdapter
+        binding.rvListPhoto.setHasFixedSize(true)
         binding.rvListPhoto.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+    }
+
+    override fun onImagePickerResult(data: ArrayList<Uri>) {
+        super.onImagePickerResult(data)
+        listImages.addAll(data)
+        photoAdapter.setData(listImages)
     }
 
     override fun setupObservers() {
@@ -115,6 +124,7 @@ class AddProductFragment : BaseProductImageFragment<FragmentAddProductBinding>()
             }
         }
     }
+
 
     override fun onBarcodeScannerResult(data: String?, requestCode: Int) {
         super.onBarcodeScannerResult(data, requestCode)

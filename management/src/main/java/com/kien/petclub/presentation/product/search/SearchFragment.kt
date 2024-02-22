@@ -12,17 +12,6 @@ class SearchFragment : BaseFragment<FragmentSearchProductBinding>() {
     override fun getViewBinding(): FragmentSearchProductBinding =
         FragmentSearchProductBinding.inflate(layoutInflater)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    (requireActivity() as HomeActivity).showBottomNavigationAndFabButton()
-                    backToPreviousScreen()
-                }
-            })
-    }
 
     override fun setUpViews() {
 

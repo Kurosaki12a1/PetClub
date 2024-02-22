@@ -64,6 +64,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":ImagePicker"))
+
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")

@@ -43,12 +43,6 @@ android {
         jvmTarget = "17"
     }
 
-    buildFeatures {
-        buildConfig = true
-        dataBinding = true
-        viewBinding = true
-    }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -62,6 +56,7 @@ android {
 
 dependencies {
     implementation(project(":management"))
+    implementation(project(":ImagePicker"))
 
     implementation("androidx.core:core-ktx:1.12.0")
 

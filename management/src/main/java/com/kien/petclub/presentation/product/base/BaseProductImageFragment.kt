@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -12,11 +13,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewbinding.ViewBinding
 import com.google.zxing.integration.android.IntentIntegrator
+import com.kien.imagepicker.ImagePickerActivity
+import com.kien.imagepicker.utils.readUriListFromFile
 import com.kien.petclub.constants.Constants
 import com.kien.petclub.extensions.checkAndRequestPermission
 import com.kien.petclub.extensions.getResultLauncher
 import com.kien.petclub.extensions.requestPermissionLauncher
-import com.kien.petclub.presentation.product.common.PhotoAdapter
+import com.kien.petclub.presentation.product.common.ImagePickerListener
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.utils.convertMillisToDate
 
@@ -33,7 +36,7 @@ abstract class BaseProductImageFragment<VB : ViewBinding> : BaseProductFragment<
 
     private var requestCode: Int = 0
 
-    lateinit var photoAdapter: PhotoAdapter
+    lateinit var photoAdapter: PickImageAdapter
 
     var listImages = ArrayList<Uri>()
 
@@ -50,13 +53,20 @@ abstract class BaseProductImageFragment<VB : ViewBinding> : BaseProductFragment<
 
     override fun setUpViews() {
         super.setUpViews()
-        photoAdapter = PhotoAdapter { onImageClick(it) }
+        val widthItem = (Resources.getSystem().displayMetrics.widthPixels / 3.5f).toInt()
+        photoAdapter = PickImageAdapter(object : ImagePickerListener {
+            override fun onTakePhotoClick() {
+                onImageClick()
+            }
+        }, widthItem)
         photoAdapter.setData(listImages)
     }
 
-    open fun onImageClick(position: Int) {
-        requestPermissionsAndStartTakePhoto.launch(CAMERA_PERMISSION)
+    open fun onImageClick() {
+        getUriContent.launch(Intent(requireActivity(), ImagePickerActivity::class.java))
     }
+
+    open fun onImagePickerResult(data: ArrayList<Uri>) {}
 
     open fun onBarcodeScannerResult(data: String?, requestCode: Int) {}
 
@@ -123,5 +133,11 @@ abstract class BaseProductImageFragment<VB : ViewBinding> : BaseProductFragment<
                 }
             }
         }
+
+    private val getUriContent = getResultLauncher { resultCode, _ ->
+        if (resultCode == Activity.RESULT_OK) {
+            onImagePickerResult(readUriListFromFile(requireActivity()))
+        }
+    }
 
 }

@@ -15,3 +15,10 @@ interface ProductListener {
 
     fun onClickListener(data: InfoProduct) {}
 }
+
+interface ImagePickerListener {
+
+    fun onTakePhotoClick() {}
+    fun onImagePickerClick(position: Int) {}
+    fun onImageDeleteClick(position: Int) {}
+}
