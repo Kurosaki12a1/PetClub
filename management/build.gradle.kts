@@ -14,6 +14,7 @@ android {
 
     defaultConfig {
         minSdk = 29
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -36,11 +37,11 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
-        freeCompilerArgs += listOf(
+       /* freeCompilerArgs += listOf(
             "-opt-in=org.mylibrary.OptInAnnotation",
             "-Xopt-in=kotlin.RequiresOptIn",
             "-Xopt-in=kotlin.OptIn"
-        )
+        )*/
     }
 
     packaging {
@@ -62,6 +63,21 @@ android {
     hilt {
         enableAggregatingTask = true
     }
+
+    sourceSets {
+        getByName("main").java.srcDir("src/main/java")
+        getByName("test").java.srcDir("src/test/java")
+        getByName("androidTest").java.srcDir("src/androidTest/java")
+    }
+
+    testOptions {
+        unitTests.apply {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+
 }
 
 dependencies {
@@ -113,5 +129,16 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.storage)
+
+    // Test Implementation
+    // Unit Test
+    testImplementation(libs.mockK)
+    testImplementation(libs.junit)
+    testImplementation(libs.roboletric)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.core.testing)
+
+    // Android Test
+    testImplementation(libs.androidx.navigation.testing)
 
 }

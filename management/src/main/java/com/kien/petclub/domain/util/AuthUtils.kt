@@ -1,8 +1,10 @@
 package com.kien.petclub.domain.util
 
+import androidx.core.util.PatternsCompat
+
 object AuthUtils {
 
-    fun isValidEmail(email: String) = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    fun isValidEmail(email: String) = PatternsCompat.EMAIL_ADDRESS.matcher(email).matches()
 
     /**
      * Password must be at least 6 characters long and contain at least one uppercase letter
