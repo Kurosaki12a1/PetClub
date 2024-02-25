@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
@@ -68,7 +69,7 @@ class DetailProductFragment : BaseProductFragment<FragmentDetailProductBinding>(
     override fun setupObservers() {
         super.setupObservers()
         lifecycleScope.launch {
-            shareVM.productResponse.collect {
+            shareVM.productResponse.flowWithLifecycle(lifecycle).collect {
                 if (it != null) {
                     product = it
                     updateUI(it)
@@ -77,7 +78,7 @@ class DetailProductFragment : BaseProductFragment<FragmentDetailProductBinding>(
         }
 
         lifecycleScope.launch {
-            viewModel.deleteResponse.collect {
+            viewModel.deleteResponse.flowWithLifecycle(lifecycle).collect {
                 when (it) {
                     is Resource.Success -> {
                         hideLoadingAnimation()
@@ -99,7 +100,7 @@ class DetailProductFragment : BaseProductFragment<FragmentDetailProductBinding>(
         }
 
         lifecycleScope.launch {
-            viewModel.getPhotoResponse.collect {
+            viewModel.getPhotoResponse.flowWithLifecycle(lifecycle).collect {
                 when (it) {
                     is Resource.Success -> {
                         hideLoadingAnimation()

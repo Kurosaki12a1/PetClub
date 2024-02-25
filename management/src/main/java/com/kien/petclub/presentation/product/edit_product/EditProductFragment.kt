@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
@@ -113,13 +114,13 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         sharedViewModel.setInfoProduct(null)
 
         job = lifecycleScope.launch {
-            sharedViewModel.productResponse.collect {
+            sharedViewModel.productResponse.flowWithLifecycle(lifecycle).collect {
                 it?.let { updateUI(it) }
             }
         }
 
         lifecycleScope.launch {
-            sharedViewModel.infoProductResponse.collect {
+            sharedViewModel.infoProductResponse.flowWithLifecycle(lifecycle).collect {
                 if (it.isNullOrEmpty()) return@collect
                 when (typeInfo) {
                     Constants.VALUE_BRAND -> binding.brandEdit.setText(it)
@@ -130,7 +131,7 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         }
 
         lifecycleScope.launch {
-            viewModel.downloadResponse.collect {
+            viewModel.downloadResponse.flowWithLifecycle(lifecycle).collect {
                 when (it) {
                     is Resource.Success -> {
                         hideLoadingAnimation()
@@ -153,7 +154,7 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         }
 
         lifecycleScope.launch {
-            viewModel.updateResponse.collect {
+            viewModel.updateResponse.flowWithLifecycle(lifecycle).collect {
                 when (it) {
                     is Resource.Success -> {
                         job?.cancel()

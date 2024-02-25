@@ -29,7 +29,7 @@ class RepositoryModule {
         auth: FirebaseAuth,
         db: FirebaseDatabase
     ): FirebaseDBRepository =
-        FirebaseDBRepositoryImpl(auth, db)
+        FirebaseDBRepositoryImpl(auth, db, Dispatchers.IO)
 
     @Provides
     @Singleton
@@ -40,7 +40,7 @@ class RepositoryModule {
     fun provideFirebaseStorageRepository(
         storage: FirebaseStorage
     ): FirebaseStorageRepository =
-        FirebaseStorageRepositoryImpl(storage)
+        FirebaseStorageRepositoryImpl(storage, Dispatchers.IO)
 
     @Provides
     @Singleton

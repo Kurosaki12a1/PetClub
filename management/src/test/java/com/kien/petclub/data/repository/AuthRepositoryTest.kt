@@ -18,7 +18,7 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class AuthRepositoryImplTest {
+class AuthRepositoryTest {
 
     private lateinit var auth: FirebaseAuth
 

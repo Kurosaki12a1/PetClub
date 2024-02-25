@@ -11,6 +11,7 @@ import com.kien.petclub.domain.model.entity.mapSnapshotToInfoProduct
 import com.kien.petclub.domain.model.entity.mapSnapshotToService
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.util.Resource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 class FirebaseDBRepositoryImpl @Inject constructor(
     auth: FirebaseAuth,
-    db: FirebaseDatabase
+    db: FirebaseDatabase,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : FirebaseDBRepository {
     private val goodsDatabase = db.reference.child(Constants.GOODS_DB)
     private val serviceDatabase = db.reference.child(Constants.SERVICE_DB)
@@ -42,7 +44,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun getServiceDatabase(): Flow<Resource<ArrayList<Product.Service>>?> = flow {
         emit(Resource.Loading)
@@ -53,7 +55,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun getGoodsById(id: String): Flow<Resource<Product.Goods?>> = flow {
         emit(Resource.Loading)
@@ -89,7 +91,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun updateUserDatabase(userId: String, user: User): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -99,7 +101,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun getUserDatabase(userId: String): Flow<Resource<User?>> = flow {
         emit(Resource.Loading)
@@ -109,7 +111,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun deleteUserDatabase(userId: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -119,7 +121,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun addGoodsDatabase(goods: Product.Goods): Flow<Resource<Unit>> = flow {
         try {
@@ -129,7 +131,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun addServiceDatabase(service: Product.Service): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -140,9 +142,12 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
-    override fun updateGoodsDatabase(goodsId: String, data: Product.Goods): Flow<Resource<Product>> =
+    override fun updateGoodsDatabase(
+        goodsId: String,
+        data: Product.Goods
+    ): Flow<Resource<Product>> =
         flow {
             emit(Resource.Loading)
             try {
@@ -151,7 +156,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 emit(Resource.failure(e))
             }
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
 
     override fun updateServiceDatabase(
         serviceId: String,
@@ -165,7 +170,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 emit(Resource.failure(e))
             }
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
 
     override fun deleteGoodsDatabase(goodsId: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -175,7 +180,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun deleteServiceDatabase(serviceId: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -185,7 +190,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun checkGoodsExist(id: String): Flow<Resource<Boolean>> =
         flow {
@@ -196,7 +201,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 emit(Resource.failure(e))
             }
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
 
     override fun checkServiceExist(id: String): Flow<Resource<Boolean>> =
         flow {
@@ -207,7 +212,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 emit(Resource.failure(e))
             }
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
 
     override fun getTypeProducts(): Flow<Resource<ArrayList<InfoProduct>>> = flow {
         emit(Resource.Loading)
@@ -218,7 +223,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun addTypeProduct(type: InfoProduct): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -244,7 +249,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
 
     override fun getBrandProducts(): Flow<Resource<ArrayList<InfoProduct>>> = flow {
@@ -256,7 +261,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun addBrandProduct(name: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -268,7 +273,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun getLocationProducts(): Flow<Resource<ArrayList<InfoProduct>>> = flow {
         emit(Resource.Loading)
@@ -279,7 +284,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun addLocationProduct(name: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -291,7 +296,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun searchForBrands(name: String): Flow<Resource<ArrayList<InfoProduct>>> = flow {
         emit(Resource.Loading)
@@ -305,7 +310,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
 
     override fun searchForTypes(name: String): Flow<Resource<ArrayList<InfoProduct>>> = flow {
@@ -328,7 +333,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun searchForLocations(name: String): Flow<Resource<ArrayList<InfoProduct>>> = flow {
         emit(Resource.Loading)
@@ -342,7 +347,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun deleteTypeProduct(id: String, parentId: String?): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -356,7 +361,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
 
     override fun deleteBrandProduct(id: String): Flow<Resource<Unit>> = flow {
@@ -367,7 +372,7 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun deleteLocationProduct(id: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -377,5 +382,5 @@ class FirebaseDBRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 }

@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.kien.petclub.domain.repository.FirebaseStorageRepository
 import com.kien.petclub.domain.util.Resource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -12,7 +13,10 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: FirebaseStorage) :
+class FirebaseStorageRepositoryImpl @Inject constructor(
+    private val storage: FirebaseStorage,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+) :
     FirebaseStorageRepository {
     override fun uploadImage(uri: Uri, nameFile: String): Flow<Resource<String>> = flow {
         emit(Resource.Loading)
@@ -27,7 +31,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun downloadImage(fileRef: String): Flow<Resource<Uri>> = flow {
         emit(Resource.Loading)
@@ -38,7 +42,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun deleteImage(fileRef: String): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading)
@@ -49,7 +53,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
         } catch (e: Exception) {
             emit(Resource.failure(e))
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcher)
 
     override fun uploadListImage(listImages: List<Uri>): Flow<Resource<List<String>>> = flow {
         emit(Resource.Loading)
@@ -63,7 +67,7 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
             imageUrls.add(imageUrl)
         }
         emit(Resource.success(imageUrls))
-    }.catch { error -> emit(Resource.failure(error)) }.flowOn(Dispatchers.IO)
+    }.catch { error -> emit(Resource.failure(error)) }.flowOn(dispatcher)
 
     override fun downloadListImage(listFileRef: List<String>): Flow<Resource<List<Uri>>> = flow {
         emit(Resource.Loading)
@@ -74,6 +78,6 @@ class FirebaseStorageRepositoryImpl @Inject constructor(private val storage: Fir
             imageUris.add(downloadUri)
         }
         emit(Resource.success(imageUris))
-    }.catch { error -> emit(Resource.failure(error)) }.flowOn(Dispatchers.IO)
+    }.catch { error -> emit(Resource.failure(error)) }.flowOn(dispatcher)
 
 }

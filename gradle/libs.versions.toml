@@ -44,6 +44,7 @@ androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx",
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 arch-lifecycle = { module = "android.arch.lifecycle:extensions", version.ref = "arch-lifecycle" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutinesTestVersion" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTestVersion" }
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core-testing" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }

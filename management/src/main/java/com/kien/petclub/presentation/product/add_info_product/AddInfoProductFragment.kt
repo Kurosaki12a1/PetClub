@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
@@ -97,7 +98,7 @@ class AddInfoProductFragment : BaseProductFragment<FragmentAddInfoProductBinding
 
     override fun setupObservers() {
         super.setupObservers()
-        viewModel.addResponse.onEach {
+        viewModel.addResponse.flowWithLifecycle(lifecycle).onEach {
             when (it) {
                 is Resource.Success -> {
                     hideLoadingAnimation()
@@ -115,7 +116,7 @@ class AddInfoProductFragment : BaseProductFragment<FragmentAddInfoProductBinding
             }
         }.launchIn(lifecycleScope)
 
-        viewModel.getResponse.onEach {
+        viewModel.getResponse.flowWithLifecycle(lifecycle).onEach {
             when (it) {
                 is Resource.Success -> {
                     hideLoadingAnimation()
@@ -133,7 +134,7 @@ class AddInfoProductFragment : BaseProductFragment<FragmentAddInfoProductBinding
 
         }.launchIn(lifecycleScope)
 
-        viewModel.deleteResponse.onEach {
+        viewModel.deleteResponse.flowWithLifecycle(lifecycle).onEach {
             when (it) {
                 is Resource.Success -> {
                     // After deleted, we continue update recycler view
@@ -153,7 +154,7 @@ class AddInfoProductFragment : BaseProductFragment<FragmentAddInfoProductBinding
 
 
         job = lifecycleScope.launch {
-            sharedVM.infoProductResponse.collect {
+            sharedVM.infoProductResponse.flowWithLifecycle(lifecycle).collect {
                 if (!it.isNullOrBlank() && it.isNotEmpty()) {
                     if (parentTypeId != Constants.EMPTY_STRING && typeAddInfo == Constants.VALUE_TYPE) {
                         viewModel.updateTypeProduct(parentTypeId, it)
@@ -166,7 +167,7 @@ class AddInfoProductFragment : BaseProductFragment<FragmentAddInfoProductBinding
         }
 
         lifecycleScope.launch {
-            viewModel.searchResponse.collectLatest {
+            viewModel.searchResponse.flowWithLifecycle(lifecycle).collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         hideLoadingAnimation()
