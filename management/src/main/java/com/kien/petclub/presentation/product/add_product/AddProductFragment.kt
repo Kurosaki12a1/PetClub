@@ -13,9 +13,8 @@ import com.kien.petclub.databinding.FragmentAddProductBinding
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.extensions.navigateSafe
-import com.kien.petclub.presentation.home.HomeActivity
 import com.kien.petclub.presentation.product.base.BaseProductImageFragment
-import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
 import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint

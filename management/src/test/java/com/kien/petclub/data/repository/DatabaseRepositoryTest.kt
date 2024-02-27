@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -68,11 +67,6 @@ class DatabaseRepositoryTest {
         val result = repo.getGoodsDatabase().toList()
         assert(result.first() is Resource.Loading)
         assert(result.last() is Resource.Failure)
-    }
-
-    @After
-    fun tearDown() {
-
     }
 }
 

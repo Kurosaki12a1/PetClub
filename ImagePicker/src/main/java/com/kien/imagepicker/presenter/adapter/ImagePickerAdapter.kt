@@ -16,9 +16,17 @@ import com.kien.imagepicker.data.entity.Photo
 import com.kien.imagepicker.databinding.PickPhotoItemBinding
 import com.kien.imagepicker.presenter.ImagePickerListener
 
+/**
+ * An adapter for the RecyclerView used in an image picker, supporting paging and custom image handling.
+ * @param listener An instance of ImagePickerListener for callback events.
+ * @param size The size to which images should be resized.
+ * @author Thinh Huynh
+ * @since 27/02/2024
+ */
 class ImagePickerAdapter(private val listener: ImagePickerListener, private val size: Int) :
     PagingDataAdapter<Photo, ImagePickerAdapter.ViewHolder>(DIFF_CALLBACK) {
 
+    // Tracks the images that have been selected.
     var imagesChosen = ArrayList<Photo>()
 
     override fun onCreateViewHolder(
@@ -30,8 +38,7 @@ class ImagePickerAdapter(private val listener: ImagePickerListener, private val 
         return (ViewHolder(PickPhotoItemBinding.bind(root)))
     }
 
-    // Avoid Recyclerview keep showing wrong image
-
+    // Avoid Recyclerview keep showing wrong image (working around)
     override fun getItemViewType(position: Int): Int {
         return if (position != FIRST_INDEX_ITEM) position
         else super.getItemViewType(position)

@@ -1,18 +1,11 @@
 package com.kien.imagepicker.utils
 
-import android.app.Activity
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Rect
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
-import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import androidx.recyclerview.widget.RecyclerView
-import com.kien.imagepicker.R
+import com.kien.imagepicker.constants.Constants.TEMP_SAVED_FILE
 import java.io.FileInputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
@@ -37,29 +30,31 @@ private fun convertMillisToDate(): String {
     return format.format(calender.time)
 }
 
-fun Activity.initTransitionClose() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        overrideActivityTransition(
-            Activity.OVERRIDE_TRANSITION_CLOSE,
-            R.anim.anim_slide_in_left,
-            R.anim.anim_slide_out_right
-        )
-    } else {
-        overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_right)
-    }
-    finish()
-}
-
+/**
+ * Saves a list of image URIs to a file in the private storage of the app.
+ * This method is useful when the list is too large to be passed through a Bundle.
+ *
+ * @param context The context of the application, used to access the file system.
+ * @param images The list of image URIs to be saved.
+ * @return The name of the file where the list of URIs is saved.
+ */
 fun saveUriListsToFile(context: Context, images: ArrayList<Uri>): String {
-    val fileName = "temp_pet_club"
+    val fileName = TEMP_SAVED_FILE
     val fos = context.openFileOutput(fileName, Context.MODE_PRIVATE)
     ObjectOutputStream(fos).use { it.writeObject(images.map { str -> str.toString() }) }
     fos.close()
     return fileName
 }
 
+/**
+ * Reads a list of image URIs from a file in the private storage of the app.
+ * This method retrieves the list that was previously saved when it was too large to pass through a Bundle.
+ *
+ * @param context The context of the application, used to access the file system.
+ * @return An ArrayList of URIs that were read from the file.
+ */
 fun readUriListFromFile(context: Context): ArrayList<Uri> {
-    val fis: FileInputStream = context.openFileInput("temp_pet_club")
+    val fis: FileInputStream = context.openFileInput(TEMP_SAVED_FILE)
     var uriList: ArrayList<String> = ArrayList()
     try {
         ObjectInputStream(fis).use { ois -> uriList = ois.readObject() as ArrayList<String> }
@@ -69,56 +64,6 @@ fun readUriListFromFile(context: Context): ArrayList<Uri> {
     fis.close()
 
     // Đảm bảo xóa file sau khi sử dụng để không chiếm dụng bộ nhớ không cần thiết
-    context.deleteFile("temp_pet_club")
+    context.deleteFile(TEMP_SAVED_FILE)
     return uriList.map { Uri.parse(it) } as ArrayList<Uri>
-}
-
-fun RecyclerView.slideUpAnimation() {
-    val slideUpAnimation = AnimationUtils.loadAnimation(context, R.anim.anim_in)
-    slideUpAnimation.setAnimationListener(object : Animation.AnimationListener {
-        override fun onAnimationStart(p0: Animation?) {
-            visibility = View.VISIBLE
-        }
-
-        override fun onAnimationEnd(p0: Animation?) {
-        }
-
-        override fun onAnimationRepeat(p0: Animation?) {
-        }
-
-    })
-    startAnimation(slideUpAnimation)
-}
-
-fun RecyclerView.slideDownAnimation() {
-    val slideDownAnimation = AnimationUtils.loadAnimation(context, R.anim.anim_out)
-    slideDownAnimation.setAnimationListener(object : Animation.AnimationListener {
-        override fun onAnimationStart(p0: Animation?) {}
-
-        override fun onAnimationEnd(p0: Animation?) {
-             visibility = View.GONE
-        }
-
-        override fun onAnimationRepeat(p0: Animation?) {}
-    })
-   startAnimation(slideDownAnimation)
-}
-
-fun View.toggleVisibility() {
-    visibility = if (visibility == View.VISIBLE) {
-        View.GONE
-    } else {
-        View.VISIBLE
-    }
-}
-
-fun View.getVisibleRect(): Rect {
-    val outRect = Rect()
-    getGlobalVisibleRect(outRect)
-    return outRect
-}
-
-fun View.isInVisibleRect(x: Int, y: Int): Boolean {
-    val outRect = getVisibleRect()
-    return outRect.contains(x, y)
 }

@@ -20,7 +20,8 @@ import com.kien.petclub.extensions.checkAndRequestPermission
 import com.kien.petclub.extensions.getResultLauncher
 import com.kien.petclub.extensions.requestPermissionLauncher
 import com.kien.petclub.presentation.base.BaseFragment
-import com.kien.petclub.presentation.product.common.ImagePickerListener
+import com.kien.petclub.presentation.product.ImagePickerListener
+import com.kien.petclub.presentation.product.PickImageAdapter
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.utils.convertMillisToDate
 

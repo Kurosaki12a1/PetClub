@@ -1,14 +1,16 @@
 package com.kien.petclub.extensions
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.kien.petclub.R
 import com.kien.petclub.utils.hideSoftInput
 
 fun Fragment.navigateSafe(directions: NavDirections, navOptions: NavOptions? = null) {
@@ -66,4 +68,13 @@ fun Fragment.getResultLauncher(
             onResult(result.resultCode, result.data)
         }
     return launcher
+}
+
+fun Fragment.showMessage(message: String?) {
+    Toast.makeText(
+        requireContext(),
+        message ?: context?.resources?.getString(R.string.some_error),
+        Toast.LENGTH_SHORT
+    )
+        .show()
 }

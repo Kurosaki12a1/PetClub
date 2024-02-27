@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.product.common
+package com.kien.petclub.presentation.product
 
 import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.presentation.base.BaseViewModel

@@ -5,9 +5,9 @@ import androidx.lifecycle.lifecycleScope
 import com.kien.petclub.databinding.FragmentSignInBinding
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.navigateSafe
+import com.kien.petclub.extensions.showMessage
 import com.kien.petclub.presentation.auth.AuthActivity
 import com.kien.petclub.presentation.base.BaseFragment
-import com.kien.petclub.utils.showMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -50,7 +50,7 @@ class SignInFragment : BaseFragment<FragmentSignInBinding>() {
 
                 is Resource.Failure -> {
                     (requireActivity() as AuthActivity).stopLoadingAnimation()
-                    showMessage(requireActivity(), it.error.message.toString())
+                    showMessage(it.error.message.toString())
                 }
 
                 else -> {}

@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.product.common
+package com.kien.petclub.presentation.product
 
 import com.kien.petclub.domain.model.entity.ChooserItem
 import com.kien.petclub.domain.model.entity.InfoProduct
@@ -17,8 +17,5 @@ interface ProductListener {
 }
 
 interface ImagePickerListener {
-
     fun onTakePhotoClick() {}
-    fun onImagePickerClick(position: Int) {}
-    fun onImageDeleteClick(position: Int) {}
 }

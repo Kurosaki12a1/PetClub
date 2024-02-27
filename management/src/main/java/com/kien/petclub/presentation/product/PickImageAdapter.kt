@@ -1,4 +1,4 @@
-package com.kien.petclub.presentation.product.base
+package com.kien.petclub.presentation.product
 
 import android.annotation.SuppressLint
 import android.net.Uri
@@ -16,7 +16,6 @@ import com.kien.imagepicker.presenter.adapter.ImagePickerAdapter
 import com.kien.petclub.R.drawable
 import com.kien.petclub.R.layout
 import com.kien.petclub.databinding.AddPhotoItemBinding
-import com.kien.petclub.presentation.product.common.ImagePickerListener
 
 class PickImageAdapter(
     private var listener : ImagePickerListener,

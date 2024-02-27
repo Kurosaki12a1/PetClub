@@ -2,9 +2,7 @@ package com.kien.petclub.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.kien.petclub.domain.model.entity.User
 import com.kien.petclub.domain.repository.AuthRepository
-import com.kien.petclub.domain.util.AuthUtils
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

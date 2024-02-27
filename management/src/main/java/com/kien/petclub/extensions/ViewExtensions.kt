@@ -10,11 +10,6 @@ fun View.getVisibleRect(): Rect {
     return outRect
 }
 
-fun View.isInVisibleRect(x: Int, y: Int): Boolean {
-    val outRect = getVisibleRect()
-    return outRect.contains(x, y)
-}
-
 fun EditText.updateText(text: String?) {
     if (text.isNullOrBlank() || text.isEmpty()) this.setText("")
     setText(text)

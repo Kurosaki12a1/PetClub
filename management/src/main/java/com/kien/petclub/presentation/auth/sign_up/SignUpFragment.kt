@@ -5,9 +5,9 @@ import androidx.lifecycle.lifecycleScope
 import com.kien.petclub.databinding.FragmentSignUpBinding
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
+import com.kien.petclub.extensions.showMessage
 import com.kien.petclub.presentation.auth.AuthActivity
 import com.kien.petclub.presentation.base.BaseFragment
-import com.kien.petclub.utils.showMessage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -41,15 +41,18 @@ class SignUpFragment : BaseFragment<FragmentSignUpBinding>() {
                     (requireActivity() as AuthActivity).stopLoadingAnimation()
                     backToPreviousScreen()
                 }
+
                 is Resource.Failure -> {
                     (requireActivity() as AuthActivity).stopLoadingAnimation()
-                    showMessage(requireActivity(), it.error.message.toString())
+                    showMessage(it.error.message.toString())
                 }
+
                 is Resource.Loading -> {
                     (requireActivity() as AuthActivity).showLoadingAnimation()
                 }
+
                 else -> {
-                     // Do nothing
+                    // Do nothing
                 }
             }
         }.launchIn(lifecycleScope)

@@ -21,52 +21,75 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kien.imagepicker.R
+import com.kien.imagepicker.data.entity.Album
+import com.kien.imagepicker.databinding.ActivityImagePickerBinding
+import com.kien.imagepicker.extensions.initTransitionClose
+import com.kien.imagepicker.extensions.isInVisibleRect
+import com.kien.imagepicker.extensions.slideDownAnimation
+import com.kien.imagepicker.extensions.slideUpAnimation
 import com.kien.imagepicker.presenter.adapter.AlbumPickerAdapter
 import com.kien.imagepicker.presenter.adapter.ImagePickerAdapter
-import com.kien.imagepicker.databinding.ActivityImagePickerBinding
-import com.kien.imagepicker.data.entity.Album
 import com.kien.imagepicker.utils.createImageUri
-import com.kien.imagepicker.utils.initTransitionClose
-import com.kien.imagepicker.utils.isInVisibleRect
 import com.kien.imagepicker.utils.saveUriListsToFile
-import com.kien.imagepicker.utils.slideDownAnimation
-import com.kien.imagepicker.utils.slideUpAnimation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/**
+ * An activity for picking images, equipped with album and photo browsing capabilities.
+ *
+ * Utilizes [AndroidEntryPoint] for dependency injection with Hilt, facilitating ViewModel
+ * and other Android framework dependencies' injections.
+ * @author Thinh Huynh
+ * @since 27/02/2024
+ */
 @AndroidEntryPoint
 class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
     companion object {
+        // Permissions required for reading and writing to external storage, and camera access
         private const val READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE
         private const val WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE
         private const val CAMERA = Manifest.permission.CAMERA
 
+        // Request codes for permission requests
         private const val REQUEST_CODE_READ_FILE = 0
         private const val REQUEST_CODE_TAKE_PICTURE = 1
+
+        // Number of columns in the grid layout for displaying images
         private const val COLUMN = 3
     }
 
+    // Binding for the activity's views
     private lateinit var binding: ActivityImagePickerBinding
 
+    // Adapter for the RecyclerView displaying images
     private lateinit var adapter: ImagePickerAdapter
 
+    // Adapter for the RecyclerView displaying albums
     private lateinit var albumAdapter: AlbumPickerAdapter
 
+    // Currently selected album index
     private var selectedAlbum = 0
 
+    // ViewModel for managing UI-related data
     private val viewModel: ImagePickerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityImagePickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Request permission to read external storage upon creation
         requestPermission(arrayOf(READ_EXTERNAL_STORAGE), REQUEST_CODE_READ_FILE)
+
+        // Initialize UI components and observe ViewModel data
         setUpViews()
         setUpObserver()
 
+        // Handle back press with custom behavior
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                // Hide album RecyclerView with animation if visible, else perform default action
                 if (binding.rvAlbum.visibility == View.VISIBLE) {
                     binding.rvAlbum.slideDownAnimation()
                     return
@@ -76,6 +99,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
         })
     }
 
+    /**
+     * Sets up UI components, including RecyclerViews for displaying photos and albums.
+     */
     private fun setUpViews() {
         val widthItem = Resources.getSystem().displayMetrics.widthPixels / COLUMN
         adapter = ImagePickerAdapter(this, widthItem)
@@ -87,12 +113,14 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
         }
 
         binding.save.setOnClickListener {
+            // Save selected images and return to previous activity
             saveUriListsToFile(this, adapter.imagesChosen.map { it.uri } as ArrayList<Uri>)
             setResult(Activity.RESULT_OK, Intent())
             initTransitionClose()
         }
 
         binding.tvAlbum.setOnClickListener {
+            // Toggle visibility of album RecyclerView with animations
             if (binding.rvAlbum.visibility != View.VISIBLE) {
                 binding.rvAlbum.slideUpAnimation()
             } else {
@@ -101,6 +129,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
         }
     }
 
+    /**
+     * Initializes the RecyclerView for displaying photos with grid layout.
+     */
     private fun setUpRecyclerView() {
         binding.rvPhoto.layoutManager =
             GridLayoutManager(this, COLUMN, GridLayoutManager.VERTICAL, false)
@@ -133,7 +164,9 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
         binding.rvAlbum.adapter = albumAdapter
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    /**
+     * Observes data from the ViewModel to update UI components.
+     */
     private fun setUpObserver() {
         lifecycleScope.launch {
             viewModel.albums.flowWithLifecycle(lifecycle).collect { list ->
@@ -152,12 +185,14 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
             viewModel.photos.flowWithLifecycle(lifecycle).collectLatest {
                 adapter.submitData(lifecycle, it)
                 // Data keep showing wrong so we must notify
-                adapter.notifyDataSetChanged()
                 binding.rvPhoto.layoutManager?.smoothScrollToPosition(binding.rvPhoto, null, 0)
             }
         }
     }
 
+    /**
+     * Requests the necessary permissions for the activity.
+     */
     private fun requestPermission(permissions: Array<out String>, code: Int) {
         requestPermissions(permissions, code)
     }
@@ -195,13 +230,17 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
 
     override fun onAlbumClick(album: Album, position: Int) {
         super.onAlbumClick(album, position)
+        // Update UI based on the selected album
         binding.tvAlbum.text = album.name
         selectedAlbum = position
+        // Fetch photos for the selected album
         viewModel.getPhotos(album)
+        // Hide the album list
         binding.rvAlbum.slideDownAnimation()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        // Dismiss album list if touch event occurs outside of its bounds
         if (ev?.action == MotionEvent.ACTION_DOWN && binding.rvAlbum.visibility == View.VISIBLE) {
             if (!binding.rvAlbum.isInVisibleRect(ev.rawX.toInt(), ev.rawY.toInt())) {
                 binding.rvAlbum.slideDownAnimation()

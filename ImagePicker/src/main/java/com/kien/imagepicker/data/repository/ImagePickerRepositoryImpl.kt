@@ -29,8 +29,11 @@ class ImagePickerRepositoryImpl @Inject constructor(private val contentResolver:
 
         // Query albums from media store
         val projection = arrayOf(
+            // Get Album Name
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            // Get Album ID
             MediaStore.Images.Media.BUCKET_ID,
+            // Get ID from image
             MediaStore.Images.Media._ID
         )
 
@@ -39,6 +42,7 @@ class ImagePickerRepositoryImpl @Inject constructor(private val contentResolver:
             projection,
             null,
             null,
+            // Sort by date added
             MediaStore.Images.Media.DATE_ADDED + " ASC"
         )?.use { cursor ->
             val bucketNameColumn =
@@ -50,6 +54,7 @@ class ImagePickerRepositoryImpl @Inject constructor(private val contentResolver:
                 val id = cursor.getLong(idIndex)
                 val bucketName = cursor.getString(bucketNameColumn)
                 val bucketId = cursor.getLong(bucketIdColumn)
+                // Get list Uri images from id
                 val contentUri =
                     ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
@@ -61,6 +66,7 @@ class ImagePickerRepositoryImpl @Inject constructor(private val contentResolver:
             }
         }
         val albums = ArrayList<Album>()
+        // Create "All Photo Albums" album
         val totalPhotoAlbum = Album(
             ID_TOTAL_PHOTO_ALBUM,
             NAME_TOTAL_PHOTO_ALBUM,
@@ -81,6 +87,6 @@ class ImagePickerRepositoryImpl @Inject constructor(private val contentResolver:
             pagingSourceFactory = {
                 ImagePickerPagingSource(album.images.reversed().toCollection(ArrayList()))
             }
-        ).flow
+        ).flow.flowOn(Dispatchers.IO)
 
 }

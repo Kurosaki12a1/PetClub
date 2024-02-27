@@ -1,6 +1,5 @@
 package com.kien.petclub.presentation.more
 
-import com.kien.petclub.R
 import com.kien.petclub.databinding.FragmentMoreBinding
 import com.kien.petclub.presentation.base.BaseFragment
 

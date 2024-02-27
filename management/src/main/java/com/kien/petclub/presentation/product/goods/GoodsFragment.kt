@@ -18,8 +18,8 @@ import com.kien.petclub.extensions.navigateSafe
 import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.home.HomeActivity
 import com.kien.petclub.domain.model.entity.ChooserItem
-import com.kien.petclub.presentation.product.common.ProductListener
-import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.ProductListener
+import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.BUYING_PRICE
 import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.SELLING_PRICE
 import com.kien.petclub.presentation.product.sort_product.SortChooserPopup

@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
 import com.kien.petclub.databinding.SortChooserPopUpBinding
 import com.kien.petclub.domain.model.entity.ChooserItem
-import com.kien.petclub.presentation.product.common.ProductListener
+import com.kien.petclub.presentation.product.ProductListener
 
 class SortChooserPopup(
     private val listItem: ArrayList<ChooserItem>,

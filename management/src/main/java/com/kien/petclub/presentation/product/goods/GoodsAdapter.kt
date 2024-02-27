@@ -17,7 +17,7 @@ import com.kien.petclub.domain.model.entity.getName
 import com.kien.petclub.domain.model.entity.getSellingPrice
 import com.kien.petclub.domain.model.entity.getStock
 import com.kien.petclub.domain.model.entity.getUpdateDated
-import com.kien.petclub.presentation.product.common.ProductListener
+import com.kien.petclub.presentation.product.ProductListener
 
 class GoodsAdapter(private var listener: ProductListener) :
     RecyclerView.Adapter<GoodsAdapter.ViewHolder>() {

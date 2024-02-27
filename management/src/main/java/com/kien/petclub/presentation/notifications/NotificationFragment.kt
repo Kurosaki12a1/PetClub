@@ -1,6 +1,5 @@
 package com.kien.petclub.presentation.notifications
 
-import com.kien.petclub.R
 import com.kien.petclub.databinding.FragmentNotificationsBinding
 import com.kien.petclub.presentation.base.BaseFragment
 

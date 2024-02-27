@@ -15,7 +15,7 @@ import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ItemAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
-import com.kien.petclub.presentation.product.common.ProductListener
+import com.kien.petclub.presentation.product.ProductListener
 
 class SearchInfoProductAdapter(
     private val typeInfo: String,

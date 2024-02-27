@@ -1,6 +1,13 @@
 package com.kien.petclub.domain.usecase.auth
 
 import com.google.firebase.auth.FirebaseUser
+import com.kien.petclub.constants.Constants.EMPTY_EMAIL
+import com.kien.petclub.constants.Constants.EMPTY_NAME
+import com.kien.petclub.constants.Constants.EMPTY_PASSWORD
+import com.kien.petclub.constants.Constants.EMPTY_PHONE
+import com.kien.petclub.constants.Constants.INVALID_EMAIL
+import com.kien.petclub.constants.Constants.INVALID_PASSWORD
+import com.kien.petclub.constants.Constants.PASSWORD_NOT_MATCH
 import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.util.AuthUtils
 import com.kien.petclub.domain.util.Resource
@@ -18,40 +25,40 @@ class SignUpUseCase @Inject constructor(private val repo: AuthRepository) {
     ): Flow<Resource<FirebaseUser?>> {
         if (email.isEmpty()) {
             return flow {
-                emit(Resource.Failure(IllegalArgumentException("Email is empty")))
+                emit(Resource.Failure(IllegalArgumentException(EMPTY_EMAIL)))
             }
         }
 
         if (!AuthUtils.isValidEmail(email)) {
             return flow {
-                emit(Resource.Failure(IllegalArgumentException("Email format is invalid.")))
+                emit(Resource.Failure(IllegalArgumentException(INVALID_EMAIL)))
             }
         }
 
         if (password.isEmpty()) {
             return flow {
-                emit(Resource.Failure(IllegalArgumentException("Password is empty")))
+                emit(Resource.Failure(IllegalArgumentException(EMPTY_PASSWORD)))
             }
         }
 
         if (!AuthUtils.isValidPassword(password)) {
             return flow {
-                emit(Resource.Failure(IllegalArgumentException("Password must be at least 6 characters long and contain at least one uppercase letter")))
+                emit(Resource.Failure(IllegalArgumentException(INVALID_PASSWORD)))
             }
         }
 
         if (password != rePassword) {
             return flow {
-                emit(Resource.Failure(IllegalArgumentException("Password and re-password are not the same")))
+                emit(Resource.Failure(IllegalArgumentException(PASSWORD_NOT_MATCH)))
             }
         }
 
         if (name.isEmpty()) {
-            return flow { emit(Resource.Failure(IllegalArgumentException("Name is empty"))) }
+            return flow { emit(Resource.Failure(IllegalArgumentException(EMPTY_NAME))) }
         }
 
         if (phone.isEmpty()) {
-            return flow { (Resource.Failure(IllegalArgumentException("Phone is empty"))) }
+            return flow { (Resource.Failure(IllegalArgumentException(EMPTY_PHONE))) }
         }
 
         return repo.signUp(email, password)

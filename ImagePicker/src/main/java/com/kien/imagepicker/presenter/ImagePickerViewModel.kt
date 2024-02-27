@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.kien.imagepicker.data.entity.Album
 import com.kien.imagepicker.data.entity.Photo
-import com.kien.imagepicker.data.repository.ImagePickerRepositoryImpl
 import com.kien.imagepicker.domain.usecase.GetAlbumsUseCase
 import com.kien.imagepicker.domain.usecase.GetPhotosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

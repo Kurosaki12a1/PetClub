@@ -18,15 +18,8 @@ sealed class Resource<out T> {
         val errorMessage : String? = null,
     ) : Resource<Nothing>()
 
-    object Loading : Resource<Nothing>()
+    data object Loading : Resource<Nothing>()
 
-    object Default : Resource<Nothing>() 
+    data object Default : Resource<Nothing>()
 
-}
-
-enum class FailureStatus {
-    EMPTY,
-    API_FAIL,
-    NO_INTERNET,
-    OTHER
 }

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kien.petclub.R
 import com.kien.petclub.databinding.SortChooseItemBinding
 import com.kien.petclub.domain.model.entity.ChooserItem
-import com.kien.petclub.presentation.product.common.ProductListener
+import com.kien.petclub.presentation.product.ProductListener
 
 class SortChooseAdapter(
     private val listener: ProductListener
