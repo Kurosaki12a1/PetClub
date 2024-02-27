@@ -14,7 +14,7 @@ import com.kien.petclub.databinding.FragmentAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
-import com.kien.petclub.presentation.product.base.BaseProductFragment
+import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.product.common.ProductListener
 import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AddInfoProductFragment : BaseProductFragment<FragmentAddInfoProductBinding>(),
+class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
     ProductListener {
     private lateinit var adapter: SearchInfoProductAdapter
 

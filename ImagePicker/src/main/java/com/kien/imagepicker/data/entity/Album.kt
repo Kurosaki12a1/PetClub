@@ -1,4 +1,4 @@
-package com.kien.imagepicker.entity
+package com.kien.imagepicker.data.entity
 
 import android.net.Uri
 

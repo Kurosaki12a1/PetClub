@@ -1,9 +1,9 @@
-package com.kien.imagepicker.adapter
+package com.kien.imagepicker.presenter.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -11,21 +11,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.kien.imagepicker.ImagePickerListener
 import com.kien.imagepicker.R
+import com.kien.imagepicker.data.entity.Photo
 import com.kien.imagepicker.databinding.PickPhotoItemBinding
-import com.kien.imagepicker.entity.Photo
+import com.kien.imagepicker.presenter.ImagePickerListener
 
 class ImagePickerAdapter(private val listener: ImagePickerListener, private val size: Int) :
-    RecyclerView.Adapter<ImagePickerAdapter.ViewHolder>() {
-    companion object {
-        private const val FIRST_INDEX_ITEM = 0
-        const val RADIUS = 16
-    }
+    PagingDataAdapter<Photo, ImagePickerAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    private var images: ArrayList<Photo> = ArrayList()
+    var imagesChosen = ArrayList<Photo>()
 
-    var imagesChosen: ArrayList<Photo> = ArrayList()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -35,9 +30,27 @@ class ImagePickerAdapter(private val listener: ImagePickerListener, private val 
         return (ViewHolder(PickPhotoItemBinding.bind(root)))
     }
 
+    // Avoid Recyclerview keep showing wrong image
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position != FIRST_INDEX_ITEM) position
+        else super.getItemViewType(position)
+    }
+
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (images.isEmpty()) {
-            holder.ivPhoto.setImageResource(R.drawable.ic_add_camera)
+        val requestOptions = RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .placeholder(R.drawable.ic_add_camera)
+            .transform(CenterCrop(), RoundedCorners(RADIUS))
+            .override(size)
+
+        // Only first item is the camera item
+        if (itemCount == 1) {
+            Glide.with(holder.itemView.context)
+                .load(R.drawable.ic_add_camera)
+                .into(holder.ivPhoto)
+
             holder.ivChoose.visibility = View.GONE
             holder.itemView.setOnClickListener {
                 listener.onTakePhoto()
@@ -46,20 +59,18 @@ class ImagePickerAdapter(private val listener: ImagePickerListener, private val 
         }
 
         if (position == FIRST_INDEX_ITEM) {
-            holder.ivPhoto.setImageResource(R.drawable.ic_add_camera)
+            Glide.with(holder.itemView.context)
+                .load(R.drawable.ic_add_camera)
+                .into(holder.ivPhoto)
+
             holder.ivChoose.visibility = View.GONE
             holder.itemView.setOnClickListener {
                 listener.onTakePhoto()
             }
         } else {
-            val data = images[position - 1]
+            val data = getItem(position - 1)
+            if (data?.uri == null) return
             holder.ivChoose.visibility = View.VISIBLE
-
-            val requestOptions = RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.drawable.ic_add_camera)
-                .transform(CenterCrop(), RoundedCorners(RADIUS))
-                .override(size)
 
             Glide.with(holder.itemView.context)
                 .load(data.uri)
@@ -85,39 +96,24 @@ class ImagePickerAdapter(private val listener: ImagePickerListener, private val 
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(newList: ArrayList<Photo>) {
-        images.clear()
-        images.addAll(newList)
-        notifyDataSetChanged()
-    }
-
-    fun addData(newList: ArrayList<Photo>) {
-        val tempList = images.map { it.copy() } as ArrayList
-        tempList.addAll(newList)
-        val diffResult = DiffUtil.calculateDiff(DiffCallback(images, tempList))
-        images.addAll(newList)
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    override fun getItemCount(): Int = images.size + 1 // +1 for the camera item
+    override fun getItemCount(): Int = super.getItemCount() + 1 // +1 for the camera item
 
     inner class ViewHolder(binding: PickPhotoItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val ivPhoto = binding.ivPhoto
         val ivChoose = binding.ivChoose
     }
 
-    inner class DiffCallback(
-        private val oldList: ArrayList<Photo>,
-        private val newList: ArrayList<Photo>
-    ) :
-        DiffUtil.Callback() {
-        override fun getOldListSize(): Int = oldList.size
-        override fun getNewListSize(): Int = newList.size
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            oldList[oldItemPosition].id == newList[newItemPosition].id
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Photo>() {
+            override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+                oldItem.uri == newItem.uri
 
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-            oldList[oldItemPosition] == newList[newItemPosition]
+            override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+                oldItem == newItem
+        }
+
+        private const val FIRST_INDEX_ITEM = 0
+        const val RADIUS = 16
     }
+
 }

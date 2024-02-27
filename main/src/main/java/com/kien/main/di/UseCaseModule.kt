@@ -1,5 +1,8 @@
 package com.kien.main.di
 
+import com.kien.imagepicker.domain.repository.ImagePickerRepository
+import com.kien.imagepicker.domain.usecase.GetAlbumsUseCase
+import com.kien.imagepicker.domain.usecase.GetPhotosUseCase
 import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.repository.FirebaseStorageRepository
@@ -203,6 +206,18 @@ class UseCaseModule {
         downloadUseCase: DownloadImageUseCase
     ): ImageUseCase {
         return ImageUseCase(uploadUseCase, downloadUseCase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetAlbumsUseCase(repo : ImagePickerRepository) : GetAlbumsUseCase {
+        return GetAlbumsUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetPhotosUseCase(repo : ImagePickerRepository) : GetPhotosUseCase {
+        return GetPhotosUseCase(repo)
     }
 
 }

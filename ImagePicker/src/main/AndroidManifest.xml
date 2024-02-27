@@ -7,6 +7,6 @@
     <application
         android:usesCleartextTraffic="true"
         >
-        <activity android:name=".ImagePickerActivity" />
+        <activity android:name=".presenter.ImagePickerActivity" />
     </application>
 </manifest>

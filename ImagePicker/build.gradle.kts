@@ -63,4 +63,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     kapt(libs.kotlinx.metadata.jvm)
+
+    // Paging
+    implementation(libs.paging.runtime)
 }

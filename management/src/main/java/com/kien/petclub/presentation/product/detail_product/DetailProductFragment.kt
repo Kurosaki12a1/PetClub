@@ -17,7 +17,7 @@ import com.kien.petclub.domain.model.entity.getPhoto
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.extensions.navigateSafe
-import com.kien.petclub.presentation.product.base.BaseProductFragment
+import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.product.common.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
@@ -26,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class DetailProductFragment : BaseProductFragment<FragmentDetailProductBinding>() {
+class DetailProductFragment : BaseFragment<FragmentDetailProductBinding>() {
     private lateinit var adapter: DetailProductAdapter
 
     private lateinit var product: Product

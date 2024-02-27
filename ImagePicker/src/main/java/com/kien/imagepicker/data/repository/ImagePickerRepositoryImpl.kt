@@ -1,23 +1,30 @@
-package com.kien.imagepicker.repository
+package com.kien.imagepicker.data.repository
 
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.provider.MediaStore
-import com.kien.imagepicker.entity.Album
-import com.kien.imagepicker.entity.Photo
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.kien.imagepicker.data.entity.Album
+import com.kien.imagepicker.data.entity.Photo
+import com.kien.imagepicker.domain.repository.ImagePickerRepository
+import com.kien.imagepicker.paging.ImagePickerPagingSource
+import com.kien.imagepicker.paging.ImagePickerPagingSource.Companion.PAGE_SIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class ImagePickerRepository @Inject constructor(private val contentResolver: ContentResolver) {
+class ImagePickerRepositoryImpl @Inject constructor(private val contentResolver: ContentResolver) :
+    ImagePickerRepository {
     companion object {
         private const val ID_TOTAL_PHOTO_ALBUM = 230797250203L
         private const val NAME_TOTAL_PHOTO_ALBUM = "All Photos"
     }
 
-    fun getAlbums(): Flow<List<Album>> = flow {
+    override fun getAlbums(): Flow<List<Album>> = flow {
         val albumMap = mutableMapOf<Long, Album>()
 
         // Query albums from media store
@@ -64,5 +71,16 @@ class ImagePickerRepository @Inject constructor(private val contentResolver: Con
         albums.addAll(albumMap.values)
         emit(albums)
     }.flowOn(Dispatchers.IO)
+
+    override fun getPhotos(album: Album): Flow<PagingData<Photo>> =
+        Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE * 2
+            ),
+            pagingSourceFactory = {
+                ImagePickerPagingSource(album.images.reversed().toCollection(ArrayList()))
+            }
+        ).flow
 
 }

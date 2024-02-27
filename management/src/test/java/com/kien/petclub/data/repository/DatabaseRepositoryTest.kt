@@ -49,7 +49,6 @@ class DatabaseRepositoryTest {
         coEvery { ref.get() } returns taskSnapshot
         coEvery { taskSnapshot.result } returns mockDataSnapshotListWithGoods()
         val result = repo.getGoodsDatabase().toList()
-        println(result.last())
         assert(result.first() is Resource.Loading)
         assert(result.last() is Resource.Success && (result.last() as Resource.Success).value.size == goodsList.size)
     }
@@ -67,7 +66,6 @@ class DatabaseRepositoryTest {
         coEvery { ref.get() } returns taskSnapshot
         coEvery { taskSnapshot.await() } throws Exception()
         val result = repo.getGoodsDatabase().toList()
-        println(result.last())
         assert(result.first() is Resource.Loading)
         assert(result.last() is Resource.Failure)
     }

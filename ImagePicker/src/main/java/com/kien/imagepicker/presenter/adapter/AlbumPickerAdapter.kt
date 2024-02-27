@@ -1,4 +1,4 @@
-package com.kien.imagepicker.adapter
+package com.kien.imagepicker.presenter.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -11,10 +11,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.kien.imagepicker.ImagePickerListener
+import com.kien.imagepicker.presenter.ImagePickerListener
 import com.kien.imagepicker.R
 import com.kien.imagepicker.databinding.AlbumPickerItemBinding
-import com.kien.imagepicker.entity.Album
+import com.kien.imagepicker.data.entity.Album
 
 class AlbumPickerAdapter(private val listener: ImagePickerListener) :
     RecyclerView.Adapter<AlbumPickerAdapter.ViewHolder>() {

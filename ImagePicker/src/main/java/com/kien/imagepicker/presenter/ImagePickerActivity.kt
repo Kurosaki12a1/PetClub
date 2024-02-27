@@ -1,6 +1,7 @@
-package com.kien.imagepicker
+package com.kien.imagepicker.presenter
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,15 +15,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kien.imagepicker.adapter.AlbumPickerAdapter
-import com.kien.imagepicker.adapter.ImagePickerAdapter
+import com.kien.imagepicker.R
+import com.kien.imagepicker.presenter.adapter.AlbumPickerAdapter
+import com.kien.imagepicker.presenter.adapter.ImagePickerAdapter
 import com.kien.imagepicker.databinding.ActivityImagePickerBinding
-import com.kien.imagepicker.entity.Album
-import com.kien.imagepicker.entity.Photo
+import com.kien.imagepicker.data.entity.Album
 import com.kien.imagepicker.utils.createImageUri
 import com.kien.imagepicker.utils.initTransitionClose
 import com.kien.imagepicker.utils.isInVisibleRect
@@ -30,6 +32,7 @@ import com.kien.imagepicker.utils.saveUriListsToFile
 import com.kien.imagepicker.utils.slideDownAnimation
 import com.kien.imagepicker.utils.slideUpAnimation
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -42,8 +45,6 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
         private const val REQUEST_CODE_READ_FILE = 0
         private const val REQUEST_CODE_TAKE_PICTURE = 1
         private const val COLUMN = 3
-        private const val VISIBLE_THRESHOLD = 3
-        private const val ITEM_PER_PAGE = 15
     }
 
     private lateinit var binding: ActivityImagePickerBinding
@@ -53,12 +54,6 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
     private lateinit var albumAdapter: AlbumPickerAdapter
 
     private var selectedAlbum = 0
-
-    private var isLoading = false
-
-    private var images: ArrayList<Photo> = ArrayList()
-
-    private var currentItemCount = 0
 
     private val viewModel: ImagePickerViewModel by viewModels()
 
@@ -111,18 +106,6 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
             GridLayoutManager(this, COLUMN, GridLayoutManager.VERTICAL, false)
         binding.rvPhoto.adapter = adapter
         binding.rvPhoto.setHasFixedSize(true)
-        binding.rvPhoto.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                val totalItemCount = layoutManager.itemCount
-                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-                if (!isLoading && totalItemCount <= lastVisibleItem + VISIBLE_THRESHOLD) {
-                    isLoading = true
-                    loadMoreItems()
-                }
-            }
-        })
         binding.rvPhoto.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,
@@ -150,47 +133,28 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
         binding.rvAlbum.adapter = albumAdapter
     }
 
-    private fun loadMoreItems() {
-        isLoading = false
-        if (images.size <= currentItemCount + ITEM_PER_PAGE) {
-            adapter.addData(ArrayList(images.subList(currentItemCount, images.size)))
-            currentItemCount = images.size
-        } else {
-            adapter.addData(
-                ArrayList(
-                    images.subList(
-                        currentItemCount,
-                        currentItemCount + ITEM_PER_PAGE - 1
-                    )
-                )
-            )
-            currentItemCount += ITEM_PER_PAGE
-        }
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     private fun setUpObserver() {
         lifecycleScope.launch {
-            viewModel.images.collect { list ->
+            viewModel.albums.flowWithLifecycle(lifecycle).collect { list ->
                 if (list.isNotEmpty()) {
                     if (binding.rvPhoto.visibility == View.GONE) {
                         binding.rvPhoto.visibility = View.VISIBLE
                     }
                     binding.tvAlbum.text = list[selectedAlbum].name
                     albumAdapter.setData(ArrayList(list))
-                    setUpDataRecyclerView(list[selectedAlbum].images)
+                    viewModel.getPhotos(list[selectedAlbum])
                 }
             }
         }
-    }
 
-    private fun setUpDataRecyclerView(photos: ArrayList<Photo>) {
-        images = ArrayList(photos.reversed())
-        if (images.size > ITEM_PER_PAGE) {
-            currentItemCount = ITEM_PER_PAGE
-            adapter.setData(ArrayList(images.subList(0, currentItemCount - 1)))
-        } else {
-            currentItemCount = photos.size
-            adapter.setData(images)
+        lifecycleScope.launch {
+            viewModel.photos.flowWithLifecycle(lifecycle).collectLatest {
+                adapter.submitData(lifecycle, it)
+                // Data keep showing wrong so we must notify
+                adapter.notifyDataSetChanged()
+                binding.rvPhoto.layoutManager?.smoothScrollToPosition(binding.rvPhoto, null, 0)
+            }
         }
     }
 
@@ -233,7 +197,7 @@ class ImagePickerActivity : AppCompatActivity(), ImagePickerListener {
         super.onAlbumClick(album, position)
         binding.tvAlbum.text = album.name
         selectedAlbum = position
-        setUpDataRecyclerView(album.images)
+        viewModel.getPhotos(album)
         binding.rvAlbum.slideDownAnimation()
     }
 

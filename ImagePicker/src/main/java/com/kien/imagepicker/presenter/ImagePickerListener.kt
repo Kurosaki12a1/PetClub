@@ -1,6 +1,6 @@
-package com.kien.imagepicker
+package com.kien.imagepicker.presenter
 
-import com.kien.imagepicker.entity.Album
+import com.kien.imagepicker.data.entity.Album
 
 interface ImagePickerListener {
 

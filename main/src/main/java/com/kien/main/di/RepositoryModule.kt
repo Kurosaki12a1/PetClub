@@ -1,11 +1,11 @@
 package com.kien.main.di
 
-import android.content.ContentProvider
 import android.content.ContentResolver
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.kien.imagepicker.repository.ImagePickerRepository
+import com.kien.imagepicker.data.repository.ImagePickerRepositoryImpl
+import com.kien.imagepicker.domain.repository.ImagePickerRepository
 import com.kien.petclub.data.repository.AuthRepositoryImpl
 import com.kien.petclub.data.repository.FirebaseDBRepositoryImpl
 import com.kien.petclub.data.repository.FirebaseStorageRepositoryImpl
@@ -33,7 +33,8 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(auth: FirebaseAuth): AuthRepository = AuthRepositoryImpl(auth, Dispatchers.IO)
+    fun provideAuthRepository(auth: FirebaseAuth): AuthRepository =
+        AuthRepositoryImpl(auth, Dispatchers.IO)
 
     @Provides
     @Singleton
@@ -46,5 +47,5 @@ class RepositoryModule {
     @Singleton
     fun provideImagePickerRepository(
         contentResolver: ContentResolver
-    ): ImagePickerRepository = ImagePickerRepository(contentResolver)
+    ): ImagePickerRepository = ImagePickerRepositoryImpl(contentResolver)
 }

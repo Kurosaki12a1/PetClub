@@ -13,17 +13,18 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.viewbinding.ViewBinding
 import com.google.zxing.integration.android.IntentIntegrator
-import com.kien.imagepicker.ImagePickerActivity
+import com.kien.imagepicker.presenter.ImagePickerActivity
 import com.kien.imagepicker.utils.readUriListFromFile
 import com.kien.petclub.constants.Constants
 import com.kien.petclub.extensions.checkAndRequestPermission
 import com.kien.petclub.extensions.getResultLauncher
 import com.kien.petclub.extensions.requestPermissionLauncher
+import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.product.common.ImagePickerListener
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.utils.convertMillisToDate
 
-abstract class BaseProductImageFragment<VB : ViewBinding> : BaseProductFragment<VB>() {
+abstract class BaseProductImageFragment<VB : ViewBinding> : BaseFragment<VB>() {
     companion object {
         private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
         private const val WRITE_EXTERNAL_STORAGE_PERMISSION =
