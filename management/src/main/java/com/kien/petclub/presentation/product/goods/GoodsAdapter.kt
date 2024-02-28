@@ -79,7 +79,7 @@ class GoodsAdapter(private var listener: ProductListener) :
                         .override(holder.itemView.context.resources.getDimensionPixelSize(R.dimen.dimen60))
 
                     Glide.with(holder.itemView.context)
-                        .load(data.photo[0])
+                        .load(data.photo!![0])
                         .apply(requestOptions)
                         .into(holder.ivPhoto)
                 }
@@ -102,7 +102,7 @@ class GoodsAdapter(private var listener: ProductListener) :
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.mipmap.ic_app)
                     Glide.with(holder.itemView.context)
-                        .load(data.photo[0])
+                        .load(data.photo!![0])
                         .apply(requestOptions)
                         .into(holder.ivPhoto)
                 }

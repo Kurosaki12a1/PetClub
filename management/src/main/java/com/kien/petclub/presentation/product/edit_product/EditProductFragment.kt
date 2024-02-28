@@ -12,18 +12,19 @@ import com.kien.petclub.R
 import com.kien.petclub.constants.Constants
 import com.kien.petclub.databinding.FragmentAddProductBinding
 import com.kien.petclub.domain.model.entity.Product
+import com.kien.petclub.domain.model.entity.deletePhoto
 import com.kien.petclub.domain.model.entity.getPhoto
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.extensions.navigateSafe
 import com.kien.petclub.extensions.updateText
-import com.kien.petclub.presentation.product.base.BaseProductImageFragment
 import com.kien.petclub.presentation.product.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.base.BaseProductImageFragment
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
 import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -33,6 +34,7 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
 
     private lateinit var product: Product
 
+    // List images that added before
     private var currentListImage = ArrayList<Uri>()
 
     private lateinit var typeProduct: String
@@ -40,8 +42,6 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
     private val sharedViewModel: ShareMultiDataViewModel by activityViewModels()
 
     private val viewModel: EditProductViewModel by viewModels()
-
-    private var job: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,15 +113,15 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         super.setupObservers()
         sharedViewModel.setInfoProduct(null)
 
-        job = lifecycleScope.launch {
-            sharedViewModel.productResponse.flowWithLifecycle(lifecycle).collect {
+        lifecycleScope.launch {
+            sharedViewModel.productResponse.flowWithLifecycle(lifecycle).collectLatest {
                 it?.let { updateUI(it) }
             }
         }
 
         lifecycleScope.launch {
-            sharedViewModel.infoProductResponse.flowWithLifecycle(lifecycle).collect {
-                if (it.isNullOrEmpty()) return@collect
+            sharedViewModel.infoProductResponse.flowWithLifecycle(lifecycle).collectLatest {
+                if (it.isNullOrEmpty()) return@collectLatest
                 when (typeInfo) {
                     Constants.VALUE_BRAND -> binding.brandEdit.setText(it)
                     Constants.VALUE_TYPE -> binding.typeEdit.setText(it)
@@ -131,13 +131,18 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         }
 
         lifecycleScope.launch {
-            viewModel.downloadResponse.flowWithLifecycle(lifecycle).collect {
+            // Get Images added before form Firebase
+            viewModel.downloadResponse.flowWithLifecycle(lifecycle).collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         hideLoadingAnimation()
-                        currentListImage = ArrayList(it.value)
-                        listImages.addAll(currentListImage)
-                        photoAdapter.setData(listImages)
+                        if (it.value.isEmpty()) return@collectLatest
+                        val tempList = it.value.toCollection(ArrayList())
+                        if (currentListImage != tempList) {
+                            currentListImage = tempList
+                            listImages.addAll(currentListImage)
+                            photoAdapter.setData(listImages)
+                        }
                     }
 
                     is Resource.Failure -> {
@@ -154,10 +159,9 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         }
 
         lifecycleScope.launch {
-            viewModel.updateResponse.flowWithLifecycle(lifecycle).collect {
+            viewModel.updateResponse.flowWithLifecycle(lifecycle).collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        job?.cancel()
                         sharedViewModel.setProduct(it.value)
                         hideLoadingAnimation()
                         backToPreviousScreen()
@@ -178,6 +182,10 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
     }
 
     private fun updateUI(product: Product) {
+        // Avoid update same data
+        if (::product.isInitialized) {
+            if (this.product == product) return
+        }
         this.product = product
         when (product) {
             is Product.Goods -> {
@@ -194,7 +202,7 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
                 binding.weightEdit.updateText(product.weight)
                 binding.locationEdit.updateText(product.location)
 
-                if (product.photo != null) viewModel.downloadImage(product.photo)
+                if (product.photo != null) viewModel.downloadImage(product.photo!!)
             }
 
             is Product.Service -> {
@@ -208,7 +216,7 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
                 binding.typeEdit.updateText(product.type)
                 binding.brandEdit.updateText(product.brands)
 
-                if (product.photo != null) viewModel.downloadImage(product.photo)
+                if (product.photo != null) viewModel.downloadImage(product.photo!!)
             }
         }
     }
@@ -220,6 +228,29 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
             REQUEST_CODE_ID_SERVICE -> binding.idEdit.setText(data ?: "")
             REQUEST_CODE_BARCODE_SERVICE -> binding.codeEdit.setText(data ?: "")
         }
+    }
+
+    override fun onImagePickerResult(data: ArrayList<Uri>) {
+        super.onImagePickerResult(data)
+        listImages.addAll(data)
+        photoAdapter.setData(listImages)
+    }
+
+    override fun onDeletePhotoClick(uri: Uri, position: Int) {
+        super.onDeletePhotoClick(uri, position)
+        val tempList = listImages.map { it } as ArrayList<Uri>
+        listImages.clear()
+        // Case delete image added before
+        if (position < currentListImage.size) {
+            // Remove image from list added before
+            currentListImage.removeAt(position)
+            // Delete image from Firebase
+            product.deletePhoto(position)
+        }
+        // Remove image from list
+        tempList.removeAt(position)
+        listImages.addAll(tempList)
+        photoAdapter.setData(listImages)
     }
 
     private fun submit() {

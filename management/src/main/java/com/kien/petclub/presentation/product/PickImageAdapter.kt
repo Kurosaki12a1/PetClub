@@ -45,6 +45,9 @@ class PickImageAdapter(
 
         if (position < listUriImage.size) {
             holder.ivRemove.visibility = View.VISIBLE
+            holder.ivRemove.setOnClickListener {
+                listener.onDeletePhoto(listUriImage[position], position)
+            }
 
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

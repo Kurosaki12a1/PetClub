@@ -3,6 +3,7 @@ package com.kien.petclub.presentation.product.detail_product
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -29,6 +30,7 @@ class DetailProductAdapter(private val size: Int) : RecyclerView.Adapter<DetailP
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = listPhoto[position]
 
+        holder.ivRemove.visibility = View.GONE
         val requestOptions = RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .placeholder(R.mipmap.ic_app)
@@ -51,6 +53,7 @@ class DetailProductAdapter(private val size: Int) : RecyclerView.Adapter<DetailP
 
     inner class ViewHolder(binding: AddPhotoItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val ivPhoto = binding.ivAddPhoto
+        val ivRemove = binding.ivRemovePhoto
     }
 
 }

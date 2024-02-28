@@ -1,5 +1,6 @@
 package com.kien.petclub.presentation.product
 
+import android.net.Uri
 import com.kien.petclub.domain.model.entity.ChooserItem
 import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.model.entity.Product
@@ -18,4 +19,6 @@ interface ProductListener {
 
 interface ImagePickerListener {
     fun onTakePhotoClick() {}
+
+    fun onDeletePhoto(uri: Uri, position: Int) {}
 }

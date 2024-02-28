@@ -13,7 +13,7 @@ sealed class Product {
         val buyingPrice: String,
         val description: String?,
         val note: String?,
-        val photo: List<String>? = null,
+        var photo: List<String>? = null,
         val updatedDate: Long? = null
     ) : Product()
 
@@ -30,7 +30,7 @@ sealed class Product {
         val location: String? = null,
         val description: String,
         val note: String,
-        val photo: List<String>? = null,
+        var photo: List<String>? = null,
         val minimumStock: String? = "0",
         val maximumStock: String? = "999999999",
         val updatedDate: Long? = null
@@ -41,6 +41,21 @@ fun Product.getPhoto(): List<String>? {
     return when (this) {
         is Product.Goods -> this.photo
         is Product.Service -> this.photo
+    }
+}
+
+fun Product.deletePhoto(position: Int) {
+    when (this) {
+        is Product.Goods -> {
+            val myPhoto = photo?.toMutableList()
+            myPhoto?.removeAt(position)
+            this.photo = myPhoto
+        }
+        is Product.Service -> {
+            val myPhoto = photo?.toMutableList()
+            myPhoto?.removeAt(position)
+            this.photo = myPhoto
+        }
     }
 }
 
