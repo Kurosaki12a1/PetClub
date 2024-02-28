@@ -6,6 +6,9 @@ import com.kien.imagepicker.domain.usecase.GetPhotosUseCase
 import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.repository.FirebaseStorageRepository
+import com.kien.petclub.domain.repository.GoodsRepository
+import com.kien.petclub.domain.repository.InfoProductRepository
+import com.kien.petclub.domain.repository.ServiceRepository
 import com.kien.petclub.domain.usecase.auth.SignInUseCase
 import com.kien.petclub.domain.usecase.auth.SignOutUseCase
 import com.kien.petclub.domain.usecase.auth.SignUpUseCase
@@ -43,32 +46,41 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideGetGoodsUseCase(firebaseDBRepository: FirebaseDBRepository): GetGoodsUseCase {
-        return GetGoodsUseCase(firebaseDBRepository)
+    fun provideGetGoodsUseCase(goodsRepository: GoodsRepository): GetGoodsUseCase {
+        return GetGoodsUseCase(goodsRepository)
     }
 
     @Provides
     @Singleton
-    fun provideUpdateProductUseCase(firebaseDBRepository: FirebaseDBRepository): UpdateProductUseCase {
-        return UpdateProductUseCase(firebaseDBRepository)
+    fun provideUpdateProductUseCase(
+        goodsRepository: GoodsRepository,
+        serviceRepository: ServiceRepository
+    ): UpdateProductUseCase {
+        return UpdateProductUseCase(goodsRepository, serviceRepository)
     }
 
     @Provides
     @Singleton
-    fun provideDeleteProductUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteProductUseCase {
-        return DeleteProductUseCase(firebaseDBRepository)
+    fun provideDeleteProductUseCase(
+        goodsRepository: GoodsRepository,
+        serviceRepository: ServiceRepository
+    ): DeleteProductUseCase {
+        return DeleteProductUseCase(goodsRepository, serviceRepository)
     }
 
     @Provides
     @Singleton
-    fun provideAddProductUseCase(firebaseDBRepository: FirebaseDBRepository): AddProductUseCase {
-        return AddProductUseCase(firebaseDBRepository)
+    fun provideAddProductUseCase(
+        goodsRepository: GoodsRepository,
+        serviceRepository: ServiceRepository
+    ): AddProductUseCase {
+        return AddProductUseCase(goodsRepository, serviceRepository)
     }
 
     @Provides
     @Singleton
-    fun provideGetServiceUseCase(firebaseDBRepository: FirebaseDBRepository): GetServiceUseCase {
-        return GetServiceUseCase(firebaseDBRepository)
+    fun provideGetServiceUseCase(serviceRepository: ServiceRepository): GetServiceUseCase {
+        return GetServiceUseCase(serviceRepository)
     }
 
     @Provides
@@ -130,8 +142,11 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideCheckExistUserUseCase(firebaseDBRepository: FirebaseDBRepository): CheckExistenceProductUseCase {
-        return CheckExistenceProductUseCase(firebaseDBRepository)
+    fun provideCheckExistProductUseCase(
+        goodsRepository: GoodsRepository,
+        serviceRepository: ServiceRepository
+    ): CheckExistenceProductUseCase {
+        return CheckExistenceProductUseCase(serviceRepository, goodsRepository)
     }
 
     @Provides
@@ -142,26 +157,26 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideAddInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): AddInfoProductUseCase {
-        return AddInfoProductUseCase(firebaseDBRepository)
+    fun provideAddInfoProductUseCase(infoProductRepository: InfoProductRepository): AddInfoProductUseCase {
+        return AddInfoProductUseCase(infoProductRepository)
     }
 
     @Provides
     @Singleton
-    fun provideSearchInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): SearchInfoProductUseCase {
-        return SearchInfoProductUseCase(firebaseDBRepository)
+    fun provideSearchInfoProductUseCase(infoProductRepository: InfoProductRepository): SearchInfoProductUseCase {
+        return SearchInfoProductUseCase(infoProductRepository)
     }
 
     @Provides
     @Singleton
-    fun provideGetInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): GetInfoProductUseCase {
-        return GetInfoProductUseCase(firebaseDBRepository)
+    fun provideGetInfoProductUseCase(infoProductRepository: InfoProductRepository): GetInfoProductUseCase {
+        return GetInfoProductUseCase(infoProductRepository)
     }
 
     @Provides
     @Singleton
-    fun provideDeleteInfoProductUseCase(firebaseDBRepository: FirebaseDBRepository): DeleteInfoProductUseCase {
-        return DeleteInfoProductUseCase(firebaseDBRepository)
+    fun provideDeleteInfoProductUseCase(infoProductRepository: InfoProductRepository): DeleteInfoProductUseCase {
+        return DeleteInfoProductUseCase(infoProductRepository)
     }
 
     @Provides
@@ -210,13 +225,13 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideGetAlbumsUseCase(repo : ImagePickerRepository) : GetAlbumsUseCase {
+    fun provideGetAlbumsUseCase(repo: ImagePickerRepository): GetAlbumsUseCase {
         return GetAlbumsUseCase(repo)
     }
 
     @Provides
     @Singleton
-    fun provideGetPhotosUseCase(repo : ImagePickerRepository) : GetPhotosUseCase {
+    fun provideGetPhotosUseCase(repo: ImagePickerRepository): GetPhotosUseCase {
         return GetPhotosUseCase(repo)
     }
 

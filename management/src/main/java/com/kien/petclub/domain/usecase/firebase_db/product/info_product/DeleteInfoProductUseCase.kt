@@ -3,11 +3,12 @@ package com.kien.petclub.domain.usecase.firebase_db.product.info_product
 import com.kien.petclub.constants.Constants.VALUE_BRAND
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.domain.repository.FirebaseDBRepository
+import com.kien.petclub.domain.repository.InfoProductRepository
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class DeleteInfoProductUseCase @Inject constructor(private val repo: FirebaseDBRepository) {
+class DeleteInfoProductUseCase @Inject constructor(private val repo: InfoProductRepository) {
     operator fun invoke(type: String, id: String, parentId: String? = null): Flow<Resource<Unit>> {
         return when (type) {
             VALUE_BRAND -> repo.deleteBrandProduct(id)

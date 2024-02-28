@@ -1,13 +1,15 @@
 package com.kien.petclub.domain.usecase.firebase_db.product
 
 import com.kien.petclub.domain.model.entity.Product
-import com.kien.petclub.domain.repository.FirebaseDBRepository
+import com.kien.petclub.domain.repository.GoodsRepository
+import com.kien.petclub.domain.repository.ServiceRepository
 import com.kien.petclub.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AddProductUseCase @Inject constructor(
-    private val firebaseDBRepository: FirebaseDBRepository
+    private val goodsRepository: GoodsRepository,
+    private val serviceRepository: ServiceRepository
 ) {
 
     operator fun invoke(
@@ -35,7 +37,7 @@ class AddProductUseCase @Inject constructor(
             photo = photo,
             updatedDate = System.currentTimeMillis()
         )
-        return firebaseDBRepository.addServiceDatabase(service)
+        return serviceRepository.addServiceDatabase(service)
     }
 
     operator fun invoke(
@@ -73,6 +75,6 @@ class AddProductUseCase @Inject constructor(
             maximumStock = maximumStock,
             updatedDate = System.currentTimeMillis()
         )
-        return firebaseDBRepository.addGoodsDatabase(goods)
+        return goodsRepository.addGoodsDatabase(goods)
     }
 }

@@ -9,9 +9,15 @@ import com.kien.imagepicker.domain.repository.ImagePickerRepository
 import com.kien.petclub.data.repository.AuthRepositoryImpl
 import com.kien.petclub.data.repository.FirebaseDBRepositoryImpl
 import com.kien.petclub.data.repository.FirebaseStorageRepositoryImpl
+import com.kien.petclub.data.repository.GoodsRepositoryImpl
+import com.kien.petclub.data.repository.InfoProductRepositoryImpl
+import com.kien.petclub.data.repository.ServiceRepositoryImpl
 import com.kien.petclub.domain.repository.AuthRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.repository.FirebaseStorageRepository
+import com.kien.petclub.domain.repository.GoodsRepository
+import com.kien.petclub.domain.repository.InfoProductRepository
+import com.kien.petclub.domain.repository.ServiceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +32,29 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideFirebaseDBRepository(
-        auth: FirebaseAuth,
         db: FirebaseDatabase
     ): FirebaseDBRepository =
-        FirebaseDBRepositoryImpl(auth, db, Dispatchers.IO)
+        FirebaseDBRepositoryImpl(db, Dispatchers.IO)
+
+    @Provides
+    @Singleton
+    fun provideGoodsRepository(
+        auth: FirebaseAuth,
+        db: FirebaseDatabase
+    ): GoodsRepository = GoodsRepositoryImpl(auth, db, Dispatchers.IO)
+
+    @Provides
+    @Singleton
+    fun provideServiceRepository(
+        auth: FirebaseAuth,
+        db: FirebaseDatabase
+    ): ServiceRepository = ServiceRepositoryImpl(auth, db, Dispatchers.IO)
+
+    @Provides
+    @Singleton
+    fun provideInfoProductRepository(
+        db: FirebaseDatabase
+    ): InfoProductRepository = InfoProductRepositoryImpl(db, Dispatchers.IO)
 
     @Provides
     @Singleton
