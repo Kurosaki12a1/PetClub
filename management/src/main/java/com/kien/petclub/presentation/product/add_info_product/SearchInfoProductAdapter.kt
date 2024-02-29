@@ -3,23 +3,24 @@ package com.kien.petclub.presentation.product.add_info_product
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ItemAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
-import com.kien.petclub.presentation.product.ProductListener
+import com.kien.petclub.presentation.product.InfoProductListener
+import com.kien.petclub.presentation.utils.PopupMenuHelper
 
 class SearchInfoProductAdapter(
     private val typeInfo: String,
-    private val listener: ProductListener? = null
+    private val listener: InfoProductListener? = null
 ) : RecyclerView.Adapter<SearchInfoProductAdapter.ViewHolder>() {
 
     companion object {
@@ -65,8 +66,27 @@ class SearchInfoProductAdapter(
                     SearchInfoProductAdapter(typeInfo, listener).also { it.setData(data.child!!) }
             }
 
+            val popUpHelper = PopupMenuHelper(
+                itemView.context,
+                R.menu.item_popup_menu,
+            ) {
+                when (it.itemId) {
+                    R.id.action_add -> {
+                        listener?.onAddInfoProduct(data)
+                    }
+
+                    R.id.action_delete -> {
+                        listener?.onDeleteInfoProduct(data)
+                    }
+                }
+                true
+            }
+
             itemView.setOnLongClickListener {
-                showPopup(it, data)
+                popUpHelper.show(it) {
+                    menu.findItem(R.id.action_add).isVisible =
+                        typeInfo == VALUE_TYPE && data.parentId == null
+                }
                 true
             }
 
@@ -118,30 +138,7 @@ class SearchInfoProductAdapter(
         valueAnimator.start()
     }
 
-    private fun showPopup(v: View, data: InfoProduct) {
-        val popUp = PopupMenu(v.context, v)
-        val inflater = popUp.menuInflater
-        inflater.inflate(R.menu.item_popup_menu, popUp.menu)
-        popUp.menu.findItem(R.id.action_add).isVisible =
-            typeInfo == VALUE_TYPE && data.parentId == null
-        popUp.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_add -> {
-                    listener?.onAddInfoProduct(data)
-                    true
-                }
-
-                R.id.action_delete -> {
-                    listener?.onDeleteInfoProduct(data)
-                    true
-                }
-
-                else -> false
-            }
-        }
-        popUp.show()
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(data: ArrayList<InfoProduct>) {
         listInfoProduct.clear()
         listInfoProduct.addAll(data)

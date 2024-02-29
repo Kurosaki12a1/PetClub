@@ -70,4 +70,8 @@ object Constants {
 
     const val EXISTED_PRODUCT = "Product id already exists"
 
+
+    // SharedPreferences
+    const val KEY_FILTER = "key_filter"
+    const val SORT_FILTER = "sort_filter"
 }

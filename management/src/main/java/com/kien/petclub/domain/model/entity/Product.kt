@@ -1,11 +1,12 @@
 package com.kien.petclub.domain.model.entity
 
 import com.google.firebase.database.DataSnapshot
+import com.kien.petclub.R
 
 sealed class Product {
     data class Service(
         val id: String,
-        val code: String?,
+        val code: String? = "",
         val name: String,
         val type: String? = null,
         val brands: String? = null,
@@ -19,7 +20,7 @@ sealed class Product {
 
     data class Goods(
         val id: String,
-        val code: String,
+        val code: String? = "",
         val name: String,
         val type: String? = null,
         val brands: String? = null,
@@ -51,6 +52,7 @@ fun Product.deletePhoto(position: Int) {
             myPhoto?.removeAt(position)
             this.photo = myPhoto
         }
+
         is Product.Service -> {
             val myPhoto = photo?.toMutableList()
             myPhoto?.removeAt(position)
@@ -77,6 +79,13 @@ fun Product.getId(): String {
     return when (this) {
         is Product.Goods -> this.id
         is Product.Service -> this.id
+    }
+}
+
+fun Product.getCode(): String {
+    return when (this) {
+        is Product.Goods -> this.code ?: ""
+        is Product.Service -> this.code ?: ""
     }
 }
 
@@ -173,4 +182,73 @@ fun mapSnapshotToService(snapshot: DataSnapshot): Product.Service {
         photo,
         updatedDate
     )
+}
+
+enum class ProductSortType(val value: Int, val description: String) {
+    NEWEST(0, "Newest"),
+    OLDEST(1, "Oldest"),
+    NAME_AZ(2, "Name A-Z"),
+    NAME_ZA(3, "Name Z-A"),
+    PRICE_LOW_TO_HIGH(4, "Price Low to High"),
+    PRICE_HIGH_TO_LOW(5, "Price High to Low"),
+    INVENTORY_LOW_TO_HIGH(6, "Inventory Low to High"),
+    INVENTORY_HIGH_TO_LOW(7, "Inventory High to Low"),
+    SELL_LOW_TO_HIGH(8, "Sell Low to High"),
+    SELL_HIGH_TO_LOW(9, "Sell High to Low");
+
+    companion object {
+
+        fun initListChooser(): ArrayList<ChooserItem> {
+            return entries.mapIndexed { index, it ->
+                ChooserItem(it.description, index == 0)
+            }.toCollection(ArrayList())
+        }
+
+        fun getListSort(list: ArrayList<Product>, sort: Int): ArrayList<Product> {
+            return when (sort) {
+                NEWEST.value -> {
+                    list.sortedByDescending { it.getUpdateDated() }
+                }
+
+                OLDEST.value -> {
+                    list.sortedBy { it.getUpdateDated() }
+                }
+
+                NAME_AZ.value -> {
+                    list.sortedBy { it.getName() }
+                }
+
+                NAME_ZA.value -> {
+                    list.sortedByDescending { it.getName() }
+                }
+
+                PRICE_LOW_TO_HIGH.value -> {
+                    list.sortedBy { it.getBuyingPrice() }
+                }
+
+                PRICE_HIGH_TO_LOW.value -> {
+                    list.sortedByDescending { it.getBuyingPrice() }
+                }
+
+                INVENTORY_LOW_TO_HIGH.value -> {
+                    list.sortedBy { it.getStock() }
+                }
+
+                INVENTORY_HIGH_TO_LOW.value -> {
+                    list.sortedByDescending { it.getStock() }
+                }
+
+                SELL_LOW_TO_HIGH.value -> {
+                    list.sortedBy { it.getSellingPrice() }
+                }
+
+                SELL_HIGH_TO_LOW.value -> {
+                    list.sortedByDescending { it.getSellingPrice() }
+                }
+
+                else -> list
+            }.toCollection(ArrayList())
+        }
+    }
+
 }

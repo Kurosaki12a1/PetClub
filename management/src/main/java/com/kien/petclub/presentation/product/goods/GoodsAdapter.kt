@@ -1,5 +1,6 @@
 package com.kien.petclub.presentation.product.goods
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +12,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.kien.petclub.R
 import com.kien.petclub.databinding.ItemDetailProductBinding
 import com.kien.petclub.domain.model.entity.Product
-import com.kien.petclub.domain.model.entity.getBuyingPrice
+import com.kien.petclub.domain.model.entity.ProductSortType
 import com.kien.petclub.domain.model.entity.getId
-import com.kien.petclub.domain.model.entity.getName
-import com.kien.petclub.domain.model.entity.getSellingPrice
-import com.kien.petclub.domain.model.entity.getStock
-import com.kien.petclub.domain.model.entity.getUpdateDated
 import com.kien.petclub.presentation.product.ProductListener
 
 class GoodsAdapter(private var listener: ProductListener) :
@@ -27,22 +24,11 @@ class GoodsAdapter(private var listener: ProductListener) :
         const val SELLING_PRICE = 101
         private const val VALUE_GOODS = 0
         private const val VALUE_SERVICE = 1
-
-        private const val NEWEST = 0
-        private const val OLDEST = 1
-        private const val NAME_AZ = 2
-        private const val NAME_ZA = 3
-        private const val PRICE_LOW_TO_HIGH = 4
-        private const val PRICE_HIGH_TO_LOW = 5
-        private const val INVENTORY_LOW_TO_HIGH = 6
-        private const val INVENTORY_HIGH_TO_LOW = 7
-        private const val SELL_LOW_TO_HIGH = 8
-        private const val SELL_HIGH_TO_LOW = 9
     }
 
     private var filterPrice = SELLING_PRICE
 
-    private var sortedType = NEWEST
+    private var sortedType = 0
 
     private var listProduct = ArrayList<Product>()
 
@@ -114,64 +100,18 @@ class GoodsAdapter(private var listener: ProductListener) :
         }
     }
 
-    private fun getSortedList(list: ArrayList<Product>, sortType: Int): ArrayList<Product> {
-        val result: ArrayList<Product> = when (sortType) {
-            NEWEST -> {
-                ArrayList(list.sortedByDescending { it.getUpdateDated() })
-            }
-
-            OLDEST -> {
-                ArrayList(list.sortedBy { it.getUpdateDated() })
-            }
-
-            NAME_AZ -> {
-                ArrayList(list.sortedBy { it.getName() })
-            }
-
-            NAME_ZA -> {
-                ArrayList(list.sortedByDescending { it.getName() })
-            }
-
-            PRICE_LOW_TO_HIGH -> {
-                ArrayList(list.sortedBy { if (filterPrice == BUYING_PRICE) it.getBuyingPrice() else it.getSellingPrice() })
-            }
-
-            PRICE_HIGH_TO_LOW -> {
-                ArrayList(list.sortedByDescending { if (filterPrice == BUYING_PRICE) it.getBuyingPrice() else it.getSellingPrice() })
-            }
-
-            INVENTORY_LOW_TO_HIGH -> {
-                ArrayList(list.sortedBy { it.getStock() })
-            }
-
-            INVENTORY_HIGH_TO_LOW -> {
-                ArrayList(list.sortedByDescending { it.getStock() })
-            }
-
-            /*    SELL_LOW_TO_HIGH -> {
-                    list.sortedBy { it.getSellingPrice() }
-                }
-
-                SELL_HIGH_TO_LOW -> {
-                    list.sortedByDescending { it.getSellingPrice() }
-                }*/
-
-            else -> ArrayList(list)
-        }
-        return result
-    }
-
     fun sortData(sortType: Int) {
         this.sortedType = sortType
-        val tempList = getSortedList(listProduct, sortedType)
+        val tempList = ProductSortType.getListSort(listProduct, sortedType)
         val diffResult = DiffUtil.calculateDiff(DiffCallback(listProduct, tempList))
         listProduct = tempList
         diffResult.dispatchUpdatesTo(this)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(list: ArrayList<Product>, sortType: Int? = null) {
         if (sortType != null) sortedType = sortType
-        val tempList = getSortedList(list, sortedType)
+        val tempList = ProductSortType.getListSort(list, sortedType)
         if (listProduct.isEmpty()) {
             listProduct = tempList
             notifyDataSetChanged()
@@ -183,6 +123,7 @@ class GoodsAdapter(private var listener: ProductListener) :
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setFilterPrice(filter: Int) {
         filterPrice = filter
         notifyDataSetChanged()

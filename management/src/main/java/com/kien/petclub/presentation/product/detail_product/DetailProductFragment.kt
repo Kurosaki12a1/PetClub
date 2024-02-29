@@ -3,7 +3,6 @@ package com.kien.petclub.presentation.product.detail_product
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
-import android.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -22,6 +21,7 @@ import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
 import com.kien.petclub.presentation.product.utils.showLoadingAnimation
+import com.kien.petclub.presentation.utils.PopupMenuHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -50,8 +50,22 @@ class DetailProductFragment : BaseFragment<FragmentDetailProductBinding>() {
             backToPreviousScreen()
         }
 
+        val popUpHelper = PopupMenuHelper(
+            requireActivity(),
+            R.menu.detail_popup_menu,
+        ) { item ->
+            when (item.itemId) {
+                R.id.action_print -> {}
+                R.id.action_stop_selling -> {}
+                R.id.action_delete -> {
+                    viewModel.deleteProduct(product)
+                }
+            }
+            true
+        }
+
         binding.ivOptions.setOnClickListener {
-            showPopup(it)
+            popUpHelper.show(it)
         }
 
         binding.ivEdit.setOnClickListener {
@@ -196,27 +210,5 @@ class DetailProductFragment : BaseFragment<FragmentDetailProductBinding>() {
         binding.rvPhoto.adapter = adapter
         binding.rvPhoto.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-    }
-
-    private fun showPopup(view: View) {
-        val popup = PopupMenu(requireActivity(), view)
-        popup.menuInflater.inflate(R.menu.detail_popup_menu, popup.menu)
-        popup.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.action_print -> {
-                    //TODO
-                }
-
-                R.id.action_stop_selling -> {
-                    //TODO
-                }
-
-                R.id.action_delete -> {
-                    viewModel.deleteProduct(product)
-                }
-            }
-            true
-        }
-        popup.show()
     }
 }

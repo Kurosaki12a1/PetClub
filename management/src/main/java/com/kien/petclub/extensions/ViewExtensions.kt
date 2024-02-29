@@ -3,6 +3,7 @@ package com.kien.petclub.extensions
 import android.graphics.Rect
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 
 fun View.getVisibleRect(): Rect {
     val outRect = Rect()
@@ -10,8 +11,8 @@ fun View.getVisibleRect(): Rect {
     return outRect
 }
 
-fun EditText.updateText(text: String?) {
-    if (text.isNullOrBlank() || text.isEmpty()) this.setText("")
+fun TextView.updateText(text: String?) {
+    if (text.isNullOrBlank() || text.isEmpty()) this.text = ""
     setText(text)
 }
 
@@ -22,15 +23,15 @@ fun EditText.setOnDrawableRightClick(onClick: () -> Unit) {
             val compoundDrawablesRight = compoundDrawables[2]
             compoundDrawablesRight?.let {
                 val drawableRightWidth = it.bounds.width()
-                val etPaddingRight = et.paddingRight
-                val drawableRightStart = et.width - etPaddingRight - drawableRightWidth
+                val drawableRightStart = et.width - drawableRightWidth
                 if (touchPoint >= drawableRightStart) {
                     onClick.invoke()
                     return@setOnTouchListener true
                 }
             }
+        } else {
+            performClick()
         }
-        performClick()
         return@setOnTouchListener false
     }
 }
@@ -48,8 +49,9 @@ fun EditText.setOnDrawableLeftClick(onClick: () -> Unit) {
                     return@setOnTouchListener true
                 }
             }
+        } else {
+            performClick()
         }
-        performClick()
         return@setOnTouchListener false
     }
 }

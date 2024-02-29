@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kien.petclub.R
 import com.kien.petclub.databinding.SortChooseItemBinding
 import com.kien.petclub.domain.model.entity.ChooserItem
-import com.kien.petclub.presentation.product.ProductListener
+import com.kien.petclub.presentation.product.SortProductListener
 
 class SortChooseAdapter(
-    private val listener: ProductListener
+    private val listener: SortProductListener
 ) : ListAdapter<ChooserItem, SortChooseAdapter.ViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -39,7 +39,7 @@ class SortChooseAdapter(
     override fun onBindViewHolder(holder: SortChooseAdapter.ViewHolder, position: Int) {
         val data = getItem(position)
         holder.itemView.setOnClickListener {
-            listener.onItemClick(data, position)
+            listener.onSortClick(data, position)
         }
         holder.name.text = data.name
         holder.rb.isChecked = data.isSelected

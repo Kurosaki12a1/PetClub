@@ -47,7 +47,18 @@
     <fragment
         android:id="@+id/search_fragment"
         android:name="com.kien.petclub.presentation.product.search.SearchFragment"
-        tools:layout="@layout/fragment_search_product" />
+        tools:layout="@layout/fragment_search_product" >
+
+        <action
+            android:id="@+id/action_open_detail_fragment"
+            app:destination="@id/detail_product_fragment"
+            app:enterAnim="@anim/anim_slide_in_right"
+            app:exitAnim="@anim/anim_slide_out_left"
+            app:popEnterAnim="@anim/anim_slide_in_left"
+            app:popExitAnim="@anim/anim_slide_out_right"
+            app:popUpTo="@id/search_fragment"
+            app:popUpToInclusive="false" />
+    </fragment>
 
     <fragment
         android:id="@+id/detail_product_fragment"

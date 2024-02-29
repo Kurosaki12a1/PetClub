@@ -4,6 +4,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.kien.imagepicker.extensions.isInVisibleRect
@@ -12,11 +13,18 @@ import com.kien.petclub.constants.Constants.TIMEOUT_BACK_PRESS
 import com.kien.petclub.constants.Constants.VALUE_GOODS
 import com.kien.petclub.constants.Constants.VALUE_SERVICE
 import com.kien.petclub.databinding.ActivityHomeBinding
+import com.kien.petclub.domain.model.entity.ChooserItem
+import com.kien.petclub.domain.model.entity.ProductSortType
 import com.kien.petclub.extensions.getVisibleRect
 import com.kien.petclub.extensions.setupWithNavController
 import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.base.BaseActivity
+import com.kien.petclub.presentation.product.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.SortProductListener
+import com.kien.petclub.presentation.product.goods.GoodsFragment
 import com.kien.petclub.presentation.product.goods.GoodsFragmentDirections
+import com.kien.petclub.presentation.product.search.SearchFragment
+import com.kien.petclub.presentation.product.sort_product.SortChooserPopup
 import com.kien.petclub.utils.AnimationLoader
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -35,13 +43,20 @@ import kotlinx.coroutines.flow.onEach
  * Date: 27/02/2024
  */
 @AndroidEntryPoint
-class HomeActivity : BaseActivity<ActivityHomeBinding>() {
+class HomeActivity : BaseActivity<ActivityHomeBinding>(), SortProductListener {
+
+    companion object {
+        private const val TAG_POPUP = "SortChooserPopup"
+    }
+
+    private lateinit var popUpSort: SortChooserPopup
 
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun getViewBinding() = ActivityHomeBinding.inflate(layoutInflater)
 
     private val animationLoader = AnimationLoader(this)
+
 
 
     override fun setUpBottomNavigation() {
@@ -77,6 +92,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     override fun setUpViews() {
         super.setUpViews()
         setUpFloatingActionButton()
+        popUpSort = SortChooserPopup(ProductSortType.initListChooser(), this)
     }
 
     override fun setUpObserver() {
@@ -213,5 +229,36 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
     fun stopLoadingAnimation() {
         binding.loadingAnimationView.visibility = View.GONE
         binding.loadingAnimationView.cancelAnimation()
+    }
+
+    override fun onSortClick(item: ChooserItem, position: Int) {
+        findNavController(R.id.fragment_host_container).currentDestination?.id?.let {
+            when (it) {
+                R.id.goodsFragment -> {
+                    val goodsFragment =
+                        supportFragmentManager.findFragmentById(R.id.fragment_host_container)
+                    if (goodsFragment is GoodsFragment) {
+                        goodsFragment.onSortClick(item, position)
+                    }
+                }
+                R.id.search_fragment -> {
+                    val searchFragment =
+                        supportFragmentManager.findFragmentById(R.id.fragment_host_container)
+                    if (searchFragment is SearchFragment) {
+                        searchFragment.onSortClick(item, position)
+                    }
+                }
+            }
+        }
+    }
+
+    fun showPopUpSort() {
+        if (!popUpSort.isVisible) {
+            popUpSort.show(supportFragmentManager, TAG_POPUP)
+        }
+    }
+
+    fun dismissPopUpSort() {
+        popUpSort.dismiss()
     }
 }

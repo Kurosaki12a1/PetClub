@@ -7,14 +7,18 @@ import com.kien.petclub.domain.model.entity.Product
 
 interface ProductListener {
     fun onItemClick(product: Product) {}
+}
 
-    fun onItemClick(item: ChooserItem, position: Int) {}
-
+interface InfoProductListener {
     fun onAddInfoProduct(data: InfoProduct) {}
 
     fun onDeleteInfoProduct(data: InfoProduct) {}
 
     fun onClickListener(data: InfoProduct) {}
+}
+
+interface SortProductListener {
+    fun onSortClick(item: ChooserItem, position: Int)
 }
 
 interface ImagePickerListener {

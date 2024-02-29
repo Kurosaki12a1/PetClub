@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import androidx.lifecycle.viewModelScope
+import com.kien.petclub.data.data_source.local.preferences.AppPreferences
 import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.domain.usecase.firebase_db.product.GetProductUseCase
 import com.kien.petclub.domain.util.Resource
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GoodsViewModel @Inject constructor(
-    private val getProductUseCase: GetProductUseCase
+    private val getProductUseCase: GetProductUseCase,
+    private val pref : AppPreferences
 ) : BaseViewModel() {
 
     private val _productResponse =
@@ -87,5 +89,17 @@ class GoodsViewModel @Inject constructor(
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         return spannable
+    }
+
+    fun getSortProduct() = pref.productSort
+
+    fun setSortProduct(sort: Int) {
+        pref.productSort = sort
+    }
+
+    fun getFilterProduct() = pref.productFilter
+
+    fun setFilterProduct(filter: String) {
+        pref.productFilter = filter
     }
 }

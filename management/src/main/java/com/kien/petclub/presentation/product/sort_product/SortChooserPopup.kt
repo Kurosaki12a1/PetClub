@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
 import com.kien.petclub.databinding.SortChooserPopUpBinding
 import com.kien.petclub.domain.model.entity.ChooserItem
-import com.kien.petclub.presentation.product.ProductListener
+import com.kien.petclub.presentation.product.SortProductListener
 
 class SortChooserPopup(
     private val listItem: ArrayList<ChooserItem>,
-    private val listener: ProductListener
+    private val listener: SortProductListener
 ) : DialogFragment() {
 
     private lateinit var binding: SortChooserPopUpBinding
@@ -87,12 +87,11 @@ class SortChooserPopup(
             dismiss()
         }
 
-        adapter = SortChooseAdapter(object : ProductListener {
-            override fun onItemClick(item: ChooserItem, position: Int) {
-                super.onItemClick(item, position)
+        adapter = SortChooseAdapter(object : SortProductListener {
+            override fun onSortClick(item: ChooserItem, position: Int) {
                 listItem.forEach { it.isSelected = false }
                 item.isSelected = true
-                listener.onItemClick(item, position)
+                listener.onSortClick(item, position)
             }
         })
 

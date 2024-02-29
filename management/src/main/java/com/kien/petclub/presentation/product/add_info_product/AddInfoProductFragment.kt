@@ -15,13 +15,12 @@ import com.kien.petclub.domain.model.entity.InfoProduct
 import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.presentation.base.BaseFragment
-import com.kien.petclub.presentation.product.ProductListener
+import com.kien.petclub.presentation.product.InfoProductListener
 import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
 import com.kien.petclub.presentation.product.utils.showDialog
 import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,7 +28,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
-    ProductListener {
+    InfoProductListener {
     private lateinit var adapter: SearchInfoProductAdapter
 
     private lateinit var dialog: AddInfoProductPopup
@@ -41,8 +40,6 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
     private var parentTypeId = Constants.EMPTY_STRING
 
     private var typeAddInfo = Constants.EMPTY_STRING
-
-    private var job: Job? = null
 
     override fun getViewBinding(): FragmentAddInfoProductBinding =
         FragmentAddInfoProductBinding.inflate(layoutInflater)
@@ -153,7 +150,7 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
         }.launchIn(lifecycleScope)
 
 
-        job = lifecycleScope.launch {
+        lifecycleScope.launch {
             sharedVM.infoProductResponse.flowWithLifecycle(lifecycle).collect {
                 if (!it.isNullOrBlank() && it.isNotEmpty()) {
                     if (parentTypeId != Constants.EMPTY_STRING && typeAddInfo == Constants.VALUE_TYPE) {
@@ -199,7 +196,6 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
     }
 
     override fun onClickListener(data: InfoProduct) {
-        job?.cancel()
         sharedVM.setInfoProduct(data.name)
         backToPreviousScreen()
     }
