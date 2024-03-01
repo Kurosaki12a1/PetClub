@@ -35,7 +35,7 @@ class AddProductUseCase @Inject constructor(
             description = description,
             note = note,
             photo = photo,
-            updatedDate = System.currentTimeMillis()
+            updatedDate = System.currentTimeMillis().toString()
         )
         return serviceRepository.addServiceDatabase(service)
     }
@@ -73,7 +73,7 @@ class AddProductUseCase @Inject constructor(
             photo = photo,
             minimumStock = minimumStock,
             maximumStock = maximumStock,
-            updatedDate = System.currentTimeMillis()
+            updatedDate = System.currentTimeMillis().toString()
         )
         return goodsRepository.addGoodsDatabase(goods)
     }

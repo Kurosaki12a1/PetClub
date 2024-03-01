@@ -1,6 +1,5 @@
 package com.kien.petclub.presentation.product.goods
 
-import android.content.Context
 import android.graphics.Color
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -21,7 +20,6 @@ import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.SortProductListener
 import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.BUYING_PRICE
 import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.SELLING_PRICE
-import com.kien.petclub.presentation.product.sort_product.SortChooserPopup
 import com.kien.petclub.presentation.product.utils.showBottomNavigationAndFabButton
 import com.kien.petclub.presentation.utils.PopupMenuHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -131,7 +129,7 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, Sor
         val totalStock = list.sumOf { it.getStock() }
         val text = getString(R.string.goods_info, list.size.toString(), totalStock.toString())
         binding.infoGoods.text = viewModel.getSpannableStringAllProductText(
-            list.size,
+            list.size.toString().length,
             totalStock.toString().length,
             text,
             resources.getColor(R.color.colorPrimary, null),

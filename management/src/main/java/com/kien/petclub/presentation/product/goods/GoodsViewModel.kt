@@ -78,7 +78,7 @@ class GoodsViewModel @Inject constructor(
 
         spannable.setSpan(
             colorNormalText,
-            numOfProducts + 1,
+            numOfProducts,
             textDisplay.length - numOfTotalStock,
             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
         )

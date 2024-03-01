@@ -48,6 +48,8 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
 
     private var searchResult = ArrayList<Product>()
 
+    private var isSearching = true
+
     private lateinit var adapter: GoodsAdapter
 
     private val goodsViewModel: GoodsViewModel by activityViewModels()
@@ -102,6 +104,7 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                isSearching = true
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -152,6 +155,7 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
         binding.ivSort.visibility = View.GONE
         binding.etSearch.visibility = View.VISIBLE
         binding.tvResult.visibility = View.GONE
+        isSearching = true
     }
 
     private fun hideSearchBar() {
@@ -167,7 +171,8 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
 
     private fun performSearch() {
         hideSearchBar()
-        setInfoTotalProduct(dataSource)
+        isSearching = false
+        setInfoTotalProduct(searchResult)
         adapter.sortData(viewModel.getSortProduct())
     }
 
@@ -176,7 +181,7 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
         val totalStock = list.sumOf { it.getStock() }
         val text = getString(R.string.goods_info, list.size.toString(), totalStock.toString())
         binding.infoGoods.text = viewModel.getSpannableStringAllProductText(
-            list.size,
+            list.size.toString().length,
             totalStock.toString().length,
             text,
             resources.getColor(R.color.colorPrimary, null),
@@ -202,10 +207,12 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object :
             OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (binding.etSearch.visibility == View.VISIBLE) {
+                if (binding.etSearch.visibility == View.VISIBLE && !isSearching) {
                     hideSearchBar()
                 } else {
-                    activity?.onBackPressedDispatcher?.onBackPressed()
+                    this.isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    this.isEnabled = true
                 }
             }
         })

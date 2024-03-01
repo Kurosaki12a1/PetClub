@@ -127,7 +127,7 @@ class EditProductViewModel @Inject constructor(
                                 photo = listPhoto,
                                 minimumStock = minimumStock,
                                 maximumStock = maximumStock,
-                                updatedDate = System.currentTimeMillis()
+                                updatedDate = System.currentTimeMillis().toString()
                             )
                             // Call updateProductUseCase to update the product in the repository
                             updateProductUseCase(id, goods)
@@ -166,7 +166,7 @@ class EditProductViewModel @Inject constructor(
                                 description,
                                 note,
                                 photo = listPhoto,
-                                updatedDate = System.currentTimeMillis()
+                                updatedDate = System.currentTimeMillis().toString()
                             )
                             updateProductUseCase(id, service)
                         }

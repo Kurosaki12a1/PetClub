@@ -41,6 +41,8 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
     private var typeAddInfo = Constants.EMPTY_STRING
 
+    private var shouldUpdateInfoProduct = true
+
     override fun getViewBinding(): FragmentAddInfoProductBinding =
         FragmentAddInfoProductBinding.inflate(layoutInflater)
 
@@ -57,6 +59,7 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
         binding.rvList.adapter = adapter
 
         binding.ivBack.setOnClickListener {
+            shouldUpdateInfoProduct = false
             backToPreviousScreen()
         }
 
@@ -95,6 +98,8 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
     override fun setupObservers() {
         super.setupObservers()
+        // Avoid update data when we back from add info screen
+        sharedVM.setInfoProduct(null)
         viewModel.addResponse.flowWithLifecycle(lifecycle).onEach {
             when (it) {
                 is Resource.Success -> {
@@ -151,8 +156,8 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
 
         lifecycleScope.launch {
-            sharedVM.infoProductResponse.flowWithLifecycle(lifecycle).collect {
-                if (!it.isNullOrBlank() && it.isNotEmpty()) {
+            sharedVM.infoProductResponse.flowWithLifecycle(lifecycle).collectLatest {
+                if (!it.isNullOrBlank() && it.isNotEmpty() && shouldUpdateInfoProduct) {
                     if (parentTypeId != Constants.EMPTY_STRING && typeAddInfo == Constants.VALUE_TYPE) {
                         viewModel.updateTypeProduct(parentTypeId, it)
                         parentTypeId = Constants.EMPTY_STRING
@@ -196,6 +201,7 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
     }
 
     override fun onClickListener(data: InfoProduct) {
+        shouldUpdateInfoProduct = false
         sharedVM.setInfoProduct(data.name)
         backToPreviousScreen()
     }

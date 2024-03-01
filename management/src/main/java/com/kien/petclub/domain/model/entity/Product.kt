@@ -1,7 +1,6 @@
 package com.kien.petclub.domain.model.entity
 
 import com.google.firebase.database.DataSnapshot
-import com.kien.petclub.R
 
 sealed class Product {
     data class Service(
@@ -15,7 +14,7 @@ sealed class Product {
         val description: String?,
         val note: String?,
         var photo: List<String>? = null,
-        val updatedDate: Long? = null
+        val updatedDate: String? = null
     ) : Product()
 
     data class Goods(
@@ -34,7 +33,7 @@ sealed class Product {
         var photo: List<String>? = null,
         val minimumStock: String? = "0",
         val maximumStock: String? = "999999999",
-        val updatedDate: Long? = null
+        val updatedDate: String? = null
     ) : Product()
 }
 
@@ -89,24 +88,24 @@ fun Product.getCode(): String {
     }
 }
 
-fun Product.getUpdateDated(): Long? {
+fun Product.getUpdateDated(): Long {
     return when (this) {
-        is Product.Goods -> this.updatedDate
-        is Product.Service -> this.updatedDate
+        is Product.Goods -> this.updatedDate?.toLong() ?: System.currentTimeMillis()
+        is Product.Service -> this.updatedDate?.toLong() ?: System.currentTimeMillis()
     }
 }
 
-fun Product.getBuyingPrice(): Long {
+fun Product.getBuyingPrice(): Double {
     return when (this) {
-        is Product.Goods -> this.buyingPrice.toLong()
-        is Product.Service -> this.buyingPrice.toLong()
+        is Product.Goods -> this.buyingPrice.toDouble()
+        is Product.Service -> this.buyingPrice.toDouble()
     }
 }
 
-fun Product.getSellingPrice(): Long {
+fun Product.getSellingPrice(): Double {
     return when (this) {
-        is Product.Goods -> this.sellingPrice.toLong()
-        is Product.Service -> this.sellingPrice.toLong()
+        is Product.Goods -> this.sellingPrice.toDouble()
+        is Product.Service -> this.sellingPrice.toDouble()
     }
 }
 
@@ -125,7 +124,7 @@ fun mapSnapshotToGoods(snapshot: DataSnapshot): Product.Goods {
     val note = snapshot.child("note").getValue(String::class.java)
     val minimumStock = snapshot.child("minimumStock").getValue(String::class.java)
     val maximumStock = snapshot.child("maximumStock").getValue(String::class.java)
-    val updatedDate = snapshot.child("updatedDate").getValue(Long::class.java)
+    val updatedDate = snapshot.child("updatedDate").getValue(String::class.java)
 
     val photo = snapshot.child("photo").children.mapNotNull { photoSnapshot ->
         photoSnapshot.getValue(String::class.java)
@@ -162,7 +161,7 @@ fun mapSnapshotToService(snapshot: DataSnapshot): Product.Service {
     val buyingPrice = snapshot.child("buyingPrice").getValue(String::class.java)
     val description = snapshot.child("description").getValue(String::class.java)
     val note = snapshot.child("note").getValue(String::class.java)
-    val updatedDate = snapshot.child("updatedDate").getValue(Long::class.java)
+    val updatedDate = snapshot.child("updatedDate").getValue(String::class.java)
 
     val photo = snapshot.child("photo").children.mapNotNull { photoSnapshot ->
         photoSnapshot.getValue(String::class.java)
@@ -204,7 +203,11 @@ enum class ProductSortType(val value: Int, val description: String) {
             }.toCollection(ArrayList())
         }
 
-        fun getListSort(list: ArrayList<Product>, sort: Int): ArrayList<Product> {
+        fun getListSort(
+            list: ArrayList<Product>,
+            sort: Int,
+            isSortedSellingPrice: Boolean = true
+        ): ArrayList<Product> {
             return when (sort) {
                 NEWEST.value -> {
                     list.sortedByDescending { it.getUpdateDated() }
@@ -223,11 +226,11 @@ enum class ProductSortType(val value: Int, val description: String) {
                 }
 
                 PRICE_LOW_TO_HIGH.value -> {
-                    list.sortedBy { it.getBuyingPrice() }
+                    list.sortedBy { if (isSortedSellingPrice) it.getSellingPrice() else it.getBuyingPrice() }
                 }
 
                 PRICE_HIGH_TO_LOW.value -> {
-                    list.sortedByDescending { it.getBuyingPrice() }
+                    list.sortedByDescending { if (isSortedSellingPrice) it.getSellingPrice() else it.getBuyingPrice() }
                 }
 
                 INVENTORY_LOW_TO_HIGH.value -> {

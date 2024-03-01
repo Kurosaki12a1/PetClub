@@ -4,9 +4,9 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.kien.imagepicker.extensions.isInVisibleRect
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.TIMEOUT_BACK_PRESS
@@ -19,7 +19,6 @@ import com.kien.petclub.extensions.getVisibleRect
 import com.kien.petclub.extensions.setupWithNavController
 import com.kien.petclub.extensions.showToast
 import com.kien.petclub.presentation.base.BaseActivity
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.SortProductListener
 import com.kien.petclub.presentation.product.goods.GoodsFragment
 import com.kien.petclub.presentation.product.goods.GoodsFragmentDirections
@@ -56,7 +55,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), SortProductListener {
     override fun getViewBinding() = ActivityHomeBinding.inflate(layoutInflater)
 
     private val animationLoader = AnimationLoader(this)
-
 
 
     override fun setUpBottomNavigation() {
@@ -143,6 +141,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), SortProductListener {
         binding.bottomNavigationView.visibility = View.GONE
         binding.actionBtn.visibility = View.GONE
         binding.divider.visibility = View.GONE
+        binding.addService.visibility = View.GONE
+        binding.tvAddService.visibility = View.GONE
+        binding.addGoods.visibility = View.GONE
+        binding.tvAddGoods.visibility = View.GONE
+
+        // Avoid event on click although visible = gone
+        binding.tvAddService.clearAnimation()
+        binding.addGoods.clearAnimation()
+        binding.tvAddGoods.clearAnimation()
+        binding.addService.clearAnimation()
     }
 
     // Shows the bottom navigation and the floating action button (FAB) on the view.
@@ -232,21 +240,20 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), SortProductListener {
     }
 
     override fun onSortClick(item: ChooserItem, position: Int) {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragment_host_container) as NavHostFragment
+        val childFragment =
+            navHostFragment.childFragmentManager.findFragmentById(R.id.fragment_host_container)
         findNavController(R.id.fragment_host_container).currentDestination?.id?.let {
             when (it) {
                 R.id.goodsFragment -> {
-                    val goodsFragment =
-                        supportFragmentManager.findFragmentById(R.id.fragment_host_container)
-                    if (goodsFragment is GoodsFragment) {
-                        goodsFragment.onSortClick(item, position)
-                    }
+                    val goodsFragment = childFragment as GoodsFragment
+                    goodsFragment.onSortClick(item, position)
                 }
+
                 R.id.search_fragment -> {
-                    val searchFragment =
-                        supportFragmentManager.findFragmentById(R.id.fragment_host_container)
-                    if (searchFragment is SearchFragment) {
-                        searchFragment.onSortClick(item, position)
-                    }
+                    val searchFragment = childFragment as SearchFragment
+                    searchFragment.onSortClick(item, position)
                 }
             }
         }

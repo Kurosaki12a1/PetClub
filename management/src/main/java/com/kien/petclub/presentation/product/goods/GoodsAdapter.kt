@@ -102,7 +102,7 @@ class GoodsAdapter(private var listener: ProductListener) :
 
     fun sortData(sortType: Int) {
         this.sortedType = sortType
-        val tempList = ProductSortType.getListSort(listProduct, sortedType)
+        val tempList = ProductSortType.getListSort(listProduct, sortedType, filterPrice == SELLING_PRICE)
         val diffResult = DiffUtil.calculateDiff(DiffCallback(listProduct, tempList))
         listProduct = tempList
         diffResult.dispatchUpdatesTo(this)
@@ -111,7 +111,7 @@ class GoodsAdapter(private var listener: ProductListener) :
     @SuppressLint("NotifyDataSetChanged")
     fun setData(list: ArrayList<Product>, sortType: Int? = null) {
         if (sortType != null) sortedType = sortType
-        val tempList = ProductSortType.getListSort(list, sortedType)
+        val tempList = ProductSortType.getListSort(list, sortedType, filterPrice == SELLING_PRICE)
         if (listProduct.isEmpty()) {
             listProduct = tempList
             notifyDataSetChanged()
