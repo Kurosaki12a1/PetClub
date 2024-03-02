@@ -27,7 +27,7 @@
             app:popEnterAnim="@anim/anim_slide_in_left"
             app:popExitAnim="@anim/anim_slide_out_right"
             app:popUpTo="@id/goodsFragment"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="false"></action>
 
         <action
             android:id="@+id/action_open_add_fragment"
@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/search_fragment"
         android:name="com.kien.petclub.presentation.product.search.SearchFragment"
-        tools:layout="@layout/fragment_search_product" >
+        tools:layout="@layout/fragment_search_product">
 
         <action
             android:id="@+id/action_open_detail_fragment"
@@ -76,6 +76,9 @@
             <argument
                 android:name="key_type"
                 app:argType="string" />
+            <argument
+                android:name="key_product"
+                app:argType="com.kien.petclub.domain.model.entity.Product" />
         </action>
 
     </fragment>

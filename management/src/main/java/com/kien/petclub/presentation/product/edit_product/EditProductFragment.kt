@@ -1,9 +1,10 @@
 package com.kien.petclub.presentation.product.edit_product
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,7 +19,6 @@ import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.extensions.navigateSafe
 import com.kien.petclub.extensions.updateText
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.base.BaseProductImageFragment
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
@@ -32,14 +32,12 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
 
     private var typeInfo = Constants.EMPTY_STRING
 
-    private lateinit var product: Product
-
     // List images that added before
     private var currentListImage = ArrayList<Uri>()
 
     private lateinit var typeProduct: String
 
-    private val sharedViewModel: ShareMultiDataViewModel by activityViewModels()
+    private lateinit var product: Product
 
     private val viewModel: EditProductViewModel by viewModels()
 
@@ -107,21 +105,13 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
         binding.rvListPhoto.setHasFixedSize(true)
         binding.rvListPhoto.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-    }
 
-    override fun setupObservers() {
-        super.setupObservers()
-        sharedViewModel.setInfoProduct(null)
-
-        lifecycleScope.launch {
-            sharedViewModel.productResponse.flowWithLifecycle(lifecycle).collectLatest {
-                it?.let { updateUI(it) }
-            }
-        }
-
-        lifecycleScope.launch {
-            sharedViewModel.infoProductResponse.flowWithLifecycle(lifecycle).collectLatest {
-                if (it.isNullOrEmpty()) return@collectLatest
+        parentFragmentManager.setFragmentResultListener(
+            Constants.KEY_INFO_PRODUCT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val result = bundle.getString(Constants.DATA)
+            result?.let {
                 when (typeInfo) {
                     Constants.VALUE_BRAND -> binding.brandEdit.setText(it)
                     Constants.VALUE_TYPE -> binding.typeEdit.setText(it)
@@ -129,6 +119,19 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
                 }
             }
         }
+
+        arguments?.let {bundle ->
+            val result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getParcelable(Constants.KEY_PRODUCT, Product::class.java)
+            } else {
+                bundle.getParcelable(Constants.KEY_PRODUCT)
+            }
+            result?.let { updateUI(it) }
+        }
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
 
         lifecycleScope.launch {
             // Get Images added before form Firebase
@@ -162,7 +165,9 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
             viewModel.updateResponse.flowWithLifecycle(lifecycle).collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        sharedViewModel.setProduct(it.value)
+                        setFragmentResult(Constants.KEY_PRODUCT, Bundle().apply {
+                            putParcelable(Constants.DATA, it.value)
+                        })
                         hideLoadingAnimation()
                         backToPreviousScreen()
                     }
@@ -182,10 +187,6 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
     }
 
     private fun updateUI(product: Product) {
-        // Avoid update same data
-        if (::product.isInitialized) {
-            if (this.product == product) return
-        }
         this.product = product
         when (product) {
             is Product.Goods -> {
@@ -201,7 +202,6 @@ class EditProductFragment : BaseProductImageFragment<FragmentAddProductBinding>(
                 binding.inventoryEdit.updateText(product.stock)
                 binding.weightEdit.updateText(product.weight)
                 binding.locationEdit.updateText(product.location)
-
                 if (product.photo != null) viewModel.downloadImage(product.photo!!)
             }
 

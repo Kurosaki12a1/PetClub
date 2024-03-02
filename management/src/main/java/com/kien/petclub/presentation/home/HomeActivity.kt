@@ -52,10 +52,9 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), SortProductListener {
 
     private val viewModel by viewModels<HomeViewModel>()
 
-    override fun getViewBinding() = ActivityHomeBinding.inflate(layoutInflater)
-
     private val animationLoader = AnimationLoader(this)
 
+    override fun getViewBinding() = ActivityHomeBinding.inflate(layoutInflater)
 
     override fun setUpBottomNavigation() {
         setUpBottomNavigationWithGraphs()

@@ -1,15 +1,17 @@
 package com.kien.petclub.presentation.product.detail_product
 
 import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants
+import com.kien.petclub.constants.Constants.DATA
+import com.kien.petclub.constants.Constants.KEY_PRODUCT
 import com.kien.petclub.databinding.FragmentDetailProductBinding
 import com.kien.petclub.domain.model.entity.Product
 import com.kien.petclub.domain.model.entity.getPhoto
@@ -17,7 +19,6 @@ import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.extensions.navigateSafe
 import com.kien.petclub.presentation.base.BaseFragment
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideBottomNavigationAndFabButton
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
 import com.kien.petclub.presentation.product.utils.showLoadingAnimation
@@ -30,8 +31,6 @@ class DetailProductFragment : BaseFragment<FragmentDetailProductBinding>() {
     private lateinit var adapter: DetailProductAdapter
 
     private lateinit var product: Product
-
-    private val shareVM: ShareMultiDataViewModel by activityViewModels()
 
     private val viewModel: DetailProductViewModel by viewModels()
 
@@ -52,17 +51,17 @@ class DetailProductFragment : BaseFragment<FragmentDetailProductBinding>() {
 
         val popUpHelper = PopupMenuHelper(
             requireActivity(),
-            R.menu.detail_popup_menu,
-        ) { item ->
-            when (item.itemId) {
-                R.id.action_print -> {}
-                R.id.action_stop_selling -> {}
-                R.id.action_delete -> {
-                    viewModel.deleteProduct(product)
+            R.menu.detail_popup_menu, { item ->
+                when (item.itemId) {
+                    R.id.action_print -> {}
+                    R.id.action_stop_selling -> {}
+                    R.id.action_delete -> {
+                        viewModel.deleteProduct(product)
+                    }
                 }
+                true
             }
-            true
-        }
+        )
 
         binding.ivOptions.setOnClickListener {
             popUpHelper.show(it)
@@ -74,22 +73,31 @@ class DetailProductFragment : BaseFragment<FragmentDetailProductBinding>() {
                     when (product) {
                         is Product.Goods -> Constants.VALUE_GOODS
                         is Product.Service -> Constants.VALUE_SERVICE
-                    }
+                    }, product
                 )
             )
         }
-    }
 
-    override fun setupObservers() {
-        super.setupObservers()
-        lifecycleScope.launch {
-            shareVM.productResponse.flowWithLifecycle(lifecycle).collect {
-                if (it != null) {
+        parentFragmentManager.setFragmentResultListener(
+            KEY_PRODUCT,
+            viewLifecycleOwner
+        ) { key, bundle ->
+            if (key == KEY_PRODUCT) {
+                val result = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    bundle.getParcelable(DATA, Product::class.java)
+                } else {
+                    bundle.getParcelable(DATA)
+                }
+                result?.let {
                     product = it
                     updateUI(it)
                 }
             }
         }
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
 
         lifecycleScope.launch {
             viewModel.deleteResponse.flowWithLifecycle(lifecycle).collect {

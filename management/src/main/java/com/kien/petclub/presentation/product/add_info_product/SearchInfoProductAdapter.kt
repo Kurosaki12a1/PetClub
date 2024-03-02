@@ -1,16 +1,13 @@
 package com.kien.petclub.presentation.product.add_info_product
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
-import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.kien.imagepicker.extensions.collapseItemView
+import com.kien.imagepicker.extensions.expandItemView
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ItemAddInfoProductBinding
@@ -22,11 +19,6 @@ class SearchInfoProductAdapter(
     private val typeInfo: String,
     private val listener: InfoProductListener? = null
 ) : RecyclerView.Adapter<SearchInfoProductAdapter.ViewHolder>() {
-
-    companion object {
-        private const val TIME_ANIMATION = 300L
-    }
-
 
     private var listInfoProduct = ArrayList<InfoProduct>()
 
@@ -54,11 +46,11 @@ class SearchInfoProductAdapter(
                 }
                 expand.setOnClickListener {
                     if (rvChild.visibility == View.VISIBLE) {
-                        collapseRecyclerView(rvChild, expand)
+                        rvChild.collapseItemView(expand)
                     } else {
                         val totalHeightChildRecyclerView =
                             (itemView.height) * data.child!!.size + rvChild.paddingTop
-                        expandRecyclerView(totalHeightChildRecyclerView, rvChild, expand)
+                        rvChild.expandItemView(totalHeightChildRecyclerView, expand)
                     }
                 }
                 rvChild.layoutManager = LinearLayoutManager(itemView.context)
@@ -68,25 +60,25 @@ class SearchInfoProductAdapter(
 
             val popUpHelper = PopupMenuHelper(
                 itemView.context,
-                R.menu.item_popup_menu,
-            ) {
-                when (it.itemId) {
-                    R.id.action_add -> {
-                        listener?.onAddInfoProduct(data)
-                    }
+                R.menu.item_popup_menu, {
+                    when (it.itemId) {
+                        R.id.action_add -> {
+                            listener?.onAddSubInfoProduct(data)
+                        }
 
-                    R.id.action_delete -> {
-                        listener?.onDeleteInfoProduct(data)
+                        R.id.action_delete -> {
+                            listener?.onDeleteInfoProduct(data)
+                        }
                     }
-                }
-                true
-            }
-
-            itemView.setOnLongClickListener {
-                popUpHelper.show(it) {
+                    true
+                }, {
                     menu.findItem(R.id.action_add).isVisible =
                         typeInfo == VALUE_TYPE && data.parentId == null
                 }
+            )
+
+            itemView.setOnLongClickListener {
+                popUpHelper.show(it)
                 true
             }
 
@@ -96,47 +88,6 @@ class SearchInfoProductAdapter(
         }
     }
 
-    private fun expandRecyclerView(height: Int, recyclerView: RecyclerView, view: ImageView) {
-        val valueAnimator = ValueAnimator.ofInt(0, height).apply {
-            duration = TIME_ANIMATION
-            addUpdateListener { animation ->
-                interpolator = LinearInterpolator()
-                val layoutParams = recyclerView.layoutParams
-                layoutParams.height = animation.animatedValue as Int
-                recyclerView.layoutParams = layoutParams
-            }
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationStart(animation: Animator) {
-                    super.onAnimationStart(animation)
-                    recyclerView.visibility = View.VISIBLE
-                    view.setImageResource(R.drawable.ic_collapse)
-                }
-            })
-        }
-        valueAnimator.start()
-    }
-
-    private fun collapseRecyclerView(recyclerView: RecyclerView, view: ImageView) {
-        val initialHeight = recyclerView.measuredHeight
-
-        val valueAnimator = ValueAnimator.ofInt(initialHeight, 0).apply {
-            duration = TIME_ANIMATION
-            addUpdateListener { animation ->
-                interpolator = LinearInterpolator()
-                val layoutParams = recyclerView.layoutParams
-                layoutParams.height = animation.animatedValue as Int
-                recyclerView.layoutParams = layoutParams
-            }
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    super.onAnimationEnd(animation)
-                    view.setImageResource(R.drawable.ic_add)
-                    recyclerView.visibility = View.GONE
-                }
-            })
-        }
-        valueAnimator.start()
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(data: ArrayList<InfoProduct>) {

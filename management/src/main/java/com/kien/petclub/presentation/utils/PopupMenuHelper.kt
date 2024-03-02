@@ -7,10 +7,11 @@ import android.widget.PopupMenu
 class PopupMenuHelper(
     private val context: Context,
     private val menuId: Int,
-    private val onMenuItemClickListener: PopupMenu.OnMenuItemClickListener
+    private val onMenuItemClickListener: PopupMenu.OnMenuItemClickListener,
+    val action: (PopupMenu.() -> Unit) = {}
 ) {
 
-    fun show(v: View, action: (PopupMenu.() -> Unit) = {}) {
+    fun show(v: View) {
         val popupMenu = PopupMenu(context, v)
         popupMenu.menuInflater.inflate(menuId, popupMenu.menu)
         action(popupMenu)

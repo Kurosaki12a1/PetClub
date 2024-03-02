@@ -1,8 +1,11 @@
 package com.kien.petclub.domain.model.entity
 
+import android.os.Parcelable
 import com.google.firebase.database.DataSnapshot
-
-sealed class Product {
+import kotlinx.parcelize.Parcelize
+@Parcelize
+sealed class Product : Parcelable {
+    @Parcelize
     data class Service(
         val id: String,
         val code: String? = "",
@@ -15,8 +18,9 @@ sealed class Product {
         val note: String?,
         var photo: List<String>? = null,
         val updatedDate: String? = null
-    ) : Product()
+    ) : Product(), Parcelable
 
+    @Parcelize
     data class Goods(
         val id: String,
         val code: String? = "",
@@ -34,7 +38,7 @@ sealed class Product {
         val minimumStock: String? = "0",
         val maximumStock: String? = "999999999",
         val updatedDate: String? = null
-    ) : Product()
+    ) : Product(), Parcelable
 }
 
 fun Product.getPhoto(): List<String>? {

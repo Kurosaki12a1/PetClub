@@ -45,6 +45,8 @@ object Constants {
 
     // Type of products
     const val KEY_TYPE = "key_type"
+    const val KEY_INFO_PRODUCT = "key_info_product"
+    const val KEY_PRODUCT = "key_product"
     const val VALUE_GOODS = "goods"
     const val VALUE_SERVICE = "service"
     const val VALUE_BRAND = "brand"

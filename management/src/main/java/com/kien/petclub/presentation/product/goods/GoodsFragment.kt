@@ -1,11 +1,14 @@
 package com.kien.petclub.presentation.product.goods
 
 import android.graphics.Color
+import android.os.Bundle
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
+import com.kien.petclub.constants.Constants
 import com.kien.petclub.databinding.FragmentGoodsBinding
 import com.kien.petclub.domain.model.entity.ChooserItem
 import com.kien.petclub.domain.model.entity.Product
@@ -16,7 +19,6 @@ import com.kien.petclub.extensions.updateText
 import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.home.HomeActivity
 import com.kien.petclub.presentation.product.ProductListener
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.SortProductListener
 import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.BUYING_PRICE
 import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.SELLING_PRICE
@@ -29,8 +31,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, SortProductListener {
     private val viewModel: GoodsViewModel by activityViewModels()
-
-    private val shareVM: ShareMultiDataViewModel by activityViewModels()
 
     private lateinit var adapter: GoodsAdapter
     override fun getViewBinding(): FragmentGoodsBinding =
@@ -46,25 +46,25 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, Sor
         val filterPopup = PopupMenuHelper(
             requireActivity(),
             R.menu.filter_price_menu,
-        ) { item ->
-            when (item.itemId) {
-                R.id.action_selling_price -> {
-                    binding.filterPrice.text = getString(R.string.selling_price)
-                    viewModel.setFilterProduct(getString(R.string.selling_price))
-                    adapter.setFilterPrice(SELLING_PRICE)
-                    true
-                }
+            { item ->
+                when (item.itemId) {
+                    R.id.action_selling_price -> {
+                        binding.filterPrice.text = getString(R.string.selling_price)
+                        viewModel.setFilterProduct(getString(R.string.selling_price))
+                        adapter.setFilterPrice(SELLING_PRICE)
+                        true
+                    }
 
-                R.id.action_buying_price -> {
-                    binding.filterPrice.text = getString(R.string.buying_price)
-                    viewModel.setFilterProduct(getString(R.string.buying_price))
-                    adapter.setFilterPrice(BUYING_PRICE)
-                    true
-                }
+                    R.id.action_buying_price -> {
+                        binding.filterPrice.text = getString(R.string.buying_price)
+                        viewModel.setFilterProduct(getString(R.string.buying_price))
+                        adapter.setFilterPrice(BUYING_PRICE)
+                        true
+                    }
 
-                else -> false
-            }
-        }
+                    else -> false
+                }
+            })
 
         binding.filterPrice.setOnClickListener {
             filterPopup.show(it)
@@ -78,11 +78,19 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, Sor
             (requireActivity() as HomeActivity).hideBottomNavigationAndFabButton()
             navigateSafe(GoodsFragmentDirections.actionOpenSearchFragment())
         }
+
+        binding.swipeRefreshProduct.setColorSchemeColors(Color.CYAN)
+
+        binding.swipeRefreshProduct.setOnRefreshListener {
+            viewModel.getAllProduct()
+            binding.swipeRefreshProduct.isRefreshing = false
+        }
+
+        viewModel.getAllProduct()
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAllProduct()
         showBottomNavigationAndFabButton()
     }
 
@@ -113,7 +121,9 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, Sor
 
     override fun onItemClick(product: Product) {
         lifecycleScope.launch {
-            shareVM.setProduct(product)
+            setFragmentResult(Constants.KEY_PRODUCT, Bundle().apply {
+                putParcelable(Constants.DATA, product)
+            })
             navigateSafe(GoodsFragmentDirections.actionOpenDetailFragment())
         }
     }

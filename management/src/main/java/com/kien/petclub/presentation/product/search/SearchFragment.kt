@@ -1,17 +1,20 @@
 package com.kien.petclub.presentation.product.search
 
 import android.graphics.Color
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
+import com.kien.petclub.constants.Constants
 import com.kien.petclub.databinding.FragmentSearchProductBinding
 import com.kien.petclub.domain.model.entity.ChooserItem
 import com.kien.petclub.domain.model.entity.Product
@@ -26,7 +29,6 @@ import com.kien.petclub.extensions.setOnDrawableRightClick
 import com.kien.petclub.extensions.updateText
 import com.kien.petclub.presentation.home.HomeActivity
 import com.kien.petclub.presentation.product.ProductListener
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.SortProductListener
 import com.kien.petclub.presentation.product.base.BarcodeFragment
 import com.kien.petclub.presentation.product.goods.GoodsAdapter
@@ -56,9 +58,6 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
 
     private val viewModel: SearchProductViewModel by viewModels()
 
-    private val shareVM: ShareMultiDataViewModel by activityViewModels()
-
-
     override fun getViewBinding(): FragmentSearchProductBinding =
         FragmentSearchProductBinding.inflate(layoutInflater)
 
@@ -72,26 +71,26 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
 
         val filterPopup = PopupMenuHelper(
             requireActivity(),
-            R.menu.filter_price_menu,
-        ) { item ->
-            when (item.itemId) {
-                R.id.action_selling_price -> {
-                    binding.filterPrice.text = getString(R.string.selling_price)
-                    viewModel.setFilterProduct(getString(R.string.selling_price))
-                    adapter.setFilterPrice(GoodsAdapter.SELLING_PRICE)
-                    true
-                }
+            R.menu.filter_price_menu, { item ->
+                when (item.itemId) {
+                    R.id.action_selling_price -> {
+                        binding.filterPrice.text = getString(R.string.selling_price)
+                        viewModel.setFilterProduct(getString(R.string.selling_price))
+                        adapter.setFilterPrice(GoodsAdapter.SELLING_PRICE)
+                        true
+                    }
 
-                R.id.action_buying_price -> {
-                    binding.filterPrice.text = getString(R.string.buying_price)
-                    viewModel.setFilterProduct(getString(R.string.buying_price))
-                    adapter.setFilterPrice(GoodsAdapter.BUYING_PRICE)
-                    true
-                }
+                    R.id.action_buying_price -> {
+                        binding.filterPrice.text = getString(R.string.buying_price)
+                        viewModel.setFilterProduct(getString(R.string.buying_price))
+                        adapter.setFilterPrice(GoodsAdapter.BUYING_PRICE)
+                        true
+                    }
 
-                else -> false
+                    else -> false
+                }
             }
-        }
+        )
 
         binding.filterPrice.setOnClickListener {
             filterPopup.show(it)
@@ -231,7 +230,9 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
 
     override fun onItemClick(product: Product) {
         super.onItemClick(product)
-        shareVM.setProduct(product)
+        setFragmentResult(Constants.KEY_PRODUCT, Bundle().apply {
+            putParcelable(Constants.DATA, product)
+        })
         navigateSafe(SearchFragmentDirections.actionOpenDetailFragment())
     }
 

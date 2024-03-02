@@ -14,17 +14,17 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants.EMPTY_STRING
 import com.kien.petclub.constants.Constants.VALUE_BRAND
 import com.kien.petclub.constants.Constants.VALUE_TYPE
 import com.kien.petclub.databinding.ViewPopUpBinding
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
+import com.kien.petclub.presentation.product.InfoProductListener
 
-class AddInfoProductPopup(private val typeInfoProduct: String) : DialogFragment() {
-
-    private val viewModel by activityViewModels<ShareMultiDataViewModel>()
+class AddInfoProductPopup(
+    private val typeInfoProduct: String,
+    private val listener: InfoProductListener
+) : DialogFragment() {
 
     private lateinit var binding: ViewPopUpBinding
 
@@ -89,7 +89,7 @@ class AddInfoProductPopup(private val typeInfoProduct: String) : DialogFragment(
         }
 
         binding.tvSubmit.setOnClickListener {
-            viewModel.setInfoProduct(binding.etAdd.text.toString())
+            listener.onAddInfoProduct(binding.etAdd.text.toString())
             dismiss()
         }
 

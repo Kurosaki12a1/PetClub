@@ -10,7 +10,8 @@ interface ProductListener {
 }
 
 interface InfoProductListener {
-    fun onAddInfoProduct(data: InfoProduct) {}
+    fun onAddInfoProduct(infoName : String) {}
+    fun onAddSubInfoProduct(data: InfoProduct) {}
 
     fun onDeleteInfoProduct(data: InfoProduct) {}
 

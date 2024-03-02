@@ -2,7 +2,7 @@ package com.kien.petclub.presentation.product.add_product
 
 import android.net.Uri
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +14,6 @@ import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.extensions.navigateSafe
 import com.kien.petclub.presentation.product.base.BaseProductImageFragment
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
 import com.kien.petclub.presentation.product.utils.showLoadingAnimation
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,8 +28,6 @@ class AddProductFragment : BaseProductImageFragment<FragmentAddProductBinding>()
     private lateinit var typeProduct: String
 
     private val viewModel: AddProductViewModel by viewModels()
-
-    private val sharedVM: ShareMultiDataViewModel by activityViewModels()
 
     override fun getViewBinding() = FragmentAddProductBinding.inflate(layoutInflater)
 
@@ -67,6 +64,15 @@ class AddProductFragment : BaseProductImageFragment<FragmentAddProductBinding>()
         binding.rvListPhoto.setHasFixedSize(true)
         binding.rvListPhoto.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+
+        parentFragmentManager.setFragmentResultListener(Constants.KEY_INFO_PRODUCT, this) { _, bundle ->
+            val infoResponse = bundle.getString(Constants.DATA)
+            when (typeInfo) {
+                Constants.VALUE_BRAND -> binding.brandEdit.setText(infoResponse)
+                Constants.VALUE_TYPE -> binding.typeEdit.setText(infoResponse)
+                Constants.VALUE_LOCATION -> binding.locationEdit.setText(infoResponse)
+            }
+        }
     }
 
     override fun onImagePickerResult(data: ArrayList<Uri>) {
@@ -77,8 +83,6 @@ class AddProductFragment : BaseProductImageFragment<FragmentAddProductBinding>()
 
     override fun setupObservers() {
         super.setupObservers()
-        sharedVM.setInfoProduct(null)
-
         viewModel.response.flowWithLifecycle(lifecycle).onEach {
             when (it) {
                 is Resource.Success -> {
@@ -91,15 +95,6 @@ class AddProductFragment : BaseProductImageFragment<FragmentAddProductBinding>()
                 is Resource.Loading -> showLoadingAnimation()
 
                 else -> {}
-            }
-        }.launchIn(lifecycleScope)
-
-        sharedVM.infoProductResponse.flowWithLifecycle(lifecycle).onEach {
-            if (it.isNullOrEmpty()) return@onEach
-            when (typeInfo) {
-                Constants.VALUE_BRAND -> binding.brandEdit.setText(it)
-                Constants.VALUE_TYPE -> binding.typeEdit.setText(it)
-                Constants.VALUE_LOCATION -> binding.locationEdit.setText(it)
             }
         }.launchIn(lifecycleScope)
     }

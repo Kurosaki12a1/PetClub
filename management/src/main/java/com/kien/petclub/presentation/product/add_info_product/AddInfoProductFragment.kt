@@ -1,14 +1,17 @@
 package com.kien.petclub.presentation.product.add_info_product
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kien.petclub.R
 import com.kien.petclub.constants.Constants
+import com.kien.petclub.constants.Constants.DATA
+import com.kien.petclub.constants.Constants.KEY_INFO_PRODUCT
 import com.kien.petclub.constants.Constants.TAG_ADD_INFO_PRODUCT_POPUP
 import com.kien.petclub.databinding.FragmentAddInfoProductBinding
 import com.kien.petclub.domain.model.entity.InfoProduct
@@ -16,7 +19,6 @@ import com.kien.petclub.domain.util.Resource
 import com.kien.petclub.extensions.backToPreviousScreen
 import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.product.InfoProductListener
-import com.kien.petclub.presentation.product.ShareMultiDataViewModel
 import com.kien.petclub.presentation.product.utils.hideLoadingAnimation
 import com.kien.petclub.presentation.product.utils.showDialog
 import com.kien.petclub.presentation.product.utils.showLoadingAnimation
@@ -35,13 +37,9 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
     private val viewModel: AddInfoProductViewModel by viewModels()
 
-    private val sharedVM: ShareMultiDataViewModel by activityViewModels()
-
     private var parentTypeId = Constants.EMPTY_STRING
 
     private var typeAddInfo = Constants.EMPTY_STRING
-
-    private var shouldUpdateInfoProduct = true
 
     override fun getViewBinding(): FragmentAddInfoProductBinding =
         FragmentAddInfoProductBinding.inflate(layoutInflater)
@@ -50,7 +48,7 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
         super.setUpViews()
 
         typeAddInfo = arguments?.getString(Constants.KEY_TYPE) ?: Constants.EMPTY_STRING
-        dialog = AddInfoProductPopup(typeAddInfo)
+        dialog = AddInfoProductPopup(typeAddInfo, this)
 
         viewModel.getInfo(typeAddInfo)
 
@@ -58,14 +56,9 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
         binding.rvList.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvList.adapter = adapter
 
-        binding.ivBack.setOnClickListener {
-            shouldUpdateInfoProduct = false
-            backToPreviousScreen()
-        }
+        binding.ivBack.setOnClickListener { backToPreviousScreen() }
 
-        binding.ivAdd.setOnClickListener {
-            showDialog(dialog, TAG_ADD_INFO_PRODUCT_POPUP)
-        }
+        binding.ivAdd.setOnClickListener { showDialog(dialog, TAG_ADD_INFO_PRODUCT_POPUP) }
 
         when (typeAddInfo) {
             Constants.VALUE_BRAND -> {
@@ -98,8 +91,6 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
     override fun setupObservers() {
         super.setupObservers()
-        // Avoid update data when we back from add info screen
-        sharedVM.setInfoProduct(null)
         viewModel.addResponse.flowWithLifecycle(lifecycle).onEach {
             when (it) {
                 is Resource.Success -> {
@@ -154,20 +145,6 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
         }.launchIn(lifecycleScope)
 
-
-        lifecycleScope.launch {
-            sharedVM.infoProductResponse.flowWithLifecycle(lifecycle).collectLatest {
-                if (!it.isNullOrBlank() && it.isNotEmpty() && shouldUpdateInfoProduct) {
-                    if (parentTypeId != Constants.EMPTY_STRING && typeAddInfo == Constants.VALUE_TYPE) {
-                        viewModel.updateTypeProduct(parentTypeId, it)
-                        parentTypeId = Constants.EMPTY_STRING
-                    } else {
-                        viewModel.addInfo(typeAddInfo, it)
-                    }
-                }
-            }
-        }
-
         lifecycleScope.launch {
             viewModel.searchResponse.flowWithLifecycle(lifecycle).collectLatest {
                 when (it) {
@@ -188,11 +165,21 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
         }
     }
 
-    override fun onAddInfoProduct(data: InfoProduct) {
-        // If this is child of type, we need pass parent id
-        if (typeAddInfo == Constants.VALUE_TYPE && data.parentId == null) {
-            parentTypeId = data.id
+    override fun onAddInfoProduct(infoName: String) {
+        super.onAddInfoProduct(infoName)
+        if (parentTypeId != Constants.EMPTY_STRING && typeAddInfo == Constants.VALUE_TYPE) {
+            viewModel.updateTypeProduct(parentTypeId, infoName)
+            parentTypeId = Constants.EMPTY_STRING
+        } else {
+            viewModel.addInfo(typeAddInfo, infoName)
         }
+    }
+
+    /**
+     * This function is called when we add a new sub info product
+     */
+    override fun onAddSubInfoProduct(data: InfoProduct) {
+        parentTypeId = data.id
         showDialog(dialog, TAG_ADD_INFO_PRODUCT_POPUP)
     }
 
@@ -201,8 +188,9 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
     }
 
     override fun onClickListener(data: InfoProduct) {
-        shouldUpdateInfoProduct = false
-        sharedVM.setInfoProduct(data.name)
+        setFragmentResult(KEY_INFO_PRODUCT, Bundle().also {
+            it.putString(DATA, data.name)
+        })
         backToPreviousScreen()
     }
 
