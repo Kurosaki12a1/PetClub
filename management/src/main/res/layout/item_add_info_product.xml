@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="@dimen/dimen5">
 
@@ -15,12 +16,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/ivTick"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_tick_blue"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+
         <TextView
             android:id="@+id/tvInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="@dimen/dimen10"
+            tools:text="Nhuộm"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size24" />
 

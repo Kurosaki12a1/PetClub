@@ -53,10 +53,10 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size18"
+            android:textSize="@dimen/text_size16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/ivProduct"
-            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintWidth_percent="0.225"
             tools:text="100.000" />
 
         <TextView

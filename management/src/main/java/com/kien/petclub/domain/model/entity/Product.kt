@@ -201,9 +201,9 @@ enum class ProductSortType(val value: Int, val description: String) {
 
     companion object {
 
-        fun initListChooser(): ArrayList<ChooserItem> {
+        fun initListChooser(positionSelected : Int = 0): ArrayList<ChooserItem> {
             return entries.mapIndexed { index, it ->
-                ChooserItem(it.description, index == 0)
+                ChooserItem(it.description, index == positionSelected)
             }.toCollection(ArrayList())
         }
 

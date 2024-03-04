@@ -20,8 +20,6 @@ import com.kien.petclub.presentation.base.BaseFragment
 import com.kien.petclub.presentation.home.HomeActivity
 import com.kien.petclub.presentation.product.ProductListener
 import com.kien.petclub.presentation.product.SortProductListener
-import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.BUYING_PRICE
-import com.kien.petclub.presentation.product.goods.GoodsAdapter.Companion.SELLING_PRICE
 import com.kien.petclub.presentation.product.utils.showBottomNavigationAndFabButton
 import com.kien.petclub.presentation.utils.PopupMenuHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,11 +35,11 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, Sor
         FragmentGoodsBinding.inflate(layoutInflater)
 
     override fun setUpViews() {
-        adapter = GoodsAdapter(this)
+        adapter = GoodsAdapter(this, viewModel.getFilterPrice() ?: "")
         binding.rvProduct.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvProduct.adapter = adapter
 
-        binding.filterPrice.updateText(viewModel.getFilterProduct())
+        binding.filterPrice.updateText(viewModel.getFilterPrice())
 
         val filterPopup = PopupMenuHelper(
             requireActivity(),
@@ -50,15 +48,15 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, Sor
                 when (item.itemId) {
                     R.id.action_selling_price -> {
                         binding.filterPrice.text = getString(R.string.selling_price)
-                        viewModel.setFilterProduct(getString(R.string.selling_price))
-                        adapter.setFilterPrice(SELLING_PRICE)
+                        viewModel.setFilterPrice(getString(R.string.selling_price))
+                        adapter.setFilterPrice(getString(R.string.selling_price))
                         true
                     }
 
                     R.id.action_buying_price -> {
                         binding.filterPrice.text = getString(R.string.buying_price)
-                        viewModel.setFilterProduct(getString(R.string.buying_price))
-                        adapter.setFilterPrice(BUYING_PRICE)
+                        viewModel.setFilterPrice(getString(R.string.buying_price))
+                        adapter.setFilterPrice(getString(R.string.buying_price))
                         true
                     }
 
@@ -68,6 +66,10 @@ class GoodsFragment : BaseFragment<FragmentGoodsBinding>(), ProductListener, Sor
 
         binding.filterPrice.setOnClickListener {
             filterPopup.show(it)
+        }
+
+        binding.ivFilter.setOnClickListener {
+            navigateSafe(GoodsFragmentDirections.actionOpenFilterFragment())
         }
 
         binding.ivSort.setOnClickListener {

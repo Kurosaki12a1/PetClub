@@ -1,18 +1,22 @@
 package com.kien.main.di
 
 import android.content.ContentResolver
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.kien.imagepicker.data.repository.ImagePickerRepositoryImpl
 import com.kien.imagepicker.domain.repository.ImagePickerRepository
+import com.kien.petclub.data.data_source.local.AppDatabase
 import com.kien.petclub.data.repository.AuthRepositoryImpl
+import com.kien.petclub.data.repository.FilterProductRepositoryImpl
 import com.kien.petclub.data.repository.FirebaseDBRepositoryImpl
 import com.kien.petclub.data.repository.FirebaseStorageRepositoryImpl
 import com.kien.petclub.data.repository.GoodsRepositoryImpl
 import com.kien.petclub.data.repository.InfoProductRepositoryImpl
 import com.kien.petclub.data.repository.ServiceRepositoryImpl
 import com.kien.petclub.domain.repository.AuthRepository
+import com.kien.petclub.domain.repository.FilterProductRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.repository.FirebaseStorageRepository
 import com.kien.petclub.domain.repository.GoodsRepository
@@ -73,4 +77,11 @@ class RepositoryModule {
     fun provideImagePickerRepository(
         contentResolver: ContentResolver
     ): ImagePickerRepository = ImagePickerRepositoryImpl(contentResolver)
+
+    @Provides
+    @Singleton
+    fun provideFilterProductRepository(
+        context: Context,
+        appDatabase: AppDatabase
+    ): FilterProductRepository = FilterProductRepositoryImpl(context, appDatabase, Dispatchers.IO)
 }

@@ -25,3 +25,4 @@ rootProject.name = "Pet Club"
 include(":management")
 include(":main")
 include(":ImagePicker")
+include(":flexbox")

@@ -48,10 +48,7 @@ class InfoProductRepositoryImpl @Inject constructor(
                 // Generate child id
                 val key = ref.push().key ?: throw Exception("Failed to generate key")
                 // Set value child to database
-                ref.child(key).setValue(type.also {
-                    it.id = key
-                    it.parentId = type.parentId
-                }).await()
+                ref.child(key).setValue(type.also { it.id = key }).await()
             }
             emit(Resource.success(Unit))
         } catch (e: Exception) {

@@ -97,9 +97,9 @@ class GoodsViewModel @Inject constructor(
         pref.productSort = sort
     }
 
-    fun getFilterProduct() = pref.productFilter
+    fun getFilterPrice() = pref.priceFilter
 
-    fun setFilterProduct(filter: String) {
-        pref.productFilter = filter
+    fun setFilterPrice(filter: String) {
+        pref.priceFilter = filter
     }
 }

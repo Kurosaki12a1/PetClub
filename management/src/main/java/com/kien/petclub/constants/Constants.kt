@@ -36,9 +36,9 @@ object Constants {
 //    const val NOTIFICATION_TIME = "THOI_GIAN"
 //    const val NOTIFICATIONS_ICON = "HINH_ANH"
 
-    const val TYPE_DB = "ALL_TYPE_PRODUCT"
-    const val BRAND_DB = "ALL_BRAND_PRODUCT"
-    const val LOCATION_DB = "ALL_LOCATION_PRODUCT"
+    const val TYPE_DB = "DU_LIEU_NHOM_HANG_HOA"
+    const val BRAND_DB = "DU_LIEU_THUONG_HIEU"
+    const val LOCATION_DB = "DU_LIEU_VI_TRI"
 
     // User
     const val USER_DB = "DU_LIEU_NGUOI_DUNG"
@@ -53,6 +53,11 @@ object Constants {
     const val VALUE_TYPE = "type"
     const val VALUE_LOCATION = "location"
     const val DATA = "data"
+    const val NAME_TYPE_PRODUCT = "Chọn nhóm hàng"
+    const val NAME_BRAND_PRODUCT = "Thương hiệu"
+    const val NAME_LOCATION_PRODUCT = "Chọn vị trí"
+    const val ID_OPTIONS_ALL = "23071997"
+    const val NAME_OPTIONS_ALL = "Tất cả"
 
     const val TIMEOUT_BACK_PRESS = 2000L
     const val EMPTY_STRING = ""
@@ -75,5 +80,4 @@ object Constants {
 
     // SharedPreferences
     const val KEY_FILTER = "key_filter"
-    const val SORT_FILTER = "sort_filter"
 }

@@ -44,9 +44,9 @@ class AddInfoProductViewModel @Inject constructor(
         }
     }
 
-    fun updateTypeProduct(parentId: String, name: String) {
+    fun updateTypeProduct(parentId: String, parentName: String, name: String) {
         viewModelScope.launch {
-            addInfoProductUseCase.addTypeChildProduct(parentId, name).collect {
+            addInfoProductUseCase(parentId, parentName, name).collect {
                 _addResponse.value = it
             }
         }

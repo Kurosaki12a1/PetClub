@@ -72,6 +72,7 @@ fun RecyclerView.collapseItemView(view: ImageView, duration: Long = 300L) {
         addUpdateListener { animation ->
             interpolator = LinearInterpolator()
             layoutParams.height = animation.animatedValue as Int
+            layoutParams = layoutParams
         }
         addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {

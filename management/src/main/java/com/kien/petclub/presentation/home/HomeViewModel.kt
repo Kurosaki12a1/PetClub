@@ -2,6 +2,7 @@ package com.kien.petclub.presentation.home
 
 import android.graphics.Rect
 import android.view.MotionEvent
+import com.kien.petclub.data.data_source.local.preferences.AppPreferences
 import com.kien.petclub.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : BaseViewModel() {
+class HomeViewModel @Inject constructor(
+    private val ref : AppPreferences
+) : BaseViewModel() {
 
     private val _fabState = MutableStateFlow(false)
 
@@ -31,4 +34,6 @@ class HomeViewModel @Inject constructor() : BaseViewModel() {
         }
 
     }
+
+    fun getSortProduct() = ref.productSort
 }

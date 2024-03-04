@@ -225,6 +225,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
+                    android:focusable="false"
                     android:drawableEnd="@drawable/ic_right_arrow"
                     android:hint="@string/choose_type"
                     android:textColor="@color/black"
@@ -258,6 +259,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7"
+                    android:focusable="false"
                     android:drawableEnd="@drawable/ic_right_arrow"
                     android:hint="@string/choose_brand"
                     android:textColor="@color/black"
@@ -422,6 +424,7 @@
                     android:layout_weight="0.7"
                     android:drawableEnd="@drawable/ic_right_arrow"
                     android:hint="@string/choose_location"
+                    android:focusable="false"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size16" />
 
@@ -567,21 +570,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
-
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/loadingAnimationView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_percent="0.25"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.25"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/loading" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

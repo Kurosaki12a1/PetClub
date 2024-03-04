@@ -139,4 +139,7 @@
     <string name="sell_high_low">Bán nhiều nhất</string>
 
     <string name="hint_search">Tìm kiếm</string>
+    <string name="filter">Bộ lọc</string>
+    <string name="apply">Áp dụng</string>
+    <string name="all">Tất cả</string>
 </resources>

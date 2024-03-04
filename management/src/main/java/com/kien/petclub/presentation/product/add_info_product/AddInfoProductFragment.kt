@@ -39,6 +39,8 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
     private var parentTypeId = Constants.EMPTY_STRING
 
+    private var parentName = Constants.EMPTY_STRING
+
     private var typeAddInfo = Constants.EMPTY_STRING
 
     override fun getViewBinding(): FragmentAddInfoProductBinding =
@@ -168,7 +170,7 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
     override fun onAddInfoProduct(infoName: String) {
         super.onAddInfoProduct(infoName)
         if (parentTypeId != Constants.EMPTY_STRING && typeAddInfo == Constants.VALUE_TYPE) {
-            viewModel.updateTypeProduct(parentTypeId, infoName)
+            viewModel.updateTypeProduct(parentTypeId, parentName, infoName)
             parentTypeId = Constants.EMPTY_STRING
         } else {
             viewModel.addInfo(typeAddInfo, infoName)
@@ -180,6 +182,7 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
      */
     override fun onAddSubInfoProduct(data: InfoProduct) {
         parentTypeId = data.id
+        parentName = data.name
         showDialog(dialog, TAG_ADD_INFO_PRODUCT_POPUP)
     }
 
@@ -189,7 +192,7 @@ class AddInfoProductFragment : BaseFragment<FragmentAddInfoProductBinding>(),
 
     override fun onClickListener(data: InfoProduct) {
         setFragmentResult(KEY_INFO_PRODUCT, Bundle().also {
-            it.putString(DATA, data.name)
+            it.putString(DATA, data.fullName)
         })
         backToPreviousScreen()
     }

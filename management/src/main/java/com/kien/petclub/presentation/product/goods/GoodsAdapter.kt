@@ -16,32 +16,26 @@ import com.kien.petclub.domain.model.entity.ProductSortType
 import com.kien.petclub.domain.model.entity.getId
 import com.kien.petclub.presentation.product.ProductListener
 
-class GoodsAdapter(private var listener: ProductListener) :
-    RecyclerView.Adapter<GoodsAdapter.ViewHolder>() {
+class GoodsAdapter(
+    private var listener: ProductListener, filterPriceType: String
+) : RecyclerView.Adapter<GoodsAdapter.ViewHolder>() {
 
     companion object {
-        const val BUYING_PRICE = 100
-        const val SELLING_PRICE = 101
-        private const val VALUE_GOODS = 0
-        private const val VALUE_SERVICE = 1
+        private const val SELLING_PRICE = "Giá bán"
     }
 
-    private var filterPrice = SELLING_PRICE
+    private var filterPrice = filterPriceType
 
     private var sortedType = 0
 
     private var listProduct = ArrayList<Product>()
 
-    override fun getItemViewType(position: Int): Int {
-        return when (listProduct[position]) {
-            is Product.Goods -> VALUE_GOODS
-            is Product.Service -> VALUE_SERVICE
-        }
-    }
+    // Avoid Recyclerview keep showing wrong image (working around)
+    override fun getItemViewType(position: Int): Int = position
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val root = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_detail_product, parent, false)
+        val root =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_detail_product, parent, false)
         return ViewHolder(ItemDetailProductBinding.bind(root))
     }
 
@@ -58,15 +52,11 @@ class GoodsAdapter(private var listener: ProductListener) :
                 if (data.photo == null) {
                     holder.ivPhoto.setImageResource(R.mipmap.ic_app)
                 } else {
-                    val requestOptions = RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.mipmap.ic_app)
-                        .centerCrop()
+                    val requestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.mipmap.ic_app).centerCrop()
                         .override(holder.itemView.context.resources.getDimensionPixelSize(R.dimen.dimen60))
 
-                    Glide.with(holder.itemView.context)
-                        .load(data.photo!![0])
-                        .apply(requestOptions)
+                    Glide.with(holder.itemView.context).load(data.photo!![0]).apply(requestOptions)
                         .into(holder.ivPhoto)
                 }
 
@@ -78,18 +68,15 @@ class GoodsAdapter(private var listener: ProductListener) :
             is Product.Service -> {
                 holder.tvName.text = data.name
                 holder.tvPrice.text =
-                    if (filterPrice == SELLING_PRICE) data.sellingPrice else data.buyingPrice
+                    if (filterPrice == holder.itemView.context.getString(R.string.selling_price)) data.sellingPrice else data.buyingPrice
                 holder.tvQuantity.visibility = View.GONE
                 holder.tvId.text = data.id
                 if (data.photo == null) {
                     holder.ivPhoto.setImageResource(R.mipmap.ic_app)
                 } else {
-                    val requestOptions = RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    val requestOptions = RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL)
                         .placeholder(R.mipmap.ic_app)
-                    Glide.with(holder.itemView.context)
-                        .load(data.photo!![0])
-                        .apply(requestOptions)
+                    Glide.with(holder.itemView.context).load(data.photo!![0]).apply(requestOptions)
                         .into(holder.ivPhoto)
                 }
 
@@ -102,7 +89,8 @@ class GoodsAdapter(private var listener: ProductListener) :
 
     fun sortData(sortType: Int) {
         this.sortedType = sortType
-        val tempList = ProductSortType.getListSort(listProduct, sortedType, filterPrice == SELLING_PRICE)
+        val tempList =
+            ProductSortType.getListSort(listProduct, sortedType, filterPrice == SELLING_PRICE)
         val diffResult = DiffUtil.calculateDiff(DiffCallback(listProduct, tempList))
         listProduct = tempList
         diffResult.dispatchUpdatesTo(this)
@@ -122,11 +110,9 @@ class GoodsAdapter(private var listener: ProductListener) :
         diffResult.dispatchUpdatesTo(this)
     }
 
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setFilterPrice(filter: Int) {
+    fun setFilterPrice(filter: String) {
         filterPrice = filter
-        notifyDataSetChanged()
+        sortData(sortedType)
     }
 
     inner class ViewHolder(binding: ItemDetailProductBinding) :
@@ -139,10 +125,8 @@ class GoodsAdapter(private var listener: ProductListener) :
     }
 
     inner class DiffCallback(
-        private val oldList: ArrayList<Product>,
-        private val newList: ArrayList<Product>
-    ) :
-        DiffUtil.Callback() {
+        private val oldList: ArrayList<Product>, private val newList: ArrayList<Product>
+    ) : DiffUtil.Callback() {
         override fun getOldListSize(): Int = oldList.size
         override fun getNewListSize(): Int = newList.size
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =

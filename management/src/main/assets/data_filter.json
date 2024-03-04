@@ -1,0 +1,89 @@
+[
+  {
+    "id": "0",
+    "name": "Loại hàng hóa",
+    "options": [
+      "Tất cả",
+      "Hàng hóa",
+      "Dịch vụ"
+    ],
+    "selectedOptions": [
+      "Tất cả"
+    ],
+    "isMultiOptions": false
+  },
+  {
+    "id": "1",
+    "name": "Tồn kho",
+    "options": [
+      "Tất cả",
+      "Dưới định mức tồn",
+      "Vượt định mức tồn",
+      "Còn hàng trong kho",
+      "Hết hàng trong kho"
+    ],
+    "selectedOptions": [
+      "Tất cả"
+    ],
+    "isMultiOptions": false
+  },
+  {
+    "id": "2",
+    "name": "Tích điểm",
+    "options": [
+      "Tất cả",
+      "Tích điểm",
+      "Không tích điểm"
+    ],
+    "selectedOptions": [
+      "Tất cả"
+    ],
+    "isMultiOptions": false
+  },
+  {
+    "id": "3",
+    "name": "Thương hiệu",
+    "options": [
+      "Tất cả"
+    ],
+    "selectedOptions": [
+      "Tất cả"
+    ],
+    "isMultiOptions": true
+  },
+  {
+    "id": "4",
+    "name": "Chọn nhóm hàng",
+    "options": [
+      "Tất cả"
+    ],
+    "selectedOptions": [
+      "Tất cả"
+    ],
+    "isMultiOptions": true
+  },
+  {
+    "id": "5",
+    "name": "Chọn vị trí",
+    "options": [
+      "Tất cả"
+    ],
+    "selectedOptions": [
+      "Tất cả"
+    ],
+    "isMultiOptions": true
+  },
+  {
+    "id": "6",
+    "name": "Lựa chọn hiển thị",
+    "options": [
+      "Tất cả",
+      "Hàng ngừng kinh doanh",
+      "Hàng đang kinh doanh"
+    ],
+    "selectedOptions": [
+      "Tất cả"
+    ],
+    "isMultiOptions": false
+  }
+]

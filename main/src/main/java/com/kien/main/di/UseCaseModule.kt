@@ -4,6 +4,7 @@ import com.kien.imagepicker.domain.repository.ImagePickerRepository
 import com.kien.imagepicker.domain.usecase.GetAlbumsUseCase
 import com.kien.imagepicker.domain.usecase.GetPhotosUseCase
 import com.kien.petclub.domain.repository.AuthRepository
+import com.kien.petclub.domain.repository.FilterProductRepository
 import com.kien.petclub.domain.repository.FirebaseDBRepository
 import com.kien.petclub.domain.repository.FirebaseStorageRepository
 import com.kien.petclub.domain.repository.GoodsRepository
@@ -30,6 +31,10 @@ import com.kien.petclub.domain.usecase.firebase_db.user.DeleteUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.GetUserUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.IsSignedInUseCase
 import com.kien.petclub.domain.usecase.firebase_db.user.UpdateUserUseCase
+import com.kien.petclub.domain.usecase.local_db.DeleteFilterProductUseCase
+import com.kien.petclub.domain.usecase.local_db.GetFilterProductUseCase
+import com.kien.petclub.domain.usecase.local_db.InsertFilterProductUseCase
+import com.kien.petclub.domain.usecase.local_db.UpdateFilterProductUseCase
 import com.kien.petclub.domain.usecase.storage.DownloadImageUseCase
 import com.kien.petclub.domain.usecase.storage.ImageUseCase
 import com.kien.petclub.domain.usecase.storage.UploadImageUseCase
@@ -233,6 +238,30 @@ class UseCaseModule {
     @Singleton
     fun provideGetPhotosUseCase(repo: ImagePickerRepository): GetPhotosUseCase {
         return GetPhotosUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetFilterProductUseCase(repo: FilterProductRepository): GetFilterProductUseCase {
+        return GetFilterProductUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteFilterProductUseCase(repo: FilterProductRepository): DeleteFilterProductUseCase {
+        return DeleteFilterProductUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateFilterProductUseCase(repo: FilterProductRepository): UpdateFilterProductUseCase {
+        return UpdateFilterProductUseCase(repo)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInsertFilterProductUseCase(repo: FilterProductRepository): InsertFilterProductUseCase {
+        return InsertFilterProductUseCase(repo)
     }
 
 }

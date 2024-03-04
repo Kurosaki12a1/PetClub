@@ -75,15 +75,15 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
                 when (item.itemId) {
                     R.id.action_selling_price -> {
                         binding.filterPrice.text = getString(R.string.selling_price)
-                        viewModel.setFilterProduct(getString(R.string.selling_price))
-                        adapter.setFilterPrice(GoodsAdapter.SELLING_PRICE)
+                        viewModel.setFilterPrice(getString(R.string.selling_price))
+                        adapter.setFilterPrice(getString(R.string.selling_price))
                         true
                     }
 
                     R.id.action_buying_price -> {
                         binding.filterPrice.text = getString(R.string.buying_price)
-                        viewModel.setFilterProduct(getString(R.string.buying_price))
-                        adapter.setFilterPrice(GoodsAdapter.BUYING_PRICE)
+                        viewModel.setFilterPrice(getString(R.string.buying_price))
+                        adapter.setFilterPrice(getString(R.string.buying_price))
                         true
                     }
 
@@ -96,7 +96,7 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
             filterPopup.show(it)
         }
 
-        binding.filterPrice.updateText(viewModel.getFilterProduct())
+        binding.filterPrice.updateText(viewModel.getFilterPrice())
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -140,7 +140,7 @@ class SearchFragment : BarcodeFragment<FragmentSearchProductBinding>(), ProductL
         }
 
         showSearchBar()
-        adapter = GoodsAdapter(this)
+        adapter = GoodsAdapter(this, viewModel.getFilterPrice()?: "")
         binding.rvProduct.layoutManager = LinearLayoutManager(requireContext())
         binding.rvProduct.adapter = adapter
     }

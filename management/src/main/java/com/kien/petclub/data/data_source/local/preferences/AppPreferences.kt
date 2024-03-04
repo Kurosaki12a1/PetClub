@@ -2,13 +2,15 @@ package com.kien.petclub.data.data_source.local.preferences
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.kien.petclub.R
 import javax.inject.Inject
 
-class AppPreferences @Inject constructor(context: Context) {
+class AppPreferences @Inject constructor(val context: Context) {
     companion object {
         private const val APP_PREFERENCES_NAME = "PET-CLUB-Cache"
         private const val MODE = Context.MODE_PRIVATE
 
+        private const val PRICE_FILTER = "priceFilter"
         private const val PRODUCT_FILTER = "productFilter"
         private const val PRODUCT_SORT = "productSort"
     }
@@ -41,10 +43,10 @@ class AppPreferences @Inject constructor(context: Context) {
     fun getBoolean(key: String, defaultValue: Boolean = false): Boolean =
         appPreferences.getBoolean(key, defaultValue)
 
-    var productFilter: String?
-        get() = appPreferences.getString(PRODUCT_FILTER, "")
+    var priceFilter: String?
+        get() = appPreferences.getString(PRICE_FILTER, context.getString(R.string.selling_price))
         set(value) = appPreferences.edit {
-            it.putString(PRODUCT_FILTER, value)
+            it.putString(PRICE_FILTER, value)
         }
 
     var productSort: Int

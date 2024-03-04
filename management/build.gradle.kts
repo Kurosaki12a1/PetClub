@@ -1,11 +1,11 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.gms.google-services")
     id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs.kotlin")
-    id("kotlin-kapt")
     id("kotlin-parcelize")
 }
 
@@ -38,11 +38,6 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
-       /* freeCompilerArgs += listOf(
-            "-opt-in=org.mylibrary.OptInAnnotation",
-            "-Xopt-in=kotlin.RequiresOptIn",
-            "-Xopt-in=kotlin.OptIn"
-        )*/
     }
 
     packaging {
@@ -53,13 +48,9 @@ android {
 
     buildFeatures {
         buildConfig = true
-        dataBinding = true
         viewBinding = true
     }
 
-    kapt {
-        correctErrorTypes = true
-    }
 
     hilt {
         enableAggregatingTask = true
@@ -83,6 +74,7 @@ android {
 
 dependencies {
     implementation(project(":ImagePicker"))
+    implementation(project(":flexbox"))
 
     // AndroidX component libraries
     implementation(libs.androidx.activity.ktx)
@@ -102,12 +94,12 @@ dependencies {
 
     // Glide
     implementation(libs.glide)
-    kapt(libs.glide.compiler)
+    ksp(libs.glide.compiler)
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    kapt(libs.kotlinx.metadata.jvm)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.kotlinx.metadata.jvm)
 
     // ViewModel
     implementation(libs.lifecycle.viewmodel.ktx)
@@ -122,6 +114,13 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.9.21-1.0.15")
 
     // Scan BarCode
     implementation(libs.zxing.android.embedded)

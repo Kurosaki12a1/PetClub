@@ -89,7 +89,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), SortProductListener {
     override fun setUpViews() {
         super.setUpViews()
         setUpFloatingActionButton()
-        popUpSort = SortChooserPopup(ProductSortType.initListChooser(), this)
+        popUpSort = SortChooserPopup(ProductSortType.initListChooser(viewModel.getSortProduct()), this)
     }
 
     override fun setUpObserver() {
